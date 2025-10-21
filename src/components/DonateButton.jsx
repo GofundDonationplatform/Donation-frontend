@@ -1,33 +1,36 @@
-import React from "react";
-import API_BASE_URL from "../config";
+// src/components/DonateButton.jsx
+import axios from "axios";
 
-export default function DonateButton({ amount }) {
-  const handleCheckout = async () => {
+export default function DonateButton({ amount, label }) {
+  const handleDonate = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/api/donations/create-checkout-session`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount }),
-      });
+      const response = await axios.post(
+        "http://localhost:5000/api/payments/flutterwave/pay",
+        {
+          name: "Guest Donor",
+          email: "guest@example.com",
+          amount,
+        }
+      );
 
-      const data = await res.json();
-
-      if (data.url) {
-        window.location.href = data.url; // redirect to Stripe Checkout
+      if (response.data.link) {
+        window.location.href = response.data.link;
       } else {
-        alert("Something went wrong!");
+        alert("Payment failed to initialize. Please try again.");
+        console.error("Invalid Flutterwave response:", response.data);
       }
-    } catch (err) {
-      console.error("Checkout error:", err);
+    } catch (error) {
+      console.error("Payment error:", error.response?.data || error.message);
+      alert("Donation failed, try again (check console).");
     }
   };
 
   return (
     <button
-      onClick={handleCheckout}
-      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+      onClick={handleDonate}
+      className="bg-blue-600 text-white font-semibold px-6 py-3 rounded-full hover:bg-blue-700 transition-all duration-300 shadow-md"
     >
-      Donate ${amount}
+      {label || "Donate"}
     </button>
   );
 }

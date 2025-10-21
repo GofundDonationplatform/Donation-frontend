@@ -1,15 +1,13 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
+// ✅ Safe, minimal config for Android/Termux (no LightningCSS)
 export default defineConfig({
   plugins: [react()],
+  css: {
+    transformer: "postcss", // Force Tailwind to use PostCSS
+  },
   server: {
-    allowedHosts: [
-      "nutrition-yields-cosmetic-regional.trycloudflare.com",
-      // or set to `true` to allow all hosts
-    ],
-    proxy: {
-      '/api': 'http://localhost:5000'
-    }
+    host: true,
   },
 });

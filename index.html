@@ -4,10 +4,15 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
+    <title>GoFund Donation Platform</title>
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+
+    <!-- React entry point -->
+    <script type="module" src="/src/main.jsx"></script>
+
+    <!-- ✅ Add this Flutterwave checkout script just before </body> -->
+    <script src="https://checkout.flutterwave.com/v3.js"></script>
   </body>
 </html>

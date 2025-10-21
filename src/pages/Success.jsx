@@ -1,18 +1,16 @@
+import React from "react";
+import { Link } from "react-router-dom";
+
 export default function Success() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-green-50">
-      <div className="bg-white p-8 rounded-2xl shadow-lg text-center max-w-md">
-        <h1 className="text-3xl font-bold text-green-600 mb-4">🎉 Thank You!</h1>
-        <p className="text-gray-700 mb-6">
-          Your donation was successful. We truly appreciate your support.
-        </p>
-        <a
-          href="/"
-          className="px-6 py-3 rounded-xl bg-green-600 text-white font-semibold hover:bg-green-700 transition"
-        >
-          Go Back Home
-        </a>
+    <section className="container center" style={{paddingTop:40}}>
+      <div style={{maxWidth:600, margin:"0 auto", color:"#fff"}}>
+        <h2>🎉 Thank You!</h2>
+        <p className="muted">Your donation has been received successfully. We appreciate your kindness and support.</p>
+        <div style={{marginTop:12}}>
+          <Link to="/" className="btn">Back to Home</Link>
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
