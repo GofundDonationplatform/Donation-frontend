@@ -20,14 +20,18 @@ export default function DonatePage() {
     try {
       console.log("POST to backend:", backendBase + "/api/donate", { amount: Number(amount) * 100 });
       const res = await axios.post(`${backendBase}/api/donate`, {
-        amount: Number(amount) * 100, // convert to kobo or cents
+        amount: Number(amount) * 100, // convert to cents/kobo
       });
 
       console.log("Backend response:", res.data);
-      if (res.data?.url) {
+
+      // ✅ FIXED: use res.data.link (from Flutterwave response)
+      if (res.data?.link) {
+        window.location.href = res.data.link;
+      } else if (res.data?.url) {
         window.location.href = res.data.url;
       } else {
-        alert("Donation failed: no redirect URL returned. Check console.");
+        alert("Donation failed: no redirect link returned. Check console for details.");
       }
     } catch (err) {
       console.error("Donate error:", err?.response || err);
@@ -40,7 +44,9 @@ export default function DonatePage() {
   return (
     <div className="min-h-screen flex items-start justify-center py-12 px-4 bg-gray-50">
       <div className="max-w-2xl w-full bg-white rounded-xl shadow-lg p-6">
-        <h2 className="text-3xl font-bold mb-4 text-center text-indigo-700">Make a Donation</h2>
+        <h2 className="text-3xl font-bold mb-4 text-center text-indigo-700">
+          Make a Donation
+        </h2>
         <p className="text-gray-600 mb-6 text-center">
           Choose an amount or enter a custom value (USD).
         </p>
