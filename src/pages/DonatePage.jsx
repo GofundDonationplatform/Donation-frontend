@@ -21,7 +21,6 @@ export default function DonatePage() {
     try {
       console.log("➡️ Sending donation to:", `${backendBase}/api/donate`, { amount });
 
-      // ✅ send POST to backend donation endpoint
       const res = await axios.post(`${backendBase}/api/donate`, {
         amount: Number(amount),
         name: "Anonymous",
@@ -31,7 +30,6 @@ export default function DonatePage() {
 
       console.log("✅ Backend response:", res.data);
 
-      // ✅ Flutterwave returns "link" field for redirect
       if (res.data?.link) {
         window.location.href = res.data.link;
       } else if (res.data?.url) {
@@ -88,7 +86,7 @@ export default function DonatePage() {
         <button
           onClick={handleDonate}
           disabled={loading}
-          className="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition disabled:opacity-50 font-semibold"
+          className="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition disabled:opacity-50"
         >
           {loading ? "Processing..." : `Donate $${Number(amount).toLocaleString()}`}
         </button>
