@@ -7,7 +7,7 @@ export default function DonatePage() {
   const [amount, setAmount] = useState(100);
   const [loading, setLoading] = useState(false);
 
-  // ✅ Hardcoded live backend URL
+  // ✅ Live backend URL
   const backendBase = "https://donation-backend-1-fh7d.onrender.com";
 
   async function handleDonate() {
@@ -18,20 +18,21 @@ export default function DonatePage() {
 
     setLoading(true);
     try {
-      console.log("POST to backend:", backendBase + "/api/donate", { amount: Number(amount) * 100 });
+      console.log("POST to backend:", `${backendBase}/api/donate`, { amount });
+
       const res = await axios.post(`${backendBase}/api/donate`, {
-        amount: Number(amount) * 100, // convert to cents/kobo
+        amount: Number(amount),
       });
 
       console.log("Backend response:", res.data);
 
-      // ✅ FIXED: use res.data.link (from Flutterwave response)
+      // ✅ Use correct redirect field
       if (res.data?.link) {
         window.location.href = res.data.link;
       } else if (res.data?.url) {
         window.location.href = res.data.url;
       } else {
-        alert("Donation failed: no redirect link returned. Check console for details.");
+        alert("Donation failed: backend did not return a redirect link.");
       }
     } catch (err) {
       console.error("Donate error:", err?.response || err);
@@ -82,7 +83,7 @@ export default function DonatePage() {
         <button
           onClick={handleDonate}
           disabled={loading}
-          className="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition disabled:opacity-50 font-semibold"
+          className="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition disabled:opacity-50"
         >
           {loading ? "Processing..." : `Donate $${Number(amount).toLocaleString()}`}
         </button>
