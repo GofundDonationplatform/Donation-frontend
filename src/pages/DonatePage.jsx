@@ -7,9 +7,9 @@ export default function DonatePage() {
   const [amount, setAmount] = useState(100);
   const [loading, setLoading] = useState(false);
 
-  // ✅ Use environment variable for backend
+  // ✅ Use env variable or fallback
   const backendBase =
-    import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+    import.meta.env.VITE_BACKEND_URL || "https://donation-backend-1-fh7d.onrender.com";
 
   async function handleDonate() {
     if (!amount || isNaN(amount) || Number(amount) <= 0) {
@@ -20,26 +20,28 @@ export default function DonatePage() {
     setLoading(true);
     try {
       console.log("POST to backend:", `${backendBase}/api/donate`, {
-        amount: Number(amount),
+        amount: Number(amount) * 100,
       });
 
+      // ✅ API call to backend
       const res = await axios.post(`${backendBase}/api/donate`, {
-        amount: Number(amount),
+        amount: Number(amount) * 100, // Convert to cents/kobo
+        currency: "USD",
       });
 
       console.log("Backend response:", res.data);
 
-      // ✅ Redirect correctly based on backend response
+      // ✅ Redirect to payment link if available
       if (res.data?.link) {
         window.location.href = res.data.link;
       } else if (res.data?.url) {
         window.location.href = res.data.url;
       } else {
-        alert("Donation failed: no redirect link returned. Check console for details.");
+        alert("Donation failed: No payment link returned. Check console for details.");
       }
     } catch (err) {
-      console.error("Donate error:", err?.response || err);
-      alert("Donation failed, please try again.");
+      console.error("❌ Donate error:", err?.response?.data || err.message);
+      alert("Donation failed. Please try again.");
     } finally {
       setLoading(false);
     }
