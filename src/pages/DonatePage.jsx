@@ -7,9 +7,9 @@ export default function DonatePage() {
   const [amount, setAmount] = useState(100);
   const [loading, setLoading] = useState(false);
 
-  // ✅ Use environment variable from Render frontend settings
+  // ✅ Use environment variable for backend
   const backendBase =
-    import.meta.env.VITE_BACKEND_URL || "https://donation-backend-1-fh7d.onrender.com";
+    import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
   async function handleDonate() {
     if (!amount || isNaN(amount) || Number(amount) <= 0) {
@@ -19,27 +19,27 @@ export default function DonatePage() {
 
     setLoading(true);
     try {
-      console.log("➡️ Sending donation to:", `${backendBase}/api/donate`, { amount });
+      console.log("POST to backend:", `${backendBase}/api/donate`, {
+        amount: Number(amount),
+      });
 
       const res = await axios.post(`${backendBase}/api/donate`, {
         amount: Number(amount),
-        name: "Anonymous",
-        email: "donor@example.com",
-        currency: "USD",
       });
 
-      console.log("✅ Backend response:", res.data);
+      console.log("Backend response:", res.data);
 
+      // ✅ Redirect correctly based on backend response
       if (res.data?.link) {
         window.location.href = res.data.link;
       } else if (res.data?.url) {
         window.location.href = res.data.url;
       } else {
-        alert("Donation failed: backend did not return a redirect link.");
+        alert("Donation failed: no redirect link returned. Check console for details.");
       }
     } catch (err) {
-      console.error("🚨 Donate error:", err?.response?.data || err.message);
-      alert("Donation failed, please try again later.");
+      console.error("Donate error:", err?.response || err);
+      alert("Donation failed, please try again.");
     } finally {
       setLoading(false);
     }
@@ -86,7 +86,7 @@ export default function DonatePage() {
         <button
           onClick={handleDonate}
           disabled={loading}
-          className="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition disabled:opacity-50"
+          className="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition disabled:opacity-50 font-semibold"
         >
           {loading ? "Processing..." : `Donate $${Number(amount).toLocaleString()}`}
         </button>
