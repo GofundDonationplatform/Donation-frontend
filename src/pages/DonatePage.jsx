@@ -8,11 +8,11 @@ export default function DonatePage() {
   const [loading, setLoading] = useState(false);
 
   // ✅ Environment-based backend (set in Render)
-  const backendBase =
-    import.meta.env.VITE_BACKEND_URL || "https://donation-backend-1-fh7d.onrender.com";
+    const backendBase = 
+    import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";;
 
   // 🟢 Flutterwave handler
-  async function handleFlutterwaveDonate() {
+    async function handleFlutterwaveDonate() {
     if (!amount || isNaN(amount) || Number(amount) <= 0) {
       alert("Please enter a valid amount");
       return;
