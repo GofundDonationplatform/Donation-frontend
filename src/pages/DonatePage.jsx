@@ -7,40 +7,43 @@ export default function DonatePage() {
   const [amount, setAmount] = useState(100);
   const [loading, setLoading] = useState(false);
 
-  // ✅ Environment-based backend (set in Render)
-    const backendBase = 
-    import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";;
+  // ✅ Backend URL (from environment)
+  const backendBase = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+  console.log("✅ Backend Base URL:", backendBase);
 
-  // 🟢 Flutterwave handler
-    async function handleFlutterwaveDonate() {
-    if (!amount || isNaN(amount) || Number(amount) <= 0) {
-      alert("Please enter a valid amount");
-      return;
-    }
-
-    setLoading(true);
-    try {
-      console.log("POST →", backendBase + "/api/donate", { amount: Number(amount) * 100 });
-      const res = await axios.post(`${backendBase}/api/donate`, {
-        amount: Number(amount) * 100, // kobo or cents
-      });
-
-      if (res.data?.link) {
-        window.location.href = res.data.link;
-      } else if (res.data?.url) {
-        window.location.href = res.data.url;
-      } else {
-        alert("Donation failed: No redirect link returned.");
-      }
-    } catch (err) {
-      console.error("Flutterwave Donate Error:", err);
-      alert("Donation failed, please try again.");
-    } finally {
-      setLoading(false);
-    }
+// 🟢 Flutterwave handler
+async function handleFlutterwaveDonate() {
+  if (!amount || isNaN(amount) || Number(amount) <= 0) {
+    alert("Please enter a valid amount");
+    return;
   }
 
-  // 🟡 PayPal handler (FIXED ENDPOINT)
+  setLoading(true);
+  try {
+    // Send the amount in major currency units (e.g. 10 for $10)
+    const payload = { amount: Number(amount), currency: "USD", name: undefined, email: undefined };
+
+    console.log("POST →", `${backendBase}/api/donate`, payload);
+    const res = await axios.post(`${backendBase}/api/donate`, payload);
+
+    // Backend returns link (flutterwave hosted payment) or url
+    if (res.data?.link) {
+      window.location.href = res.data.link;
+    } else if (res.data?.url) {
+      window.location.href = res.data.url;
+    } else {
+      console.error("No redirect link returned", res.data);
+      alert("Donation failed: No redirect link returned.");
+    }
+  } catch (err) {
+    console.error("Flutterwave Donate Error:", err.response?.data || err.message || err);
+    alert("Donation failed, please try again.");
+  } finally {
+    setLoading(false);
+  }
+}
+
+  // 🟡 PayPal Donate
   async function handlePayPalDonate() {
     if (!amount || isNaN(amount) || Number(amount) <= 0) {
       alert("Please enter a valid amount");
@@ -49,10 +52,8 @@ export default function DonatePage() {
 
     setLoading(true);
     try {
-      console.log("POST →", backendBase + "/api/paypal/create-payment", { amount });
-      const res = await axios.post(`${backendBase}/api/paypal/create-payment`, {
-        amount,
-      });
+      console.log("POST →", `${backendBase}/api/paypal/create-payment`, { amount });
+      const res = await axios.post(`${backendBase}/api/paypal/create-payment`, { amount });
 
       if (res.data?.approvalUrl) {
         window.location.href = res.data.approvalUrl;
@@ -60,35 +61,8 @@ export default function DonatePage() {
         alert("PayPal init failed — no approval URL returned.");
       }
     } catch (err) {
-      console.error("PayPal Error:", err);
+      console.error("❌ PayPal Error:", err);
       alert("PayPal donation failed. Check console.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  // 🔵 Stripe handler
-  async function handleStripeDonate() {
-    if (!amount || isNaN(amount) || Number(amount) <= 0) {
-      alert("Please enter a valid amount");
-      return;
-    }
-
-    setLoading(true);
-    try {
-      console.log("POST →", backendBase + "/api/stripe/create-checkout-session", { amount });
-      const res = await axios.post(`${backendBase}/api/stripe/create-checkout-session`, {
-        amount,
-      });
-
-      if (res.data?.url) {
-        window.location.href = res.data.url;
-      } else {
-        alert("Stripe init failed — no redirect URL returned.");
-      }
-    } catch (err) {
-      console.error("Stripe Error:", err);
-      alert("Stripe donation failed. Check console.");
     } finally {
       setLoading(false);
     }
@@ -149,14 +123,6 @@ export default function DonatePage() {
             className="w-full bg-yellow-500 text-white py-3 rounded-lg hover:bg-yellow-600 transition disabled:opacity-50 font-semibold"
           >
             Donate with PayPal
-          </button>
-
-          <button
-            onClick={handleStripeDonate}
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition disabled:opacity-50 font-semibold"
-          >
-            Donate with Stripe
           </button>
         </div>
 
