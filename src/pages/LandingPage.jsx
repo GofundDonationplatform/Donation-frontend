@@ -21,7 +21,7 @@ export default function LandingPage() {
       <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 py-10 min-h-screen">
 
         {/* LOGO */}
-        <img
+        //<img
           src="/images/gfssga-logo1.png"
           alt="GFSSGA Logo"
           className="w-28 md:w-40 mb-6 drop-shadow-lg"
