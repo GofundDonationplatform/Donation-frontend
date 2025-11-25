@@ -2,54 +2,107 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 export default function LandingPage() {
-  return (
-    <div className="min-h-screen w-full relative overflow-hidden">
+return (
+<div className="landing-container" style={styles.bg}>
+{/* Dark overlay */}
+<div style={styles.overlay}></div>
 
-      {/* Background Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1509099836639-18ba1795216d')",
-        }}
-      ></div>
+{/* Centered content */}  
+  <div style={styles.content}>  
+  <img  
+    src="/images/gfssga-logo1.png"  
+    alt="GFSSGA Impact Network Logo"  
+    className="w-20 mx-auto mb-6"  
+   />  
 
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+    <h1 style={styles.title}>GFSSGA IMPACT NETWORK</h1>  
+    <h2 style={styles.subtitle}>GofundSS Donation Platform</h2>  
 
-      {/* CONTENT */}
-      <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 py-10 min-h-screen">
+    <p style={styles.text}>  
+      A platform designed to support <strong>education</strong>,  
+      <strong> women empowerment</strong>, and building a future for the  
+      less privileged through transparent and impactful crowdfunding.  
+    </p>  
 
-        {/* LOGO */}
-        //<img
-          src="/images/gfssga-logo1.png"
-          alt="GFSSGA Logo"
-          className="w-28 md:w-40 mb-6 drop-shadow-lg"
-        />
+    <Link to="/home">  
+      <button style={styles.button}>Enter Platform</button>  
+    </Link>  
+  </div>  
+</div>
 
-        {/* TITLE */}
-        <h1 className="text-3xl md:text-5xl font-extrabold text-white leading-tight mb-3 drop-shadow-md">
-          GFSSGA IMPACT NETWORK
-        </h1>
-
-        <h2 className="text-lg md:text-2xl font-medium text-indigo-300 mb-6 tracking-wide">
-          GofundSS Donation Platform
-        </h2>
-
-        {/* DESCRIPTION */}
-        <p className="text-gray-200 max-w-lg text-sm md:text-base leading-relaxed mb-10">
-          A modern crowdfunding platform focused on 
-          <span className="font-semibold text-white"> education, women empowerment,</span> 
-          and building brighter futures through transparent and impactful support.
-        </p>
-
-        {/* BUTTON */}
-        <Link to="/home">
-          <button className="px-8 py-3 text-lg font-semibold rounded-lg bg-gradient-to-r from-indigo-600 to-blue-500 text-white shadow-lg hover:opacity-90 transition-all">
-            Enter Platform
-          </button>
-        </Link>
-      </div>
-    </div>
-  );
+);
 }
+
+/* === STYLES === */
+const styles = {
+bg: {
+backgroundImage:
+"url('https://images.unsplash.com/photo-1509099836639-18ba1795216d')",
+backgroundSize: "cover",
+backgroundPosition: "center",
+height: "100vh",
+width: "100vw",
+position: "relative",
+display: "flex",
+justifyContent: "center",
+alignItems: "center",
+},
+
+overlay: {
+position: "absolute",
+top: 0,
+left: 0,
+right: 0,
+bottom: 0,
+background: "rgba(0, 0, 0, 0.55)",
+},
+
+content: {
+position: "relative",
+color: "white",
+textAlign: "center",
+padding: "20px",
+maxWidth: "90%",
+},
+
+logo: {
+width: "180px",
+height: "auto",
+marginBottom: "10px",
+},
+
+title: {
+fontSize: "2.3rem",
+fontWeight: "700",
+marginBottom: "8px",
+},
+
+subtitle: {
+fontSize: "1.3rem",
+letterSpacing: "1px",
+marginBottom: "18px",
+},
+
+text: {
+fontSize: "1rem",
+lineHeight: "1.6",
+maxWidth: "500px",
+margin: "auto",
+marginBottom: "30px",
+},
+
+button: {
+padding: "14px 28px",
+fontSize: "1.1rem",
+fontWeight: "600",
+color: "white",
+background: "linear-gradient(90deg, #4f46e5, #3b82f6)",
+border: "none",
+borderRadius: "8px",
+cursor: "pointer",
+transition: "0.3s",
+},
+};
+
+Here is my landingpage my gee
+
