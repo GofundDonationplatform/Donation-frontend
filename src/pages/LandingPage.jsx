@@ -10,7 +10,7 @@ export default function LandingPage() {
       {/* Centered content */}
       <div style={styles.content}>
       <img
-        src="/images/gfssga-logo.png"
+        src="/images/gfssga-logo1.png"
         alt="GFSSGA Impact Network Logo"
         className="w-40 mx-auto mb-6"
        />
