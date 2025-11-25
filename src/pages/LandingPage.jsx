@@ -1,86 +1,104 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const LandingPage = () => {
+export default function LandingPage() {
   return (
-    <div className="w-full min-h-screen bg-gray-900 text-white overflow-hidden">
+    <div className="landing-container" style={styles.bg}>
+      {/* Dark overlay */}
+      <div style={styles.overlay}></div>
 
-      {/* HERO SECTION */}
-      <div
-        className="relative w-full h-screen flex flex-col justify-center items-center text-center px-6"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1526256262350-7da7584cf5eb?auto=format&fit=crop&w=1200&q=80')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-black bg-opacity-70"></div>
+      {/* Centered content */}
+      <div style={styles.content}>
+      <img
+        src="/images/gfssga-logo.png"
+        alt="GFSSGA Impact Network Logo"
+        className="w-40 mx-auto mb-6"
+       />
+       
+        <h1 style={styles.title}>GFSSGA IMPACT NETWORK</h1>
+        <h2 style={styles.subtitle}>GofundSS Donation Platform</h2>
 
-        {/* Content */}
-        <div className="relative z-10 max-w-2xl">
-          {/* Logo */}
-          <img
-            src="/logo.png" // MAKE SURE your file is placed in public/logo.png
-            alt="GFSSGA Impact Network Logo"
-            className="w-40 mx-auto mb-6 drop-shadow-xl"
-          />
+        <p style={styles.text}>
+          A platform designed to support <strong>education</strong>,
+          <strong> women empowerment</strong>, and building a future for the
+          less privileged through transparent and impactful crowdfunding.
+        </p>
 
-          <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-4 text-yellow-400">
-            GFSSGA IMPACT NETWORK
-          </h1>
-
-          <h2 className="text-2xl md:text-3xl font-semibold mb-6 text-blue-300">
-            GOFUNDSS DONATION PLATFORM
-          </h2>
-
-          <p className="text-lg text-gray-200 mb-8">
-            Empowering change through technology-driven crowdfunding.
-            <br />
-            Supporting education, women empowerment & community development.
-          </p>
-
-          <Link to="/home">
-            <button className="px-8 py-4 rounded-xl text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-700 hover:opacity-90 transition">
-              Enter Platform
-            </button>
-          </Link>
-        </div>
+        <Link to="/home">
+          <button style={styles.button}>Enter Platform</button>
+        </Link>
       </div>
-
-      {/* FEATURES SECTION */}
-      <section className="bg-white text-gray-900 py-16 px-6">
-        <div className="max-w-5xl mx-auto text-center">
-          <h3 className="text-3xl font-bold mb-10">Why Choose Our Platform?</h3>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            <div className="p-6 shadow-lg rounded-xl">
-              <h4 className="text-xl font-semibold mb-2">Tech-Based Crowdfunding</h4>
-              <p className="text-gray-600">
-                Avoid NGO documentation — support causes using a modern, tech-driven approach.
-              </p>
-            </div>
-
-            <div className="p-6 shadow-lg rounded-xl">
-              <h4 className="text-xl font-semibold mb-2">Secure Payments</h4>
-              <p className="text-gray-600">
-                All donations are processed with secure gateways to ensure safe transactions.
-              </p>
-            </div>
-
-            <div className="p-6 shadow-lg rounded-xl">
-              <h4 className="text-xl font-semibold mb-2">Real Impact</h4>
-              <p className="text-gray-600">
-                Every contribution helps build opportunities for the less privileged.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
     </div>
   );
-};
+}
 
-export default LandingPage;
+/* === STYLES === */
+const styles = {
+  bg: {
+    backgroundImage:
+      "url('https://images.unsplash.com/photo-1509099836639-18ba1795216d')",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    height: "100vh",
+    width: "100vw",
+    position: "relative",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  overlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: "rgba(0, 0, 0, 0.55)",
+  },
+
+  content: {
+    position: "relative",
+    color: "white",
+    textAlign: "center",
+    padding: "20px",
+    maxWidth: "90%",
+  },
+
+  logo: {
+    width: "180px",
+    height: "auto",
+    marginBottom: "10px",
+  },
+
+  title: {
+    fontSize: "2.3rem",
+    fontWeight: "700",
+    marginBottom: "8px",
+  },
+
+  subtitle: {
+    fontSize: "1.3rem",
+    letterSpacing: "1px",
+    marginBottom: "18px",
+  },
+
+  text: {
+    fontSize: "1rem",
+    lineHeight: "1.6",
+    maxWidth: "500px",
+    margin: "auto",
+    marginBottom: "30px",
+  },
+
+  button: {
+    padding: "14px 28px",
+    fontSize: "1.1rem",
+    fontWeight: "600",
+    color: "white",
+    background: "linear-gradient(90deg, #4f46e5, #3b82f6)",
+    border: "none",
+    borderRadius: "8px",
+    cursor: "pointer",
+    transition: "0.3s",
+  },
+};

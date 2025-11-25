@@ -5,11 +5,12 @@ import Home from "./pages/Home";
 import Donate from "./pages/Donate";
 import DonateSuccess from "./pages/DonateSuccess";
 import LandingPage from "./pages/LandingPage";
+import Terms from "./pages/Terms";           // <-- new
+import Privacy from "./pages/Privacy";       // <-- new
+import Refund from "./pages/Refund";         // <-- new
 import { useState } from "react";
 
-/* ---------------------------
-   Simple ChatBot (keeps as-is)
-   --------------------------- */
+/* ChatBot component remains unchanged */
 function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
@@ -43,21 +44,12 @@ function ChatBot() {
   };
 
   return (
-    <motion.div
-      className="fixed bottom-6 right-6 z-50"
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-    >
+    <motion.div className="fixed bottom-6 right-6 z-50" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}>
       {isOpen ? (
-        <motion.div
-          layout
-          className="w-80 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-xl p-3 flex flex-col"
-        >
+        <motion.div layout className="w-80 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-xl p-3 flex flex-col">
           <div className="flex justify-between items-center mb-2">
             <h3 className="text-cyan-300 font-semibold">GoFund AI 💬</h3>
-            <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-red-400">
-              ✖
-            </button>
+            <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-red-400">✖</button>
           </div>
 
           <div className="flex-1 overflow-y-auto max-h-64 mb-3 space-y-2">
@@ -65,9 +57,7 @@ function ChatBot() {
               <div
                 key={i}
                 className={`p-2 rounded-lg ${
-                  msg.from === "bot"
-                    ? "bg-slate-800 text-gray-200 self-start"
-                    : "bg-cyan-600 text-white self-end ml-auto"
+                  msg.from === "bot" ? "bg-slate-800 text-gray-200 self-start" : "bg-cyan-600 text-white self-end ml-auto"
                 } max-w-[90%]`}
               >
                 {msg.text}
@@ -83,17 +73,11 @@ function ChatBot() {
               placeholder="Ask me anything..."
               className="flex-1 bg-slate-900/60 text-white px-2 py-1 rounded-lg border border-slate-700"
             />
-            <button onClick={sendMessage} className="bg-gradient-to-r from-purple-600 to-cyan-500 px-3 rounded-lg">
-              ➤
-            </button>
+            <button onClick={sendMessage} className="bg-gradient-to-r from-purple-600 to-cyan-500 px-3 rounded-lg">➤</button>
           </div>
         </motion.div>
       ) : (
-        <motion.button
-          whileTap={{ scale: 0.9 }}
-          onClick={() => setIsOpen(true)}
-          className="bg-gradient-to-r from-purple-600 to-cyan-500 text-white p-4 rounded-full shadow-lg"
-        >
+        <motion.button whileTap={{ scale: 0.9 }} onClick={() => setIsOpen(true)} className="bg-gradient-to-r from-purple-600 to-cyan-500 text-white p-4 rounded-full shadow-lg">
           💬
         </motion.button>
       )}
@@ -101,9 +85,7 @@ function ChatBot() {
   );
 }
 
-/* ----------------------------------------
-   Page wrapper with framer route animation
-   ---------------------------------------- */
+/* Animated Routes */
 function AnimatedRoutes() {
   const location = useLocation();
 
@@ -118,63 +100,24 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        {/* 🏠 Landing Page (main cover) */}
-        <Route
-          path="/"
-          element={
-            <motion.div initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}>
-              <LandingPage />
-            </motion.div>
-          }
-        />
+        <Route path="/" element={<motion.div initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}><LandingPage /></motion.div>} />
+        <Route path="/home" element={<motion.div initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}><Home /></motion.div>} />
+        <Route path="/donate" element={<motion.div initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}><Donate /></motion.div>} />
+        <Route path="/donate-success" element={<motion.div initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}><DonateSuccess /></motion.div>} />
 
-        {/* Campaign Home */}
-        <Route
-          path="/home"
-          element={
-            <motion.div initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}>
-              <Home />
-            </motion.div>
-          }
-        />
-
-        {/* Donation */}
-        <Route
-          path="/donate"
-          element={
-            <motion.div initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}>
-              <Donate />
-            </motion.div>
-          }
-        />
-
-        {/* Success */}
-        <Route
-          path="/donate-success"
-          element={
-            <motion.div initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}>
-              <DonateSuccess />
-            </motion.div>
-          }
-        />
+        {/* 🔹 New Pages */}
+        <Route path="/terms" element={<motion.div initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}><Terms /></motion.div>} />
+        <Route path="/privacy" element={<motion.div initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}><Privacy /></motion.div>} />
+        <Route path="/refund" element={<motion.div initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}><Refund /></motion.div>} />
 
         {/* Fallback */}
-        <Route
-          path="*"
-          element={
-            <motion.div initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}>
-              <LandingPage />
-            </motion.div>
-          }
-        />
+        <Route path="*" element={<motion.div initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}><LandingPage /></motion.div>} />
       </Routes>
     </AnimatePresence>
   );
 }
 
-/* ------------------------
-   Main App component
-   ------------------------ */
+/* Main App */
 export default function App() {
   return (
     <Router>
@@ -187,12 +130,11 @@ export default function App() {
           </Link>
 
           <nav className="flex gap-4 text-sm">
-            <Link to="/" className="hover:text-cyan-400">
-              Home
-            </Link>
-            <Link to="/donate" className="hover:text-cyan-400">
-              Donate
-            </Link>
+            <Link to="/" className="hover:text-cyan-400">Home</Link>
+            <Link to="/donate" className="hover:text-cyan-400">Donate</Link>
+            <Link to="/terms" className="hover:text-cyan-400">Terms</Link>
+            <Link to="/privacy" className="hover:text-cyan-400">Privacy</Link>
+            <Link to="/refund" className="hover:text-cyan-400">Refund</Link>
           </nav>
         </header>
 
@@ -202,8 +144,13 @@ export default function App() {
         </main>
 
         {/* Footer */}
-        <footer className="text-center text-gray-500 py-6 text-sm border-t border-white/10">
-          © {new Date().getFullYear()} GoFund Donation Platform
+        <footer className="text-center text-gray-500 py-6 text-sm border-t border-white/10 space-y-2">
+          <div>© {new Date().getFullYear()} GoFund Donation Platform</div>
+          <div className="flex justify-center gap-4">
+            <Link to="/terms" className="hover:text-cyan-400">Terms</Link>
+            <Link to="/privacy" className="hover:text-cyan-400">Privacy</Link>
+            <Link to="/refund" className="hover:text-cyan-400">Refund</Link>
+          </div>
         </footer>
 
         {/* Chat Assistant */}
