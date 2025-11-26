@@ -4,92 +4,62 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 export default function DonatePage() {
-  const presets = [100, 250, 500, 1000, 3000, 6000, 12000];
-  const [amount, setAmount] = useState(100);
+  const presets = [200, 500, 1000, 2500, 5000, 10000];
+  const [amount, setAmount] = useState(200);
   const [loading, setLoading] = useState(false);
 
-  // Backend URL
-  const backendBase =
-    import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+  const backendBase = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
-  console.log("Backend URL:", backendBase);
-
-  /* ===============================
-        FLUTTERWAVE DONATE
-  ================================== */
+  // 🟣 Flutterwave
   async function handleFlutterwaveDonate() {
-    if (!amount || amount <= 0) return alert("Enter a valid amount");
+    if (!amount || isNaN(amount) || Number(amount) <= 0) return alert("Enter valid amount");
 
     setLoading(true);
     try {
-      const payload = {
-        amount: Number(amount),
+      const res = await axios.post(`${backendBase}/api/donate`, {
+        amount,
         currency: "USD",
-      };
+      });
 
-      const res = await axios.post(`${backendBase}/api/donate`, payload);
-
-      if (res.data?.link) window.location.href = res.data.link;
-      else alert("Error: No payment link returned.");
-    } catch (err) {
-      console.error("Flutterwave Error:", err);
+      window.location.href = res.data?.link || res.data?.url;
+    } catch (e) {
       alert("Flutterwave failed.");
     }
     setLoading(false);
   }
 
-  /* ===============================
-        PAYSTACK DONATE
-  ================================== */
+  // 🟢 Paystack
   async function handlePaystackDonate() {
-    if (!amount || amount <= 0) return alert("Enter a valid amount");
+    if (!amount || isNaN(amount) || Number(amount) <= 0) return alert("Enter valid amount");
 
     setLoading(true);
     try {
-      const payload = {
-        amount: Number(amount),
+      const res = await axios.post(`${backendBase}/api/paystack/initialize`, {
+        amount,
         email: "donor@example.com",
+        name: "User",
         currency: "NGN",
-      };
+      });
 
-      const res = await axios.post(
-        `${backendBase}/api/paystack/initialize`,
-        payload
-      );
-
-      if (res.data?.authorization_url) {
-        window.location.href = res.data.authorization_url;
-      } else {
-        alert("Paystack failed to create payment link.");
-      }
+      window.location.href = res.data.authorization_url;
     } catch (err) {
-      console.error("Paystack Error:", err);
       alert("Paystack failed.");
     }
-
     setLoading(false);
   }
 
-  /* ===============================
-             PAYPAL DONATE
-  ================================== */
+  // 🟡 PayPal
   async function handlePayPalDonate() {
-    if (!amount || amount <= 0) return alert("Enter a valid amount");
+    if (!amount || isNaN(amount) || Number(amount) <= 0) return alert("Enter valid amount");
 
     setLoading(true);
     try {
-      const res = await axios.post(
-        `${backendBase}/api/paypal/create-payment`,
-        { amount }
-      );
+      const res = await axios.post(`${backendBase}/api/paypal/create-payment`, {
+        amount,
+      });
 
-      if (res.data?.approvalUrl) {
-        window.location.href = res.data.approvalUrl;
-      } else {
-        alert("PayPal failed to initialize.");
-      }
-    } catch (err) {
-      console.error("PayPal Error:", err);
+      window.location.href = res.data.approvalUrl;
+    } catch (e) {
       alert("PayPal failed.");
     }
     setLoading(false);
@@ -98,13 +68,13 @@ export default function DonatePage() {
   return (
     <div className="min-h-screen flex flex-col justify-between bg-gray-50">
       <div className="flex-grow flex items-start justify-center py-12 px-4">
-        <div className="max-w-2xl w-full bg-white rounded-xl shadow-lg p-6">
+        <div className="max-w-2xl w-full bg-white rounded-2xl shadow-xl p-8">
           <h2 className="text-3xl font-bold mb-4 text-center text-indigo-700">
-            Make a Donation
+            Make a Donation 🌍
           </h2>
 
           <p className="text-gray-600 mb-6 text-center">
-            Choose an amount or enter a custom value.
+            Every dollar makes a difference. Choose an amount or enter a custom one.
           </p>
 
           {/* Preset Buttons */}
@@ -125,47 +95,55 @@ export default function DonatePage() {
           </div>
 
           {/* Custom Amount */}
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Custom amount (USD)
-          </label>
           <input
             type="number"
             value={amount}
+            min="1"
             onChange={(e) => setAmount(Number(e.target.value))}
             className="w-full border rounded-lg p-3 mb-4 focus:ring-2 focus:ring-indigo-500"
-            min="1"
+            placeholder="Enter custom amount"
           />
 
-          {/* DONATE BUTTONS */}
-          <div className="space-y-3">
+          {/* Payment Buttons */}
+          <div className="grid grid-cols-3 gap-3 mb-4">
 
             {/* Flutterwave */}
             <button
               onClick={handleFlutterwaveDonate}
               disabled={loading}
-              className="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition font-semibold disabled:opacity-50"
+              className="py-3 w-full rounded-lg font-semibold bg-gradient-to-r from-purple-600 to-blue-500 text-white hover:opacity-90"
             >
-              Donate via Flutterwave
-            </button>
-
-            {/* Paystack (NEW BUTTON) */}
-            <button
-              onClick={handlePaystackDonate}
-              disabled={loading}
-              className="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition font-semibold disabled:opacity-50"
-            >
-              Donate with Paystack
+              Flutterwave
             </button>
 
             {/* PayPal */}
             <button
               onClick={handlePayPalDonate}
               disabled={loading}
-              className="w-full bg-yellow-500 text-white py-3 rounded-lg hover:bg-yellow-600 transition font-semibold disabled:opacity-50"
+              className="py-3 w-full rounded-lg font-semibold bg-blue-200 text-blue-800 hover:bg-blue-300"
             >
-              Donate with PayPal
+              PayPal
             </button>
+
+            {/* Paystack */}
+            <button
+              onClick={handlePaystackDonate}
+              disabled={loading}
+              className="py-3 w-full rounded-lg font-semibold bg-green-500 text-white hover:bg-green-600"
+            >
+              Paystack
+            </button>
+
           </div>
+
+          {/* Big Main Button */}
+          <button
+            onClick={handleFlutterwaveDonate}
+            disabled={loading}
+            className="w-full bg-gradient-to-r from-purple-600 to-blue-500 text-white py-3 rounded-lg text-lg font-semibold hover:opacity-90"
+          >
+            Donate via Flutterwave 💳
+          </button>
 
           <p className="mt-4 text-xs text-gray-500 text-center">
             You’ll be redirected to a secure payment page.
@@ -173,22 +151,14 @@ export default function DonatePage() {
         </div>
       </div>
 
-      {/* FOOTER */}
-      <footer className="bg-gray-100 text-center py-6">
+      {/* Footer */}
+      <footer className="bg-gray-100 text-center py-6 mt-12">
         <div className="space-x-4">
-          <Link to="/terms" className="text-blue-600 hover:underline">
-            Terms
-          </Link>
-          <Link to="/privacy" className="text-blue-600 hover:underline">
-            Privacy
-          </Link>
-          <Link to="/refund" className="text-blue-600 hover:underline">
-            Refunds
-          </Link>
+          <Link to="/terms" className="text-blue-600 hover:underline">Terms</Link>
+          <Link to="/privacy" className="text-blue-600 hover:underline">Privacy</Link>
+          <Link to="/refund" className="text-blue-600 hover:underline">Refund</Link>
         </div>
-        <p className="text-gray-500 mt-2">
-          © 2025 GFSSGA Impact Network
-        </p>
+        <p className="text-gray-500 mt-2">&copy; 2025 GFSSGA Impact Network</p>
       </footer>
     </div>
   );
