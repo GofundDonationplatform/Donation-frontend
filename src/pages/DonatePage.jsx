@@ -4,86 +4,117 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 export default function DonatePage() {
-  const presets = [200, 500, 1000, 2500, 5000, 10000];
-  const [amount, setAmount] = useState(200);
+  const presets = [100, 250, 500, 1000, 3000, 6000, 12000];
+  const [amount, setAmount] = useState(100);
   const [loading, setLoading] = useState(false);
 
-  const backendBase = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+  const backendBase =
+    import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
-  // 🟣 Flutterwave
+  // 🟢 Flutterwave Donate
   async function handleFlutterwaveDonate() {
-    if (!amount || isNaN(amount) || Number(amount) <= 0) return alert("Enter valid amount");
+    if (!amount || isNaN(amount) || Number(amount) <= 0) {
+      alert("Please enter a valid amount");
+      return;
+    }
 
     setLoading(true);
     try {
-      const res = await axios.post(`${backendBase}/api/donate`, {
-        amount,
+      const payload = {
+        amount: Number(amount),
         currency: "USD",
-      });
+      };
+      const res = await axios.post(`${backendBase}/api/donate`, payload);
 
-      window.location.href = res.data?.link || res.data?.url;
-    } catch (e) {
+      if (res.data?.link || res.data?.url) {
+        window.location.href = res.data.link || res.data.url;
+      } else {
+        alert("Donation failed — no redirect URL.");
+      }
+    } catch (err) {
       alert("Flutterwave failed.");
     }
     setLoading(false);
   }
 
-  // 🟢 Paystack
+  // 🔴 Paystack Donate
   async function handlePaystackDonate() {
-    if (!amount || isNaN(amount) || Number(amount) <= 0) return alert("Enter valid amount");
+    if (!amount || isNaN(amount) || Number(amount) <= 0) {
+      alert("Please enter a valid amount");
+      return;
+    }
 
     setLoading(true);
-    try {
-      const res = await axios.post(`${backendBase}/api/paystack/initialize`, {
-        amount,
-        email: "donor@example.com",
-        name: "User",
-        currency: "NGN",
-      });
 
-      window.location.href = res.data.authorization_url;
+    try {
+      const payload = {
+        amount: Number(amount),
+        email: "donor@example.com",
+        name: "Donor",
+        currency: "NGN",
+      };
+
+      const res = await axios.post(
+        `${backendBase}/api/paystack/initialize`,
+        payload
+      );
+
+      if (res.data?.authorization_url) {
+        window.location.href = res.data.authorization_url;
+      } else {
+        alert("Paystack init failed.");
+      }
     } catch (err) {
-      alert("Paystack failed.");
+      alert("Paystack error. Check backend.");
     }
+
     setLoading(false);
   }
 
-  // 🟡 PayPal
+  // 🟡 PayPal Donate
   async function handlePayPalDonate() {
-    if (!amount || isNaN(amount) || Number(amount) <= 0) return alert("Enter valid amount");
+    if (!amount || isNaN(amount) || Number(amount) <= 0) {
+      alert("Please enter a valid amount");
+      return;
+    }
 
     setLoading(true);
     try {
-      const res = await axios.post(`${backendBase}/api/paypal/create-payment`, {
-        amount,
-      });
+      const res = await axios.post(
+        `${backendBase}/api/paypal/create-payment`,
+        { amount }
+      );
 
-      window.location.href = res.data.approvalUrl;
-    } catch (e) {
-      alert("PayPal failed.");
+      if (res.data?.approvalUrl) {
+        window.location.href = res.data.approvalUrl;
+      } else {
+        alert("PayPal init failed.");
+      }
+    } catch (err) {
+      alert("PayPal donation failed.");
     }
     setLoading(false);
   }
 
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-gray-50">
-      <div className="flex-grow flex items-start justify-center py-12 px-4">
-        <div className="max-w-2xl w-full bg-white rounded-2xl shadow-xl p-8">
-          <h2 className="text-3xl font-bold mb-4 text-center text-indigo-700">
-            Make a Donation 🌍
-          </h2>
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      <div className="flex-grow flex justify-center px-4 py-10">
+        <div className="w-full max-w-xl bg-white rounded-2xl shadow-lg p-6">
 
+          <h2 className="text-3xl font-extrabold mb-4 text-center text-indigo-600">
+            Make a Donation
+          </h2>
           <p className="text-gray-600 mb-6 text-center">
-            Every dollar makes a difference. Choose an amount or enter a custom one.
+            Select a preset amount or enter your custom donation.
           </p>
 
-          {/* Preset Buttons */}
-          <div className="grid grid-cols-3 gap-3 mb-4">
+          {/* Amount Presets */}
+          <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-4">
             {presets.map((p) => (
               <button
                 key={p}
                 onClick={() => setAmount(p)}
-                className={`py-2 rounded-lg font-semibold ${
+                className={`py-2 rounded-lg font-semibold text-sm sm:text-base ${
                   amount === p
                     ? "bg-indigo-600 text-white"
                     : "bg-gray-100 text-gray-800 hover:bg-gray-200"
@@ -95,70 +126,65 @@ export default function DonatePage() {
           </div>
 
           {/* Custom Amount */}
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Custom Amount (USD)
+          </label>
           <input
             type="number"
             value={amount}
             min="1"
             onChange={(e) => setAmount(Number(e.target.value))}
             className="w-full border rounded-lg p-3 mb-4 focus:ring-2 focus:ring-indigo-500"
-            placeholder="Enter custom amount"
           />
 
-          {/* Payment Buttons */}
-          <div className="grid grid-cols-3 gap-3 mb-4">
+          {/* PAYMENT BUTTONS */}
+          <div className="space-y-3 mt-4">
 
             {/* Flutterwave */}
             <button
               onClick={handleFlutterwaveDonate}
               disabled={loading}
-              className="py-3 w-full rounded-lg font-semibold bg-gradient-to-r from-purple-600 to-blue-500 text-white hover:opacity-90"
+              className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition disabled:opacity-50"
             >
-              Flutterwave
-            </button>
-
-            {/* PayPal */}
-            <button
-              onClick={handlePayPalDonate}
-              disabled={loading}
-              className="py-3 w-full rounded-lg font-semibold bg-blue-200 text-blue-800 hover:bg-blue-300"
-            >
-              PayPal
+              Donate via Flutterwave
             </button>
 
             {/* Paystack */}
             <button
               onClick={handlePaystackDonate}
               disabled={loading}
-              className="py-3 w-full rounded-lg font-semibold bg-green-500 text-white hover:bg-green-600"
+              className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition disabled:opacity-50"
             >
-              Paystack
+              Donate via Paystack
+            </button>
+
+            {/* PayPal */}
+            <button
+              onClick={handlePayPalDonate}
+              disabled={loading}
+              className="w-full bg-yellow-500 text-white py-3 rounded-lg font-semibold hover:bg-yellow-600 transition disabled:opacity-50"
+            >
+              Donate via PayPal
             </button>
 
           </div>
 
-          {/* Big Main Button */}
-          <button
-            onClick={handleFlutterwaveDonate}
-            disabled={loading}
-            className="w-full bg-gradient-to-r from-purple-600 to-blue-500 text-white py-3 rounded-lg text-lg font-semibold hover:opacity-90"
-          >
-            Donate via Flutterwave 💳
-          </button>
-
-          <p className="mt-4 text-xs text-gray-500 text-center">
-            You’ll be redirected to a secure payment page.
+          <p className="text-xs text-gray-500 text-center mt-3">
+            You will be redirected to a secure payment gateway.
           </p>
         </div>
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-100 text-center py-6 mt-12">
+      <footer className="bg-gray-100 text-center py-6 mt-6">
         <div className="space-x-4">
           <Link to="/terms" className="text-blue-600 hover:underline">Terms</Link>
           <Link to="/privacy" className="text-blue-600 hover:underline">Privacy</Link>
           <Link to="/refund" className="text-blue-600 hover:underline">Refund</Link>
         </div>
-        <p className="text-gray-500 mt-2">&copy; 2025 GFSSGA Impact Network</p>
+        <p className="text-gray-500 mt-2 text-sm">
+          © 2025 GFSSGA Impact Network
+        </p>
       </footer>
     </div>
   );
