@@ -9,6 +9,9 @@ import Terms from "./pages/Terms";           // <-- new
 import Privacy from "./pages/Privacy";       // <-- new
 import Refund from "./pages/Refund";         // <-- new
 import { useState } from "react";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+import AdminDashboard from "./pages/AdminDashboard";
 
 /* ChatBot component remains unchanged */
 function ChatBot() {
@@ -105,6 +108,10 @@ function AnimatedRoutes() {
         <Route path="/donate" element={<motion.div initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}><Donate /></motion.div>} />
         <Route path="/donate-success" element={<motion.div initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}><DonateSuccess /></motion.div>} />
 
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+
         {/* 🔹 New Pages */}
         <Route path="/terms" element={<motion.div initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}><Terms /></motion.div>} />
         <Route path="/privacy" element={<motion.div initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}><Privacy /></motion.div>} />
@@ -121,7 +128,8 @@ function AnimatedRoutes() {
 export default function App() {
   return (
     <Router>
-      <div className="app min-h-screen bg-slate-950 text-white flex flex-col">
+     
+        <div className="app min-h-screen bg-slate-950 text-white flex flex-col">
         {/* Header */}
         <header className="flex justify-between items-center px-6 py-4 bg-slate-900/70 backdrop-blur-xl border-b border-white/10">
           <Link to="/" className="flex items-center gap-2 font-bold text-cyan-400 text-lg">
