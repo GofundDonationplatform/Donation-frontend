@@ -4,42 +4,79 @@ import React, { useState } from "react";
 export default function Donate() {
   const [amount, setAmount] = useState("");
   const [selected, setSelected] = useState(null);
-  const [method, setMethod] = useState("flutterwave"); // default option
+  const [method, setMethod] = useState("flutterwave"); 
   const amounts = [200, 500, 1000, 2500, 5000, 10000];
 
-  // ✅ fallback if VITE_BACKEND_URL is not defined
   const backendURL =
-    import.meta.env.VITE_BACKEND_URL?.replace(/\/$/, "") || "http://localhost:5000";
+    import.meta.env.VITE_BACKEND_URL?.replace(/\/$/, "") ||
+    "http://localhost:5000";
 
+  // ==========================
+  //   PAYSTACK HANDLER
+  // ==========================
+  const handlePaystack = async () => {
+    if (!amount) return alert("Please enter an amount");
+
+    try {
+      console.log("🟢 Initializing Paystack...");
+      const res = await fetch(`${backendURL}/api/paystack/initialize`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount,
+          email: "donor@example.com",
+          name: "Paystack Donor",
+          currency: "NGN",
+        }),
+      });
+
+      const data = await res.json();
+      console.log("🔵 Paystack response:", data);
+
+      if (data?.authorization_url) {
+        window.location.href = data.authorization_url;
+        return;
+      }
+
+      alert("Paystack initialization failed.");
+    } catch (err) {
+      console.error("❌ Paystack Error:", err);
+      alert("Unable to start Paystack payment");
+    }
+  };
+
+  // ==========================
+  //   GENERAL DONATE BUTTON
+  // ==========================
   const handleDonate = async () => {
     if (!amount) return alert("Please select or enter an amount");
 
-    // === PAYPAL ===
+    // --- PAYSTACK ---
+    if (method === "paystack") return handlePaystack();
+
+    // --- PAYPAL ---
     if (method === "paypal") {
       try {
-        console.log("🟡 Starting PayPal donation...");
         const res = await fetch(`${backendURL}/api/paypal/create-order`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ amount }),
         });
         const data = await res.json();
-        console.log("🔵 PayPal response:", data);
+
         if (data?.id) {
           window.location.href = `https://www.paypal.com/checkoutnow?token=${data.id}`;
         } else {
           alert("PayPal initialization failed");
         }
-      } catch (err) {
-        console.error("PayPal error:", err);
+      } catch {
         alert("Unable to start PayPal payment");
       }
       return;
     }
 
-    // === FLUTTERWAVE ===
+    // --- FLUTTERWAVE ---
     try {
-      console.log("🟣 Starting Flutterwave donation...");
       const res = await fetch(`${backendURL}/api/donate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -47,21 +84,18 @@ export default function Donate() {
           amount: parseFloat(amount),
           name: "Anonymous Donor",
           email: "donor@example.com",
-          currency: "USD", // ✅ Always send currency
+          currency: "USD",
         }),
       });
 
       const data = await res.json();
-      console.log("🟢 Flutterwave backend response:", data);
 
       if (data?.link) {
         window.location.href = data.link;
       } else {
-        console.error("Flutterwave init failed:", data);
-        alert("Failed to start Flutterwave payment");
+        alert("Flutterwave initialization failed");
       }
-    } catch (err) {
-      console.error("Flutterwave error:", err);
+    } catch {
       alert("Unable to start Flutterwave payment");
     }
   };
@@ -82,7 +116,7 @@ export default function Donate() {
           background: "rgba(255,255,255,0.1)",
           borderRadius: "16px",
           padding: "32px",
-          maxWidth: "480px",
+          maxWidth: "460px",
           width: "100%",
           color: "white",
           boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
@@ -99,16 +133,8 @@ export default function Donate() {
         >
           Make a Donation 🌍
         </h2>
-        <p
-          style={{
-            textAlign: "center",
-            marginBottom: "20px",
-            opacity: 0.9,
-          }}
-        >
-          Every dollar makes a difference. Choose an amount or enter a custom one.
-        </p>
 
+        {/* PRESET AMOUNTS */}
         <div
           style={{
             display: "flex",
@@ -143,32 +169,32 @@ export default function Donate() {
           ))}
         </div>
 
-        <div style={{ display: "flex", gap: "8px", marginBottom: "16px" }}>
-          <input
-            type="number"
-            placeholder="Enter custom amount"
-            value={amount}
-            onChange={(e) => {
-              setAmount(e.target.value);
-              setSelected(null);
-            }}
-            style={{
-              flex: 1,
-              padding: "12px",
-              borderRadius: "8px",
-              border: "1px solid rgba(255,255,255,0.2)",
-              background: "transparent",
-              color: "white",
-              fontSize: "16px",
-            }}
-          />
-        </div>
+        {/* CUSTOM AMOUNT */}
+        <input
+          type="number"
+          placeholder="Enter custom amount"
+          value={amount}
+          onChange={(e) => {
+            setAmount(e.target.value);
+            setSelected(null);
+          }}
+          style={{
+            width: "100%",
+            padding: "12px",
+            marginBottom: "20px",
+            borderRadius: "8px",
+            border: "1px solid rgba(255,255,255,0.2)",
+            background: "transparent",
+            color: "white",
+            fontSize: "16px",
+          }}
+        />
 
-        {/* --- PAYMENT METHOD SELECTOR --- */}
+        {/* PAYMENT METHOD SELECTOR */}
         <div
           style={{
             display: "flex",
-            justifyContent: "space-around",
+            gap: "10px",
             marginBottom: "20px",
           }}
         >
@@ -181,16 +207,16 @@ export default function Donate() {
                   ? "linear-gradient(90deg,#7c3aed,#06b6d4)"
                   : "rgba(255,255,255,0.1)",
               color: "white",
-              border: "none",
-              borderRadius: "8px",
               padding: "12px",
-              marginRight: "10px",
+              borderRadius: "8px",
+              border: "none",
               cursor: "pointer",
               fontWeight: "600",
             }}
           >
             🌐 Flutterwave
           </button>
+
           <button
             onClick={() => setMethod("paypal")}
             style={{
@@ -200,17 +226,37 @@ export default function Donate() {
                   ? "linear-gradient(90deg,#ffc439,#f0a500)"
                   : "rgba(255,255,255,0.1)",
               color: "white",
-              border: "none",
-              borderRadius: "8px",
               padding: "12px",
+              borderRadius: "8px",
+              border: "none",
               cursor: "pointer",
               fontWeight: "600",
             }}
           >
             🅿️ PayPal
           </button>
+
+          <button
+            onClick={() => setMethod("paystack")}
+            style={{
+              flex: 1,
+              background:
+                method === "paystack"
+                  ? "linear-gradient(90deg,#0aa83f,#0dc263)"
+                  : "rgba(255,255,255,0.1)",
+              color: "white",
+              padding: "12px",
+              borderRadius: "8px",
+              border: "none",
+              cursor: "pointer",
+              fontWeight: "600",
+            }}
+          >
+            💳 Paystack
+          </button>
         </div>
 
+        {/* FINAL DONATE BUTTON */}
         <button
           onClick={handleDonate}
           style={{
@@ -218,16 +264,22 @@ export default function Donate() {
             background:
               method === "paypal"
                 ? "linear-gradient(90deg,#ffc439,#f0a500)"
+                : method === "paystack"
+                ? "linear-gradient(90deg,#0aa83f,#0dc263)"
                 : "linear-gradient(90deg,#7c3aed,#06b6d4)",
             color: "white",
             padding: "14px",
-            border: "none",
             borderRadius: "10px",
+            border: "none",
             fontWeight: "700",
             cursor: "pointer",
           }}
         >
-          {method === "paypal" ? "Donate via PayPal 🅿️" : "Donate via Flutterwave 💳"}
+          {method === "paypal"
+            ? "Donate via PayPal 🅿️"
+            : method === "paystack"
+            ? "Donate via Paystack 💳"
+            : "Donate via Flutterwave 🌐"}
         </button>
       </div>
     </div>
