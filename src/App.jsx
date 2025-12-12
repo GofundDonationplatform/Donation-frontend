@@ -1,19 +1,32 @@
 // src/App.jsx
+
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
+
+// MAIN PAGES
+import LandingPage from "./pages/LandingPage";
 import Home from "./pages/Home";
 import Donate from "./pages/Donate";
 import DonateSuccess from "./pages/DonateSuccess";
-import LandingPage from "./pages/LandingPage";
-import Terms from "./pages/Terms";           // <-- new
-import Privacy from "./pages/Privacy";       // <-- new
-import Refund from "./pages/Refund";         // <-- new
-import { useState } from "react";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
+import Refund from "./pages/Refund";
+
+// USER AUTH
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import AdminDashboard from "./pages/AdminDashboard";
+import UserDashboard from "./pages/UserDashboard";
+import PrivateRoute from "./components/PrivateRoute";
 
-/* ChatBot component remains unchanged */
+// ADMIN AUTH
+import AdminLogin from "./pages/AdminLogin";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminRoute from "./components/AdminRoute";
+
+// ==============================
+// CHATBOT COMPONENT
+// ==============================
 function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
@@ -24,6 +37,7 @@ function ChatBot() {
   const sendMessage = async () => {
     if (!input.trim()) return;
     const newMsg = { from: "user", text: input };
+
     setMessages([...messages, newMsg]);
     setInput("");
 
@@ -33,12 +47,14 @@ function ChatBot() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: input }),
       });
+
       const data = await res.json();
+
       setMessages((prev) => [
         ...prev,
         { from: "bot", text: data.reply || "Hmm... I couldn’t respond right now 🤔" },
       ]);
-    } catch (err) {
+    } catch {
       setMessages((prev) => [
         ...prev,
         { from: "bot", text: "Oops! I can’t reach the server right now." },
@@ -49,7 +65,7 @@ function ChatBot() {
   return (
     <motion.div className="fixed bottom-6 right-6 z-50" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}>
       {isOpen ? (
-        <motion.div layout className="w-80 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-xl p-3 flex flex-col">
+        <motion.div className="w-80 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-xl p-3 flex flex-col">
           <div className="flex justify-between items-center mb-2">
             <h3 className="text-cyan-300 font-semibold">GoFund AI 💬</h3>
             <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-red-400">✖</button>
@@ -60,7 +76,9 @@ function ChatBot() {
               <div
                 key={i}
                 className={`p-2 rounded-lg ${
-                  msg.from === "bot" ? "bg-slate-800 text-gray-200 self-start" : "bg-cyan-600 text-white self-end ml-auto"
+                  msg.from === "bot"
+                    ? "bg-slate-800 text-gray-200"
+                    : "bg-cyan-600 text-white self-end ml-auto"
                 } max-w-[90%]`}
               >
                 {msg.text}
@@ -80,7 +98,7 @@ function ChatBot() {
           </div>
         </motion.div>
       ) : (
-        <motion.button whileTap={{ scale: 0.9 }} onClick={() => setIsOpen(true)} className="bg-gradient-to-r from-purple-600 to-cyan-500 text-white p-4 rounded-full shadow-lg">
+        <motion.button whileTap={{ scale: 0.9 }} onClick={() => setIsOpen(true)} className="bg-gradient-to-r from-purple-600 to-cyan-500 text-white p-4 rounded-full">
           💬
         </motion.button>
       )}
@@ -88,49 +106,72 @@ function ChatBot() {
   );
 }
 
-/* Animated Routes */
+
+// ==============================
+// PAGE ANIMATIONS WRAPPER
+// ==============================
 function AnimatedRoutes() {
   const location = useLocation();
 
-  const pageVariants = {
-    initial: { opacity: 0, y: 10 },
+  const anim = {
+    initial: { opacity: 0, y: 20 },
     in: { opacity: 1, y: 0 },
-    out: { opacity: 0, y: -10 },
+    out: { opacity: 0, y: -20 },
   };
-
-  const pageTransition = { duration: 0.25, ease: "easeInOut" };
 
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<motion.div initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}><LandingPage /></motion.div>} />
-        <Route path="/home" element={<motion.div initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}><Home /></motion.div>} />
-        <Route path="/donate" element={<motion.div initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}><Donate /></motion.div>} />
-        <Route path="/donate-success" element={<motion.div initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}><DonateSuccess /></motion.div>} />
 
+        {/* PUBLIC ROUTES */}
+        <Route path="/" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><LandingPage /></motion.div>} />
+        <Route path="/home" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><Home /></motion.div>} />
+        <Route path="/donate" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><Donate /></motion.div>} />
+        <Route path="/donate-success" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><DonateSuccess /></motion.div>} />
+
+        {/* USER AUTH */}
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/admin" element={<AdminDashboard />} />
 
-        {/* 🔹 New Pages */}
-        <Route path="/terms" element={<motion.div initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}><Terms /></motion.div>} />
-        <Route path="/privacy" element={<motion.div initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}><Privacy /></motion.div>} />
-        <Route path="/refund" element={<motion.div initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}><Refund /></motion.div>} />
+        {/* PROTECTED USER DASHBOARD */}
+        <Route path="/dashboard" element={
+          <PrivateRoute>
+            <UserDashboard />
+          </PrivateRoute>
+        } />
 
-        {/* Fallback */}
-        <Route path="*" element={<motion.div initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition}><LandingPage /></motion.div>} />
+        {/* ADMIN AUTH */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+
+        {/* PROTECTED ADMIN DASHBOARD */}
+        <Route path="/admin/dashboard" element={
+          <AdminRoute>
+            <AdminDashboard />
+          </AdminRoute>
+        } />
+
+        {/* LEGAL PAGES */}
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/refund" element={<Refund />} />
+
+        {/* 404 */}
+        <Route path="*" element={<LandingPage />} />
       </Routes>
     </AnimatePresence>
   );
 }
 
-/* Main App */
+
+// ==============================
+// MAIN APP
+// ==============================
 export default function App() {
   return (
     <Router>
-     
-        <div className="app min-h-screen bg-slate-950 text-white flex flex-col">
-        {/* Header */}
+      <div className="app min-h-screen bg-slate-950 text-white flex flex-col">
+
+        {/* HEADER */}
         <header className="flex justify-between items-center px-6 py-4 bg-slate-900/70 backdrop-blur-xl border-b border-white/10">
           <Link to="/" className="flex items-center gap-2 font-bold text-cyan-400 text-lg">
             <span className="bg-gradient-to-r from-purple-600 to-cyan-400 text-white px-3 py-1 rounded-lg">GoFund</span>
@@ -146,12 +187,12 @@ export default function App() {
           </nav>
         </header>
 
-        {/* Pages */}
+        {/* ROUTES */}
         <main className="flex-1">
           <AnimatedRoutes />
         </main>
 
-        {/* Footer */}
+        {/* FOOTER */}
         <footer className="text-center text-gray-500 py-6 text-sm border-t border-white/10 space-y-2">
           <div>© {new Date().getFullYear()} GoFund Donation Platform</div>
           <div className="flex justify-center gap-4">
@@ -161,8 +202,9 @@ export default function App() {
           </div>
         </footer>
 
-        {/* Chat Assistant */}
+        {/* CHAT AI */}
         <ChatBot />
+
       </div>
     </Router>
   );

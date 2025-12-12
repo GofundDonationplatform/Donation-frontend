@@ -1,31 +1,20 @@
-// src/pages/AdminDashboard.jsx
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 
-export default function AdminDashboard(){
-  const [me,setMe] = useState(null);
-  const backend = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+const AdminDashboard = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
 
-  useEffect(()=>{
-    const token = localStorage.getItem("token");
-    if (!token) return;
-    axios.get(`${backend}/api/auth/me`, { headers: { Authorization: `Bearer ${token}` } })
-      .then(r => setMe(r.data.user))
-      .catch(err => {
-        console.error(err);
-        alert("Not authorized or session expired");
-      });
-  },[]);
+    return (
+        <div className="dashboard-container">
+            <h1>Welcome Admin: {user?.name}</h1>
 
-  if(!me) return <div className="p-6">Loading...</div>;
+            <div className="admin-options">
+                <button>View Donations</button>
+                <button>Manage Users</button>
+                <button>Update Campaigns</button>
+                <button>Logout</button>
+            </div>
+        </div>
+    );
+};
 
-  if(me.role !== "admin") return <div className="p-6">You are not an admin</div>;
-
-  return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-      <p className="mt-3">Welcome, {me.name} ({me.email})</p>
-      {/* Add admin features here: campaigns list, verify donors, view donations, etc. */}
-    </div>
-  );
-}
+export default AdminDashboard;
