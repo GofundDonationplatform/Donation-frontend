@@ -22,12 +22,12 @@ export default function Donate() {
 
   try {
     const res = await fetch(
-      `${backendURL}/api/dodopay/initiate`,
+      `${backendURL}/api/dodopay/initiate`
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          amount: Number(amount),
+          amount,
           email: "donor@example.com",
           name: "Anonymous Donor",
           currency: "USD",
@@ -36,18 +36,18 @@ export default function Donate() {
     );
 
     const data = await res.json();
-    console.log("🟣 DodoPay response:", data);
+    console.log("DodoPay init:", data);
 
-    if (data?.checkout_url) {
-      window.location.href = data.checkout_url;
+    if (data.redirect_url) {
+      window.location.href = data.redirect_url;
     } else {
       alert("DodoPay initialization failed");
     }
   } catch (err) {
-    console.error("❌ DodoPay Error:", err);
+    console.error(err);
     alert("Unable to start DodoPay payment");
   }
- };
+};
 
   // ==========================
   //   PAYSTACK HANDLER
