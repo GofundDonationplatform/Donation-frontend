@@ -15,39 +15,34 @@ export default function Donate() {
   //   DODOPAY HANDLER
   // ==========================
   const handleDodoPay = async () => {
-  if (!amount) {
-    alert("Please enter an amount");
-    return;
-  }
-
   try {
     const res = await fetch(
-      `${backendURL}/api/dodopay/initiate`, // ✅ COMMA FIXED
+      "https://gofundss-backend.onrender.com/api/dodopay/initiate",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           amount,
-          email: "donor@example.com",
-          name: "Anonymous Donor",
-          currency: "USD",
+          email,
         }),
       }
     );
 
     const data = await res.json();
-    console.log("DodoPay response:", data);
 
-    if (data?.checkout_url) {
-      window.location.href = data.checkout_url;
-    } else {
-      alert("DodoPay initialization failed");
+    if (!data.checkoutUrl) {
+      alert("Payment failed");
+      return;
     }
+
+    // 🚨 THIS IS THE MOST IMPORTANT LINE
+    window.location.href = data.checkoutUrl;
+
   } catch (err) {
-    console.error("DodoPay Error:", err);
-    alert("Unable to start DodoPay payment");
+    console.error(err);
   }
- };
+};
+   
 
   // ==========================
   //   PAYSTACK HANDLER
