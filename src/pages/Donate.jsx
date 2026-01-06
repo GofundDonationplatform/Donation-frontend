@@ -15,28 +15,116 @@ export default function Donate() {
     "http://localhost:5000";
 
   // ==========================
-  // MAIN ACTION HANDLER
+  // PAYMENT HANDLERS
   // ==========================
-  const handleDonate = async () => {
+  const handleDodoPay = async () => {
+    if (!amount) return alert("Please select or enter a support amount");
+
+    try {
+      const res = await fetch(`${backendURL}/api/dodopay/initiate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: parseFloat(amount),
+          email: "supporter@example.com",
+          name: "Supporter Name",
+        }),
+      });
+
+      const data = await res.json();
+      if (!data.checkout_url) return alert("DodoPay checkout failed");
+
+      window.location.href = data.checkout_url;
+    } catch (err) {
+      console.error(err);
+      alert("Error starting DodoPay checkout");
+    }
+  };
+
+  const handlePaystack = async () => {
+    if (!amount) return alert("Please select or enter a support amount");
+
+    try {
+      const res = await fetch(`${backendURL}/api/paystack/initialize`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: parseFloat(amount),
+          email: "supporter@example.com",
+          name: "Supporter Name",
+          currency: "USD",
+        }),
+      });
+
+      const data = await res.json();
+      if (data?.authorization_url) window.location.href = data.authorization_url;
+      else alert("Paystack checkout failed");
+    } catch (err) {
+      console.error(err);
+      alert("Error starting Paystack checkout");
+    }
+  };
+
+  const handlePayPal = async () => {
+    if (!amount) return alert("Please select or enter a support amount");
+
+    try {
+      const res = await fetch(`${backendURL}/api/paypal/create-order`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: parseFloat(amount) }),
+      });
+
+      const data = await res.json();
+      if (data?.id) window.location.href = `https://www.paypal.com/checkoutnow?token=${data.id}`;
+      else alert("PayPal checkout failed");
+    } catch (err) {
+      console.error(err);
+      alert("Error starting PayPal checkout");
+    }
+  };
+
+  const handleFlutterwave = async () => {
+    if (!amount) return alert("Please select or enter a support amount");
+
+    try {
+      const res = await fetch(`${backendURL}/api/donate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: parseFloat(amount),
+          name: "Supporter Name",
+          email: "supporter@example.com",
+          currency: "USD",
+        }),
+      });
+
+      const data = await res.json();
+      if (data?.link) window.location.href = data.link;
+      else alert("Flutterwave checkout failed");
+    } catch (err) {
+      console.error(err);
+      alert("Error starting Flutterwave checkout");
+    }
+  };
+
+  // ==========================
+  // MAIN ACTION BUTTON
+  // ==========================
+  const handleSupport = async () => {
     if (!amount) return alert("Please select or enter a support amount");
 
     if (method === "dodopay") return handleDodoPay();
     if (method === "paystack") return handlePaystack();
     if (method === "paypal") return handlePayPal();
     if (method === "flutterwave") return handleFlutterwave();
-
-    if (method === "gray") {
-      setShowGrayModal(true);
-      return;
-    }
+    if (method === "gray") return setShowGrayModal(true);
   };
 
   // ==========================
-  // GRAY RECEIPT
+  // GRAY / BANK TRANSFER HANDLER
   // ==========================
-  const handleReceiptUpload = (e) => {
-    setReceipt(e.target.files[0]);
-  };
+  const handleReceiptUpload = (e) => setReceipt(e.target.files[0]);
 
   const confirmGrayPayment = async () => {
     try {
@@ -51,7 +139,6 @@ export default function Donate() {
       });
 
       const data = await res.json();
-
       if (data?.success) {
         alert("Thank you! Your digital impact support has been recorded.");
         setShowGrayModal(false);
@@ -59,6 +146,7 @@ export default function Donate() {
         alert("Unable to confirm payment. Please try again.");
       }
     } catch (err) {
+      console.error(err);
       alert("Error confirming bank transfer.");
     }
   };
@@ -143,30 +231,16 @@ export default function Donate() {
             marginTop: "20px",
           }}
         >
-          <button onClick={() => setMethod("flutterwave")}>
-            🌐 Digital Support
-          </button>
-
-          <button onClick={() => setMethod("paypal")}>
-            🅿️ Digital Support
-          </button>
-
-          <button onClick={() => setMethod("paystack")}>
-            💳 Digital Support
-          </button>
-
-          <button onClick={() => setMethod("dodopay")}>
-            🟣 Digital Impact Support
-          </button>
-
-          <button onClick={() => setMethod("gray")}>
-            🏦 Bank Transfer Support
-          </button>
+          <button onClick={() => setMethod("flutterwave")}>🌐 Digital Support</button>
+          <button onClick={() => setMethod("paypal")}>🅿️ Digital Support</button>
+          <button onClick={() => setMethod("paystack")}>💳 Digital Support</button>
+          <button onClick={() => setMethod("dodopay")}>🟣 Digital Impact Support</button>
+          <button onClick={() => setMethod("gray")}>🏦 Bank Transfer Support</button>
         </div>
 
         {/* ACTION BUTTON */}
         <button
-          onClick={handleDonate}
+          onClick={handleSupport}
           style={{
             width: "100%",
             marginTop: "25px",
@@ -205,7 +279,6 @@ export default function Donate() {
             }}
           >
             <h2>Bank Transfer – Digital Impact Support</h2>
-
             <p><b>Account Holder:</b> GFSSGA IMPACT NETWORK</p>
             <p><b>Account Number:</b> 214673810876</p>
             <p><b>Bank:</b> Lead Bank</p>
