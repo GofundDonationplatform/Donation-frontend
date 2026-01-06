@@ -7,7 +7,7 @@ import { useState } from "react";
 // MAIN PAGES
 import LandingPage from "./pages/LandingPage";
 import Home from "./pages/Home";
-import Support from "./pages/Support.jsx";
+import Donate from "./pages/Donate.jsx";               // ✅ Updated import
 import SupportSuccess from "./pages/SupportSuccess.jsx";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
@@ -106,7 +106,6 @@ function ChatBot() {
   );
 }
 
-
 // ==============================
 // PAGE ANIMATIONS WRAPPER
 // ==============================
@@ -126,7 +125,7 @@ function AnimatedRoutes() {
         {/* PUBLIC ROUTES */}
         <Route path="/" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><LandingPage /></motion.div>} />
         <Route path="/home" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><Home /></motion.div>} />
-        <Route path="/donate" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><Support /></motion.div>} />
+        <Route path="/donate" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><Donate /></motion.div>} /> {/* ✅ Fixed route */}
         <Route path="/donate-success" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><SupportSuccess /></motion.div>} />
 
         {/* USER AUTH */}
@@ -161,7 +160,6 @@ function AnimatedRoutes() {
     </AnimatePresence>
   );
 }
-
 
 // ==============================
 // MAIN APP
