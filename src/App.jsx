@@ -7,8 +7,8 @@ import { useState } from "react";
 // MAIN PAGES
 import LandingPage from "./pages/LandingPage";
 import Home from "./pages/Home";
-import Support from "./pages/Support";
-import SupportSuccess from "./pages/SupportSuccess";
+import Support from "./pages/Support.jsx";
+import SupportSuccess from "./pages/SupportSuccess.jsx";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import Refund from "./pages/Refund";
