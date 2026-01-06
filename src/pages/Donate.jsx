@@ -1,7 +1,7 @@
-// src/pages/Donate.jsx
+// src/pages/Support.jsx
 import React, { useState } from "react";
 
-export default function Donate() {
+export default function Support() {
   const [amount, setAmount] = useState("");
   const [selected, setSelected] = useState(null);
   const [method, setMethod] = useState("dodopay");
@@ -26,7 +26,7 @@ export default function Donate() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           amount: Number(amount),
-          email: "donor@example.com", // could be dynamic
+          email: "supporter@example.com", // could be dynamic
           name: "Supporter",          // could be dynamic
         }),
       });
@@ -51,7 +51,7 @@ export default function Donate() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           amount: Number(amount),
-          email: "donor@example.com",
+          email: "supporter@example.com",
           name: "Supporter",
           currency: "USD",
         }),
@@ -111,7 +111,7 @@ export default function Donate() {
   // ==========================
   // MAIN DONATE BUTTON
   // ==========================
-  const handleDonate = async () => {
+  const handleSupport = async () => {
     if (!amount) return alert("Please select or enter a support amount");
 
     switch (method) {
@@ -252,7 +252,7 @@ export default function Donate() {
 
         {/* MAIN ACTION BUTTON */}
         <button
-          onClick={handleDonate}
+          onClick={handleSupport}
           style={{
             width: "100%",
             marginTop: "25px",

@@ -16,13 +16,13 @@ export default function Terms() {
         <p>Digital Impact Supports are processed through secure third-party payment providers. GFSSGA Impact Network does not guarantee the success of any campaign. All digital impact supports go directly to the beneficiary or campaign organizer after necessary verification.</p>
 
         <h2 className="mt-4 font-semibold text-xl">Verification</h2>
-        <p>To protect donors and beneficiaries, GFSSGA may request additional documentation before disbursement.</p>
+        <p>To protect supporters and beneficiaries, GFSSGA may request additional documentation before disbursement.</p>
 
         <h2 className="mt-4 font-semibold text-xl">Compliance</h2>
         <p>Users agree not to engage in fundraising related to: money laundering, fraud, illegal activities, terror financing, hate speech, adult content, political violence.</p>
 
         <h2 className="mt-4 font-semibold text-xl">Limitation of Liability</h2>
-        <p>GFSSGA Impact Network will not be responsible for: third-party payment issues, campaign organizer misrepresentation, donor errors.</p>
+        <p>GFSSGA Impact Network will not be responsible for: third-party payment issues, campaign organizer misrepresentation, supporter errors.</p>
 
         <h2 className="mt-4 font-semibold text-xl">Amendment of Terms</h2>
         <p>We may update these terms at any time. Continued use of the platform indicates acceptance.</p>

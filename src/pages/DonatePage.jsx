@@ -49,8 +49,8 @@ export default function SupportPage() {
     try {
       const payload = {
         amount: Number(amount),
-        email: "donor@example.com",
-        name: "Donor",
+        email: "supporter@example.com",
+        name: "Supporter",
         currency: "NGN",
       };
 

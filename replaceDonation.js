@@ -1,44 +1,41 @@
-// replaceDonation.js
+// replaceDigital Impact Support.js
 import fs from "fs";
 import path from "path";
 
-const FRONTEND_DIR = "./src"; // adjust if your components/pages are elsewhere
+// Folder to scan (frontend root)
+const rootDir = "./";
 
-// Words to replace: key is old, value is new
-const replacements = {
-  "Donate": "Support",
-  "Donation": "Digital Impact Support",
-  "donation": "digital impact support",
-  "DONATE": "SUPPORT",
-  "DONATION": "DIGITAL IMPACT SUPPORT",
-};
+const supportWords = [
+  { search: /Support/g, replace: "Support" },
+  { search: /Digital Impact Support/g, replace: "Digital Impact Support" },
+  { search: /support/g, replace: "support" },
+  { search: /Support/g, replace: "Support" },
+  { search: /supporter/g, replace: "supporter" },
+  { search: /Supporter/g, replace: "Supporter" },
+];
 
-// Recursively process directories
-function processDir(dir) {
+function walkDir(dir) {
   const files = fs.readdirSync(dir);
-  files.forEach((file) => {
+  for (const file of files) {
     const fullPath = path.join(dir, file);
-    const stats = fs.statSync(fullPath);
+    const stat = fs.statSync(fullPath);
+    if (stat.isDirectory()) {
+      walkDir(fullPath);
+    } else if (/\.(js|jsx)$/.test(file)) {
+      let content = fs.readFileSync(fullPath, "utf8");
+      let updated = content;
 
-    if (stats.isDirectory()) {
-      processDir(fullPath);
-    } else if (stats.isFile() && (file.endsWith(".jsx") || file.endsWith(".js"))) {
-      let content = fs.readFileSync(fullPath, "utf-8");
-      let newContent = content;
-
-      Object.keys(replacements).forEach((oldWord) => {
-        const newWord = replacements[oldWord];
-        const regex = new RegExp(oldWord, "g");
-        newContent = newContent.replace(regex, newWord);
+      supportWords.forEach(({ search, replace }) => {
+        updated = updated.replace(search, replace);
       });
 
-      if (newContent !== content) {
-        fs.writeFileSync(fullPath, newContent, "utf-8");
+      if (updated !== content) {
+        fs.writeFileSync(fullPath, updated, "utf8");
         console.log(`Updated: ${fullPath}`);
       }
     }
-  });
+  }
 }
 
-processDir(FRONTEND_DIR);
-console.log("✅ Finished replacing donation wording with Digital Impact Support!");
+walkDir(rootDir);
+console.log("✅ Finished replacing support wording with Digital Impact Support!");

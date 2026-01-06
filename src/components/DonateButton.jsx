@@ -7,7 +7,7 @@ export default function SupportButton({ amount, label }) {
       const response = await axios.post(
         "http://localhost:5000/api/payments/flutterwave/pay",
         {
-          name: "Guest Donor",
+          name: "Guest Supporter",
           email: "guest@example.com",
           amount,
         }
