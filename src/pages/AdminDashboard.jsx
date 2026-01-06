@@ -8,7 +8,7 @@ const AdminDashboard = () => {
             <h1>Welcome Admin: {user?.name}</h1>
 
             <div className="admin-options">
-                <button>View Donations</button>
+                <button>View Digital Impact Supports</button>
                 <button>Manage Users</button>
                 <button>Update Campaigns</button>
                 <button>Logout</button>

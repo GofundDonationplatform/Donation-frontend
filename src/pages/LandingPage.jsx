@@ -16,7 +16,7 @@ export default function LandingPage() {
         />
 
         <h1 style={styles.title}>GFSSGA IMPACT NETWORK</h1>
-        <h2 style={styles.subtitle}>GofundSS Donation Platform</h2>
+        <h2 style={styles.subtitle}>GofundSS Digital Impact Support Platform</h2>
 
         <p style={styles.text}>
           A platform designed to support <strong>education</strong>,

@@ -7,8 +7,8 @@ import { useState } from "react";
 // MAIN PAGES
 import LandingPage from "./pages/LandingPage";
 import Home from "./pages/Home";
-import Donate from "./pages/Donate";
-import DonateSuccess from "./pages/DonateSuccess";
+import Support from "./pages/Support";
+import SupportSuccess from "./pages/SupportSuccess";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import Refund from "./pages/Refund";
@@ -126,8 +126,8 @@ function AnimatedRoutes() {
         {/* PUBLIC ROUTES */}
         <Route path="/" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><LandingPage /></motion.div>} />
         <Route path="/home" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><Home /></motion.div>} />
-        <Route path="/donate" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><Donate /></motion.div>} />
-        <Route path="/donate-success" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><DonateSuccess /></motion.div>} />
+        <Route path="/donate" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><Support /></motion.div>} />
+        <Route path="/donate-success" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><SupportSuccess /></motion.div>} />
 
         {/* USER AUTH */}
         <Route path="/register" element={<Register />} />
@@ -175,12 +175,12 @@ export default function App() {
         <header className="flex justify-between items-center px-6 py-4 bg-slate-900/70 backdrop-blur-xl border-b border-white/10">
           <Link to="/" className="flex items-center gap-2 font-bold text-cyan-400 text-lg">
             <span className="bg-gradient-to-r from-purple-600 to-cyan-400 text-white px-3 py-1 rounded-lg">GoFund</span>
-            Donation
+            Digital Impact Support
           </Link>
 
           <nav className="flex gap-4 text-sm">
             <Link to="/" className="hover:text-cyan-400">Home</Link>
-            <Link to="/donate" className="hover:text-cyan-400">Donate</Link>
+            <Link to="/donate" className="hover:text-cyan-400">Support</Link>
             <Link to="/terms" className="hover:text-cyan-400">Terms</Link>
             <Link to="/privacy" className="hover:text-cyan-400">Privacy</Link>
             <Link to="/refund" className="hover:text-cyan-400">Refund</Link>
@@ -194,7 +194,7 @@ export default function App() {
 
         {/* FOOTER */}
         <footer className="text-center text-gray-500 py-6 text-sm border-t border-white/10 space-y-2">
-          <div>© {new Date().getFullYear()} GoFund Donation Platform</div>
+          <div>© {new Date().getFullYear()} GoFund Digital Impact Support Platform</div>
           <div className="flex justify-center gap-4">
             <Link to="/terms" className="hover:text-cyan-400">Terms</Link>
             <Link to="/privacy" className="hover:text-cyan-400">Privacy</Link>

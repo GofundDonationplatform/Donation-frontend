@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function DonateSuccess() {
+export default function SupportSuccess() {
   const navigate = useNavigate();
 
   return (
@@ -31,7 +31,7 @@ export default function DonateSuccess() {
           🎉 Thank You!
         </h1>
         <p style={{ fontSize: "18px", lineHeight: "1.6", marginBottom: "24px" }}>
-          Your donation has been received successfully.  
+          Your digital impact support has been received successfully.  
           Your kindness helps make the world a better place 🌍💖
         </p>
         <button

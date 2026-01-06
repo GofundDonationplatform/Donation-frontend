@@ -27,7 +27,7 @@ export default function Home() {
       id: 4,
       title: "Clean Water for All",
       description:
-        "Your donation funds wells and water filtration systems in communities lacking clean water.",
+        "Your digital impact support funds wells and water filtration systems in communities lacking clean water.",
       image: "/images/clean-water.jpg",
     },
   ];
@@ -54,7 +54,7 @@ export default function Home() {
             marginBottom: 12,
           }}
         >
-          Welcome to GoFund Donation Platform
+          Welcome to GoFund Digital Impact Support Platform
         </h1>
         <p
           style={{
@@ -81,7 +81,7 @@ export default function Home() {
             boxShadow: "0 6px 18px rgba(0,0,0,0.4)",
           }}
         >
-          Donate Now
+          Support Now
         </button>
       </div>
 
@@ -149,7 +149,7 @@ export default function Home() {
                   cursor: "pointer",
                 }}
               >
-                Donate
+                Support
               </button>
             </div>
           </div>
@@ -158,7 +158,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer style={{ marginTop: 50, color: "#94a3b8" }}>
-        © 2025 GoFund Donation Platform. All rights reserved.
+        © 2025 GoFund Digital Impact Support Platform. All rights reserved.
       </footer>
     </div>
   );

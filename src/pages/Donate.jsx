@@ -1,7 +1,7 @@
-// src/pages/Donate.jsx
+// src/pages/Support.jsx
 import React, { useState } from "react";
 
-export default function Donate() {
+export default function Support() {
   const [amount, setAmount] = useState("");
   const [selected, setSelected] = useState(null);
   const [method, setMethod] = useState("flutterwave");

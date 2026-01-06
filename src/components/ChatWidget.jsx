@@ -14,7 +14,7 @@ export default function ChatWidget() {
     setValue("");
     // Basic simulated reply — replace with real backend call if available
     setTimeout(() => {
-      setMsgs((m) => [...m, { from: "ai", text: "Thanks! We received that. For payments use the Donate page." }]);
+      setMsgs((m) => [...m, { from: "ai", text: "Thanks! We received that. For payments use the Support page." }]);
     }, 700);
   };
 

@@ -10,10 +10,10 @@ export default function Terms() {
         <p>GFSSGA Impact Network operates a tech-enabled crowdfunding platform that allows individuals to create, support, and manage fundraising campaigns for education, medical needs, community development, and social support initiatives. By using this website, you agree to these Terms & Conditions.</p>
 
         <h2 className="mt-4 font-semibold text-xl">Use of Platform</h2>
-        <p>Users may create fundraising campaigns following our platform guidelines. Donations are voluntary and are not in exchange for goods or services. GFSSGA Impact Network reserves the right to decline or remove any campaign that violates ethical, legal, or compliance standards.</p>
+        <p>Users may create fundraising campaigns following our platform guidelines. Digital Impact Supports are voluntary and are not in exchange for goods or services. GFSSGA Impact Network reserves the right to decline or remove any campaign that violates ethical, legal, or compliance standards.</p>
 
-        <h2 className="mt-4 font-semibold text-xl">Donations</h2>
-        <p>Donations are processed through secure third-party payment providers. GFSSGA Impact Network does not guarantee the success of any campaign. All donations go directly to the beneficiary or campaign organizer after necessary verification.</p>
+        <h2 className="mt-4 font-semibold text-xl">Digital Impact Supports</h2>
+        <p>Digital Impact Supports are processed through secure third-party payment providers. GFSSGA Impact Network does not guarantee the success of any campaign. All digital impact supports go directly to the beneficiary or campaign organizer after necessary verification.</p>
 
         <h2 className="mt-4 font-semibold text-xl">Verification</h2>
         <p>To protect donors and beneficiaries, GFSSGA may request additional documentation before disbursement.</p>

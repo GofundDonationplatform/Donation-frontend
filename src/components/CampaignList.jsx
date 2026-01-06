@@ -22,7 +22,7 @@ export default function CampaignList() {
               <p className="text-sm text-gray-600 mt-1">Raised ${c.raised} of ${c.goal}</p>
               <div className="mt-3 flex justify-between items-center">
                 <Link to="/donate" className="text-sm bg-indigo-600 text-white px-3 py-1 rounded">
-                  Donate
+                  Support
                 </Link>
                 <span className="text-xs text-gray-500">#{i + 1}</span>
               </div>

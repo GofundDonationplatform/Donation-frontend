@@ -22,7 +22,7 @@ export default function ChatBot() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages: [
-            { role: "system", content: "You are a friendly AI assistant for the GoFund donation platform, helping users donate or start campaigns." },
+            { role: "system", content: "You are a friendly AI assistant for the GoFund digital impact support platform, helping users donate or start campaigns." },
             ...newMessages.map((m) => ({
               role: m.from === "user" ? "user" : "assistant",
               content: m.text,

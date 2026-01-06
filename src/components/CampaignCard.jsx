@@ -13,7 +13,7 @@ export default function CampaignCard({ campaign }) {
         </p>
         <div style={{ marginTop: 8 }}>
           <Link to="/donate" className="amount-btn" style={{ textDecoration: "none" }}>
-            Donate
+            Support
           </Link>
         </div>
       </div>
