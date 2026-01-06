@@ -1,27 +1,20 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import { copyFileSync } from "fs";
+import fs from "fs";
+import path from "path";
 
 export default defineConfig({
   plugins: [
-    react(),
     {
-      // ✅ ensure _redirects gets copied to dist/
-      name: "copy-redirects",
+      name: "safe-copy-netlify-redirects",
       closeBundle() {
-        try {
-          copyFileSync("public/_redirects", "dist/_redirects");
+        const src = path.resolve("public/_redirects");
+        const dest = path.resolve("dist/_redirects");
+        if (fs.existsSync(src)) {
+          fs.copyFileSync(src, dest);
           console.log("✅ Copied _redirects to dist/");
-        } catch (err) {
-          console.error("⚠️ Failed to copy _redirects:", err);
+        } else {
+          console.log("ℹ️ No _redirects file found, skipping copy");
         }
       },
     },
   ],
-  css: {
-    transformer: "postcss", // ✅ keep Tailwind setup
-  },
-  server: {
-    host: true, // ✅ allow network access in Termux
-  },
 });
