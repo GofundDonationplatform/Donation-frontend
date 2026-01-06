@@ -1,10 +1,10 @@
-// src/pages/Support.jsx
+// src/pages/Donate.jsx
 import React, { useState } from "react";
 
-export default function Support() {
+export default function Donate() {
   const [amount, setAmount] = useState("");
   const [selected, setSelected] = useState(null);
-  const [method, setMethod] = useState("flutterwave");
+  const [method, setMethod] = useState("dodopay");
   const [showGrayModal, setShowGrayModal] = useState(false);
   const [receipt, setReceipt] = useState(null);
 
@@ -15,7 +15,7 @@ export default function Support() {
     "http://localhost:5000";
 
   // ==========================
-  // PAYMENT HANDLERS
+  // HANDLE PAYMENTS
   // ==========================
   const handleDodoPay = async () => {
     if (!amount) return alert("Please select or enter a support amount");
@@ -25,19 +25,20 @@ export default function Support() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          amount: parseFloat(amount),
-          email: "supporter@example.com",
-          name: "Supporter Name",
+          amount: Number(amount),
+          email: "donor@example.com", // could be dynamic
+          name: "Supporter",          // could be dynamic
         }),
       });
 
       const data = await res.json();
+
       if (!data.checkout_url) return alert("DodoPay checkout failed");
 
       window.location.href = data.checkout_url;
     } catch (err) {
       console.error(err);
-      alert("Error starting DodoPay checkout");
+      alert("Error initializing DodoPay checkout.");
     }
   };
 
@@ -49,19 +50,20 @@ export default function Support() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          amount: parseFloat(amount),
-          email: "supporter@example.com",
-          name: "Supporter Name",
+          amount: Number(amount),
+          email: "donor@example.com",
+          name: "Supporter",
           currency: "USD",
         }),
       });
 
       const data = await res.json();
+
       if (data?.authorization_url) window.location.href = data.authorization_url;
-      else alert("Paystack checkout failed");
+      else alert("Paystack initialization failed");
     } catch (err) {
       console.error(err);
-      alert("Error starting Paystack checkout");
+      alert("Error initializing Paystack checkout.");
     }
   };
 
@@ -72,15 +74,17 @@ export default function Support() {
       const res = await fetch(`${backendURL}/api/paypal/create-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: parseFloat(amount) }),
+        body: JSON.stringify({ amount: Number(amount) }),
       });
 
       const data = await res.json();
-      if (data?.id) window.location.href = `https://www.paypal.com/checkoutnow?token=${data.id}`;
-      else alert("PayPal checkout failed");
+
+      if (data?.id)
+        window.location.href = `https://www.paypal.com/checkoutnow?token=${data.id}`;
+      else alert("PayPal initialization failed");
     } catch (err) {
       console.error(err);
-      alert("Error starting PayPal checkout");
+      alert("Error initializing PayPal checkout.");
     }
   };
 
@@ -88,43 +92,50 @@ export default function Support() {
     if (!amount) return alert("Please select or enter a support amount");
 
     try {
-      const res = await fetch(`${backendURL}/api/donate`, {
+      const res = await fetch(`${backendURL}/api/flutterwavePay`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          amount: parseFloat(amount),
-          name: "Supporter Name",
-          email: "supporter@example.com",
-          currency: "USD",
-        }),
+        body: JSON.stringify({ amount: Number(amount) }),
       });
 
       const data = await res.json();
+
       if (data?.link) window.location.href = data.link;
-      else alert("Flutterwave checkout failed");
+      else alert("Flutterwave initialization failed");
     } catch (err) {
       console.error(err);
-      alert("Error starting Flutterwave checkout");
+      alert("Error initializing Flutterwave checkout.");
     }
   };
 
   // ==========================
-  // MAIN ACTION BUTTON
+  // MAIN DONATE BUTTON
   // ==========================
-  const handleSupport = async () => {
+  const handleDonate = async () => {
     if (!amount) return alert("Please select or enter a support amount");
 
-    if (method === "dodopay") return handleDodoPay();
-    if (method === "paystack") return handlePaystack();
-    if (method === "paypal") return handlePayPal();
-    if (method === "flutterwave") return handleFlutterwave();
-    if (method === "gray") return setShowGrayModal(true);
+    switch (method) {
+      case "dodopay":
+        return handleDodoPay();
+      case "paystack":
+        return handlePaystack();
+      case "paypal":
+        return handlePayPal();
+      case "flutterwave":
+        return handleFlutterwave();
+      case "gray":
+        return setShowGrayModal(true);
+      default:
+        return alert("Please select a payment method");
+    }
   };
 
   // ==========================
-  // GRAY / BANK TRANSFER HANDLER
+  // GRAY BANK TRANSFER
   // ==========================
-  const handleReceiptUpload = (e) => setReceipt(e.target.files[0]);
+  const handleReceiptUpload = (e) => {
+    setReceipt(e.target.files[0]);
+  };
 
   const confirmGrayPayment = async () => {
     try {
@@ -139,8 +150,9 @@ export default function Support() {
       });
 
       const data = await res.json();
+
       if (data?.success) {
-        alert("Thank you! Your digital impact support has been recorded.");
+        alert("Thank you! Your Digital Impact Support has been recorded.");
         setShowGrayModal(false);
       } else {
         alert("Unable to confirm payment. Please try again.");
@@ -226,7 +238,7 @@ export default function Support() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
+            gridTemplateColumns: "repeat(3,1fr)",
             gap: "10px",
             marginTop: "20px",
           }}
@@ -238,9 +250,9 @@ export default function Support() {
           <button onClick={() => setMethod("gray")}>🏦 Bank Transfer Support</button>
         </div>
 
-        {/* ACTION BUTTON */}
+        {/* MAIN ACTION BUTTON */}
         <button
-          onClick={handleSupport}
+          onClick={handleDonate}
           style={{
             width: "100%",
             marginTop: "25px",
@@ -279,6 +291,7 @@ export default function Support() {
             }}
           >
             <h2>Bank Transfer – Digital Impact Support</h2>
+
             <p><b>Account Holder:</b> GFSSGA IMPACT NETWORK</p>
             <p><b>Account Number:</b> 214673810876</p>
             <p><b>Bank:</b> Lead Bank</p>
@@ -298,7 +311,7 @@ export default function Support() {
                 onClick={confirmGrayPayment}
                 style={{ flex: 1, background: "green", color: "white", padding: "12px" }}
               >
-                I’ve Completed My Digital Impact Support
+                I’ve Completed My Digital Support
               </button>
 
               <button
