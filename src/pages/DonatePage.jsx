@@ -1,9 +1,9 @@
-// src/pages/SupportPage.jsx
+// src/pages/DonatePage.jsx
 import React, { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-export default function SupportPage() {
+export default function DonatePage() {
   const presets = [100, 250, 500, 1000, 3000, 6000, 12000];
   const [amount, setAmount] = useState(100);
   const [loading, setLoading] = useState(false);
@@ -11,74 +11,69 @@ export default function SupportPage() {
   const backendBase =
     import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
-  // 🟢 Flutterwave Support
-  async function handleFlutterwaveSupport() {
+  const validateAmount = () => {
     if (!amount || isNaN(amount) || Number(amount) <= 0) {
       alert("Please enter a valid amount");
-      return;
+      return false;
     }
+    return true;
+  };
 
+  // 🟣 Flutterwave
+  async function handleFlutterwave() {
+    if (!validateAmount()) return;
     setLoading(true);
+
     try {
-      const payload = {
+      const res = await axios.post(`${backendBase}/api/donate`, {
         amount: Number(amount),
         currency: "USD",
-      };
-      const res = await axios.post(`${backendBase}/api/donate`, payload);
+      });
 
       if (res.data?.link || res.data?.url) {
         window.location.href = res.data.link || res.data.url;
       } else {
-        alert("Digital Impact Support failed — no redirect URL.");
+        alert("Flutterwave checkout unavailable right now.");
       }
-    } catch (err) {
-      alert("Flutterwave failed.");
+    } catch {
+      alert("Flutterwave is temporarily unavailable.");
     }
+
     setLoading(false);
   }
 
-  // 🔴 Paystack Support
-  async function handlePaystackSupport() {
-    if (!amount || isNaN(amount) || Number(amount) <= 0) {
-      alert("Please enter a valid amount");
-      return;
-    }
-
+  // 🟢 Paystack
+  async function handlePaystack() {
+    if (!validateAmount()) return;
     setLoading(true);
 
     try {
-      const payload = {
-        amount: Number(amount),
-        email: "supporter@example.com",
-        name: "Supporter",
-        currency: "NGN",
-      };
-
       const res = await axios.post(
         `${backendBase}/api/paystack/initialize`,
-        payload
+        {
+          amount: Number(amount),
+          email: "supporter@example.com",
+          currency: "NGN",
+        }
       );
 
       if (res.data?.authorization_url) {
         window.location.href = res.data.authorization_url;
       } else {
-        alert("Paystack init failed.");
+        alert("Paystack checkout unavailable.");
       }
-    } catch (err) {
-      alert("Paystack error. Check backend.");
+    } catch {
+      alert("Paystack is temporarily unavailable.");
     }
 
     setLoading(false);
   }
 
-  // 🟡 PayPal Support
-  async function handlePayPalSupport() {
-    if (!amount || isNaN(amount) || Number(amount) <= 0) {
-      alert("Please enter a valid amount");
-      return;
-    }
-
+  // 🔵 PayPal
+  async function handlePayPal() {
+    if (!validateAmount()) return;
     setLoading(true);
+
     try {
       const res = await axios.post(
         `${backendBase}/api/paypal/create-payment`,
@@ -88,36 +83,43 @@ export default function SupportPage() {
       if (res.data?.approvalUrl) {
         window.location.href = res.data.approvalUrl;
       } else {
-        alert("PayPal init failed.");
+        alert("PayPal checkout unavailable.");
       }
-    } catch (err) {
-      alert("PayPal digital impact support failed.");
+    } catch {
+      alert("PayPal is temporarily unavailable.");
     }
+
     setLoading(false);
   }
 
-  return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <div className="flex-grow flex justify-center px-4 py-10">
-        <div className="w-full max-w-xl bg-white rounded-2xl shadow-lg p-6">
+  // 🟠 DodoPay (UI-ready, backend pending)
+  function handleDodoPay() {
+    alert("DodoPay checkout will be available shortly.");
+  }
 
-          <h2 className="text-3xl font-extrabold mb-4 text-center text-indigo-600">
-            Make a Digital Impact Support
+  return (
+    <div className="min-h-screen bg-slate-950 flex flex-col">
+      <div className="flex-grow flex justify-center px-4 py-12">
+        <div className="w-full max-w-xl bg-white rounded-2xl shadow-xl p-6">
+
+          <h2 className="text-3xl font-extrabold mb-2 text-center text-indigo-600">
+            Support a Digital Impact
           </h2>
+
           <p className="text-gray-600 mb-6 text-center">
-            Select a preset amount or enter your custom digital impact support.
+            Choose an amount and a preferred payment method.
           </p>
 
-          {/* Amount Presets */}
+          {/* Presets */}
           <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-4">
             {presets.map((p) => (
               <button
                 key={p}
                 onClick={() => setAmount(p)}
-                className={`py-2 rounded-lg font-semibold text-sm sm:text-base ${
+                className={`py-2 rounded-lg font-semibold ${
                   amount === p
                     ? "bg-indigo-600 text-white"
-                    : "bg-gray-100 text-gray-800 hover:bg-gray-200"
+                    : "bg-gray-100 hover:bg-gray-200"
                 }`}
               >
                 ${p.toLocaleString()}
@@ -125,66 +127,60 @@ export default function SupportPage() {
             ))}
           </div>
 
-          {/* Custom Amount */}
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Custom Amount (USD)
-          </label>
+          {/* Custom */}
           <input
             type="number"
             value={amount}
             min="1"
             onChange={(e) => setAmount(Number(e.target.value))}
-            className="w-full border rounded-lg p-3 mb-4 focus:ring-2 focus:ring-indigo-500"
+            className="w-full border rounded-lg p-3 mb-6 focus:ring-2 focus:ring-indigo-500"
+            placeholder="Enter custom amount"
           />
 
-          {/* PAYMENT BUTTONS */}
-          <div className="space-y-3 mt-4">
+          {/* PAYMENT METHODS */}
+          <div className="space-y-3">
 
-            {/* Flutterwave */}
             <button
-              onClick={handleFlutterwaveSupport}
+              onClick={handleFlutterwave}
               disabled={loading}
-              className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition disabled:opacity-50"
+              className="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700"
             >
-              Support via Flutterwave
+              Pay via Flutterwave
             </button>
 
-            {/* Paystack */}
             <button
-              onClick={handlePaystackSupport}
+              onClick={handlePaystack}
               disabled={loading}
-              className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition disabled:opacity-50"
+              className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700"
             >
-              Support via Paystack
+              Pay via Paystack
             </button>
 
-            {/* PayPal */}
             <button
-              onClick={handlePayPalSupport}
+              onClick={handlePayPal}
               disabled={loading}
-              className="w-full bg-yellow-500 text-white py-3 rounded-lg font-semibold hover:bg-yellow-600 transition disabled:opacity-50"
+              className="w-full bg-yellow-500 text-white py-3 rounded-lg font-semibold hover:bg-yellow-600"
             >
-              Support via PayPal
+              Pay via PayPal
+            </button>
+
+            <button
+              onClick={handleDodoPay}
+              className="w-full bg-orange-600 text-white py-3 rounded-lg font-semibold hover:bg-orange-700"
+            >
+              Pay via DodoPay
             </button>
 
           </div>
 
-          <p className="text-xs text-gray-500 text-center mt-3">
-            You will be redirected to a secure payment gateway.
+          <p className="text-xs text-gray-500 text-center mt-4">
+            Payments are processed securely via third-party gateways.
           </p>
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="bg-gray-100 text-center py-6 mt-6">
-        <div className="space-x-4">
-          <Link to="/terms" className="text-blue-600 hover:underline">Terms</Link>
-          <Link to="/privacy" className="text-blue-600 hover:underline">Privacy</Link>
-          <Link to="/refund" className="text-blue-600 hover:underline">Refund</Link>
-        </div>
-        <p className="text-gray-500 mt-2 text-sm">
-          © 2025 GFSSGA Impact Network
-        </p>
+      <footer className="bg-slate-900 text-center py-6 text-sm text-gray-400">
+        © {new Date().getFullYear()} GFSSGA Impact Network
       </footer>
     </div>
   );
