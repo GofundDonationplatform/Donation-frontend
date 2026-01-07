@@ -8,7 +8,7 @@ import { useState } from "react";
 import LandingPage from "./pages/LandingPage";
 import Home from "./pages/Home";
 import Donate from "./pages/Donate.jsx";               // ✅ Updated import
-import SupportSuccess from "./pages/SupportSuccess.jsx";
+import DonateSuccess from "./pages/DonateSuccess.jsx";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import Refund from "./pages/Refund";
@@ -125,8 +125,23 @@ function AnimatedRoutes() {
         {/* PUBLIC ROUTES */}
         <Route path="/" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><LandingPage /></motion.div>} />
         <Route path="/home" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><Home /></motion.div>} />
-        <Route path="/donate" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><Donate /></motion.div>} /> {/* ✅ Fixed route */}
-        <Route path="/donate-success" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><SupportSuccess /></motion.div>} />
+        <Route
+         path="/donate"
+        element={
+          <motion.div variants={anim} initial="initial" animate="in" exit="out">
+         <Donate />
+       </motion.div>
+       }
+     />
+
+       <Route
+       path="/donate-success"
+       element={
+        <motion.div variants={anim} initial="initial" animate="in" exit="out">
+          <DonateSuccess />
+           </motion.div>
+         }
+        />
 
         {/* USER AUTH */}
         <Route path="/register" element={<Register />} />
