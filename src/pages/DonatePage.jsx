@@ -145,37 +145,37 @@ export default function DonatePage() {
         <h3 className="text-lg font-bold text-gray-800">
         Choose a Payment Method
        </h3>
-       <p className="text-sm text-gray-500">
-        Securely support via your preferred gateway
-       </p>
-      </div>
+         <p className="text-sm text-gray-500">
+         Securely support via your preferred gateway
+         </p>
+         </div>
 
-     {/* Flutterwave */}
-     <button
-     onClick={handleFlutterwaveSupport}
-      disabled={loading}
-     className="w-full flex items-center justify-center gap-3 bg-orange-600 text-white py-3 rounded-xl font-semibold hover:bg-orange-700 transition disabled:opacity-50"
+         {/* FLUTTERWAVE */}
+         <button
+         onClick={handleFlutterwave} // use this, it's defined
+         disabled={loading}
+         className="w-full flex items-center justify-center gap-3 bg-orange-600 text-white py-3 rounded-xl font-semibold hover:bg-orange-700 transition disabled:opacity-50"
        >
        🟠 Pay via Flutterwave
         </button>
 
-        {/* Paystack */}
-       <button
-       onClick={handlePaystackSupport}
-       disabled={loading}
-       className="w-full flex items-center justify-center gap-3 bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 transition disabled:opacity-50"
-     >
+        {/* PAYSTACK */}
+        <button
+         onClick={handlePaystack}
+         disabled={loading}
+         className="w-full flex items-center justify-center gap-3 bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 transition disabled:opacity-50"
+       >
        🟢 Pay via Paystack
-      </button>
+       </button>
 
-      {/* PayPal */}
-     <button
-      onClick={handlePayPalSupport}
-      disabled={loading}
-      className="w-full flex items-center justify-center gap-3 bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition disabled:opacity-50"
-     >
+        {/* PAYPAL */}
+        <button
+         onClick={handlePayPal}
+         disabled={loading}
+         className="w-full flex items-center justify-center gap-3 bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition disabled:opacity-50"
+      >
        🔵 Pay via PayPal
-     </button>
+       </button>
 
      {/* DodoPay */}
      <button
