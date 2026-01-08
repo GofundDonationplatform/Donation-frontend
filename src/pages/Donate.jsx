@@ -1,215 +1,132 @@
-// src/pages/Support.jsx
+// src/pages/Donate.jsx
 import React, { useState } from "react";
 
-export default function Support() {
+export default function Donate() {
   const [amount, setAmount] = useState("");
-  const [selected, setSelected] = useState(null);
+  const [selectedAmount, setSelectedAmount] = useState(null);
   const [method, setMethod] = useState("dodopay");
-  const [showGrayModal, setShowGrayModal] = useState(false);
-  const [receipt, setReceipt] = useState(null);
+  const [showBankModal, setShowBankModal] = useState(false);
 
-  const amounts = [200, 500, 1000, 2500, 5000, 10000];
+  const presets = [200, 500, 1000, 2500, 5000, 10000];
 
   const backendURL =
-    import.meta.env.VITE_BACKEND_URL?.replace(/\/$/, "") ||
-    "http://localhost:5000";
+    import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
   // ==========================
-  // HANDLE PAYMENTS
+  // PAYMENT HANDLERS
   // ==========================
-  const handleDodoPay = async () => {
-    if (!amount) return alert("Please select or enter a support amount");
-
-    try {
-      const res = await fetch(`${backendURL}/api/dodopay/initiate`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          amount: Number(amount),
-          email: "supporter@example.com", // could be dynamic
-          name: "Supporter",          // could be dynamic
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!data.checkout_url) return alert("DodoPay checkout failed");
-
-      window.location.href = data.checkout_url;
-    } catch (err) {
-      console.error(err);
-      alert("Error initializing DodoPay checkout.");
+  const ensureAmount = () => {
+    if (!amount || Number(amount) <= 0) {
+      alert("Please select or enter a valid amount");
+      return false;
     }
+    return true;
   };
 
-  const handlePaystack = async () => {
-    if (!amount) return alert("Please select or enter a support amount");
-
-    try {
-      const res = await fetch(`${backendURL}/api/paystack/initialize`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          amount: Number(amount),
-          email: "supporter@example.com",
-          name: "Supporter",
-          currency: "USD",
-        }),
-      });
-
-      const data = await res.json();
-
-      if (data?.authorization_url) window.location.href = data.authorization_url;
-      else alert("Paystack initialization failed");
-    } catch (err) {
-      console.error(err);
-      alert("Error initializing Paystack checkout.");
-    }
+  const redirectOrFail = (url, msg) => {
+    if (url) window.location.href = url;
+    else alert(msg);
   };
 
-  const handlePayPal = async () => {
-    if (!amount) return alert("Please select or enter a support amount");
-
-    try {
-      const res = await fetch(`${backendURL}/api/paypal/create-order`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: Number(amount) }),
-      });
-
-      const data = await res.json();
-
-      if (data?.id)
-        window.location.href = `https://www.paypal.com/checkoutnow?token=${data.id}`;
-      else alert("PayPal initialization failed");
-    } catch (err) {
-      console.error(err);
-      alert("Error initializing PayPal checkout.");
-    }
+  const payFlutterwave = async () => {
+    if (!ensureAmount()) return;
+    const res = await fetch(`${backendURL}/api/flutterwavePay`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ amount: Number(amount) }),
+    });
+    const data = await res.json();
+    redirectOrFail(data?.link, "Flutterwave initialization failed");
   };
 
-  const handleFlutterwave = async () => {
-    if (!amount) return alert("Please select or enter a support amount");
-
-    try {
-      const res = await fetch(`${backendURL}/api/flutterwavePay`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: Number(amount) }),
-      });
-
-      const data = await res.json();
-
-      if (data?.link) window.location.href = data.link;
-      else alert("Flutterwave initialization failed");
-    } catch (err) {
-      console.error(err);
-      alert("Error initializing Flutterwave checkout.");
-    }
+  const payPaystack = async () => {
+    if (!ensureAmount()) return;
+    const res = await fetch(`${backendURL}/api/paystack/initialize`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        amount: Number(amount),
+        email: "supporter@example.com",
+        currency: "USD",
+      }),
+    });
+    const data = await res.json();
+    redirectOrFail(data?.authorization_url, "Paystack initialization failed");
   };
 
-  // ==========================
-  // MAIN DONATE BUTTON
-  // ==========================
-  const handleSupport = async () => {
-    if (!amount) return alert("Please select or enter a support amount");
+  const payPaypal = async () => {
+    if (!ensureAmount()) return;
+    const res = await fetch(`${backendURL}/api/paypal/create-order`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ amount: Number(amount) }),
+    });
+    const data = await res.json();
+    redirectOrFail(
+      data?.id && `https://www.paypal.com/checkoutnow?token=${data.id}`,
+      "PayPal initialization failed"
+    );
+  };
 
+  const payDodo = async () => {
+    if (!ensureAmount()) return;
+    const res = await fetch(`${backendURL}/api/dodopay/initiate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        amount: Number(amount),
+        email: "supporter@example.com",
+        name: "Supporter",
+      }),
+    });
+    const data = await res.json();
+    redirectOrFail(data?.checkout_url, "DodoPay checkout failed");
+  };
+
+  const proceed = () => {
     switch (method) {
-      case "dodopay":
-        return handleDodoPay();
-      case "paystack":
-        return handlePaystack();
-      case "paypal":
-        return handlePayPal();
       case "flutterwave":
-        return handleFlutterwave();
-      case "gray":
-        return setShowGrayModal(true);
+        return payFlutterwave();
+      case "paypal":
+        return payPaypal();
+      case "paystack":
+        return payPaystack();
+      case "dodopay":
+        return payDodo();
+      case "bank":
+        return setShowBankModal(true);
       default:
-        return alert("Please select a payment method");
-    }
-  };
-
-  // ==========================
-  // GRAY BANK TRANSFER
-  // ==========================
-  const handleReceiptUpload = (e) => {
-    setReceipt(e.target.files[0]);
-  };
-
-  const confirmGrayPayment = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("amount", amount);
-      formData.append("payment_method", "gray");
-      if (receipt) formData.append("receipt", receipt);
-
-      const res = await fetch(`${backendURL}/api/gray/confirm`, {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await res.json();
-
-      if (data?.success) {
-        alert("Thank you! Your Digital Impact Support has been recorded.");
-        setShowGrayModal(false);
-      } else {
-        alert("Unable to confirm payment. Please try again.");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Error confirming bank transfer.");
+        alert("Select a payment method");
     }
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(180deg,#1e293b 0%,#475569 100%)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "40px 16px",
-      }}
-    >
-      <div
-        style={{
-          background: "rgba(255,255,255,0.1)",
-          borderRadius: "16px",
-          padding: "32px",
-          maxWidth: "480px",
-          width: "100%",
-          color: "white",
-          boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
-          backdropFilter: "blur(8px)",
-        }}
-      >
-        <h2 style={{ textAlign: "center" }}>
+    <div className="min-h-screen flex items-center justify-center bg-slate-900 px-4">
+      <div className="w-full max-w-lg bg-slate-800 rounded-2xl p-6 text-white shadow-xl">
+
+        <h2 className="text-2xl font-bold text-center mb-2">
           Support Our Digital Impact 🌍
         </h2>
+        <p className="text-center text-gray-400 mb-6">
+          Choose an amount and a payment method
+        </p>
 
-        {/* AMOUNTS */}
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
-          {amounts.map((amt, i) => (
+        {/* PRESET AMOUNTS */}
+        <div className="grid grid-cols-3 gap-3 mb-4">
+          {presets.map((p, i) => (
             <button
               key={i}
               onClick={() => {
-                setSelected(i);
-                setAmount(amt);
+                setAmount(p);
+                setSelectedAmount(i);
               }}
-              style={{
-                flex: "1 1 30%",
-                background:
-                  selected === i
-                    ? "linear-gradient(90deg,#7c3aed,#06b6d4)"
-                    : "rgba(255,255,255,0.1)",
-                padding: "12px",
-                borderRadius: "8px",
-              }}
+              className={`py-2 rounded-lg font-semibold ${
+                selectedAmount === i
+                  ? "bg-cyan-500"
+                  : "bg-slate-700 hover:bg-slate-600"
+              }`}
             >
-              ${amt.toLocaleString()}
+              ${p.toLocaleString()}
             </button>
           ))}
         </div>
@@ -218,109 +135,57 @@ export default function Support() {
         <input
           type="number"
           value={amount}
-          placeholder="Enter custom support amount"
           onChange={(e) => {
             setAmount(e.target.value);
-            setSelected(null);
+            setSelectedAmount(null);
           }}
-          style={{
-            width: "100%",
-            marginTop: "20px",
-            padding: "12px",
-            borderRadius: "8px",
-            background: "transparent",
-            border: "1px solid rgba(255,255,255,0.2)",
-            color: "white",
-          }}
+          placeholder="Custom amount"
+          className="w-full mb-5 px-3 py-2 rounded-lg bg-slate-700 border border-slate-600"
         />
 
         {/* PAYMENT METHODS */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3,1fr)",
-            gap: "10px",
-            marginTop: "20px",
-          }}
-        >
-          <button onClick={() => setMethod("flutterwave")}>🌐 Digital Support</button>
-          <button onClick={() => setMethod("paypal")}>🅿️ Digital Support</button>
-          <button onClick={() => setMethod("paystack")}>💳 Digital Support</button>
-          <button onClick={() => setMethod("dodopay")}>🟣 Digital Impact Support</button>
-          <button onClick={() => setMethod("gray")}>🏦 Bank Transfer Support</button>
+        <div className="space-y-2">
+          <button onClick={() => setMethod("flutterwave")} className="w-full py-3 rounded-lg bg-indigo-600">
+            Pay via Flutterwave
+          </button>
+          <button onClick={() => setMethod("paypal")} className="w-full py-3 rounded-lg bg-yellow-500 text-black">
+            Pay via PayPal
+          </button>
+          <button onClick={() => setMethod("paystack")} className="w-full py-3 rounded-lg bg-green-600">
+            Pay via Paystack
+          </button>
+          <button onClick={() => setMethod("dodopay")} className="w-full py-3 rounded-lg bg-rose-600">
+            Pay via DodoPay
+          </button>
+          <button onClick={() => setMethod("bank")} className="w-full py-3 rounded-lg bg-gray-600">
+            Bank Transfer
+          </button>
         </div>
 
-        {/* MAIN ACTION BUTTON */}
+        {/* MAIN BUTTON */}
         <button
-          onClick={handleSupport}
-          style={{
-            width: "100%",
-            marginTop: "25px",
-            padding: "14px",
-            borderRadius: "10px",
-            fontWeight: "700",
-            background:
-              method === "dodopay"
-                ? "linear-gradient(90deg,#f43f5e,#fb7185)"
-                : "linear-gradient(90deg,#7c3aed,#06b6d4)",
-          }}
+          onClick={proceed}
+          className="w-full mt-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 font-bold"
         >
-          Proceed with Digital Support
+          Proceed to Payment
         </button>
       </div>
 
-      {/* GRAY MODAL */}
-      {showGrayModal && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.6)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <div
-            style={{
-              background: "white",
-              padding: "24px",
-              borderRadius: "12px",
-              maxWidth: "500px",
-              width: "90%",
-            }}
-          >
-            <h2>Bank Transfer – Digital Impact Support</h2>
-
-            <p><b>Account Holder:</b> GFSSGA IMPACT NETWORK</p>
+      {/* BANK MODAL */}
+      {showBankModal && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
+          <div className="bg-white text-black p-6 rounded-xl w-full max-w-md">
+            <h3 className="font-bold mb-2">Bank Transfer Details</h3>
+            <p><b>Account Name:</b> GFSSGA IMPACT NETWORK</p>
             <p><b>Account Number:</b> 214673810876</p>
             <p><b>Bank:</b> Lead Bank</p>
-            <p><b>Country:</b> United States</p>
-            <p><b>ACH Routing:</b> 101019644</p>
-            <p><b>Wire Routing:</b> 101019644</p>
 
-            <hr />
-
-            <label>
-              Upload receipt (optional):
-              <input type="file" onChange={handleReceiptUpload} />
-            </label>
-
-            <div style={{ display: "flex", gap: "10px", marginTop: "16px" }}>
-              <button
-                onClick={confirmGrayPayment}
-                style={{ flex: 1, background: "green", color: "white", padding: "12px" }}
-              >
-                I’ve Completed My Digital Support
-              </button>
-
-              <button
-                onClick={() => setShowGrayModal(false)}
-                style={{ flex: 1, background: "red", color: "white", padding: "12px" }}
-              >
-                Cancel
-              </button>
-            </div>
+            <button
+              onClick={() => setShowBankModal(false)}
+              className="mt-4 w-full py-2 bg-red-600 text-white rounded"
+            >
+              Close
+            </button>
           </div>
         </div>
       )}
