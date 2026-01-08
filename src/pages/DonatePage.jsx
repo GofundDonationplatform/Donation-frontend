@@ -138,41 +138,63 @@ export default function DonatePage() {
           />
 
           {/* PAYMENT METHODS */}
-          <div className="space-y-3">
+       <div className="mt-6 space-y-4">
 
-            <button
-              onClick={handleFlutterwave}
-              disabled={loading}
-              className="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700"
-            >
-              Pay via Flutterwave
-            </button>
+       {/* Controller / Header */}
+       <div className="text-center">
+        <h3 className="text-lg font-bold text-gray-800">
+        Choose a Payment Method
+       </h3>
+       <p className="text-sm text-gray-500">
+        Securely support via your preferred gateway
+       </p>
+      </div>
 
-            <button
-              onClick={handlePaystack}
-              disabled={loading}
-              className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700"
-            >
-              Pay via Paystack
-            </button>
+     {/* Flutterwave */}
+     <button
+     onClick={handleFlutterwaveSupport}
+      disabled={loading}
+     className="w-full flex items-center justify-center gap-3 bg-orange-600 text-white py-3 rounded-xl font-semibold hover:bg-orange-700 transition disabled:opacity-50"
+       >
+       🟠 Pay via Flutterwave
+        </button>
 
-            <button
-              onClick={handlePayPal}
-              disabled={loading}
-              className="w-full bg-yellow-500 text-white py-3 rounded-lg font-semibold hover:bg-yellow-600"
-            >
-              Pay via PayPal
-            </button>
+        {/* Paystack */}
+       <button
+       onClick={handlePaystackSupport}
+       disabled={loading}
+       className="w-full flex items-center justify-center gap-3 bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 transition disabled:opacity-50"
+     >
+       🟢 Pay via Paystack
+      </button>
 
-            <button
-              onClick={handleDodoPay}
-              className="w-full bg-orange-600 text-white py-3 rounded-lg font-semibold hover:bg-orange-700"
-            >
-              Pay via DodoPay
-            </button>
+      {/* PayPal */}
+     <button
+      onClick={handlePayPalSupport}
+      disabled={loading}
+      className="w-full flex items-center justify-center gap-3 bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition disabled:opacity-50"
+     >
+       🔵 Pay via PayPal
+     </button>
 
-          </div>
+     {/* DodoPay */}
+     <button
+      onClick={() => alert("DodoPay checkout initializing…")}
+      disabled={loading}
+      className="w-full flex items-center justify-center gap-3 bg-purple-600 text-white py-3 rounded-xl font-semibold hover:bg-purple-700 transition disabled:opacity-50"
+     >
+       🟣 Pay via DodoPay
+     </button>
 
+      {/* Bank Transfer */}
+     <button
+      onClick={() => alert("Bank transfer details will be displayed")}
+      className="w-full flex items-center justify-center gap-3 bg-gray-800 text-white py-3 rounded-xl font-semibold hover:bg-gray-900 transition"
+     >
+       🏦 Pay via Bank Transfer
+     </button>
+
+     </div>
           <p className="text-xs text-gray-500 text-center mt-4">
             Payments are processed securely via third-party gateways.
           </p>
