@@ -7,8 +7,8 @@ import { useState } from "react";
 // MAIN PAGES
 import LandingPage from "./pages/LandingPage";
 import Home from "./pages/Home";
-import Donate from "./pages/Donate.jsx";               // ✅ Updated import
-import DonateSuccess from "./pages/DonateSuccess.jsx";
+import DonatePage from "./pages/DonatePage.jsx";               // ✅ Updated import
+import DonateSuccess from "./pages/DonateSuccess";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import Refund from "./pages/Refund";
@@ -129,7 +129,7 @@ function AnimatedRoutes() {
          path="/donate"
         element={
           <motion.div variants={anim} initial="initial" animate="in" exit="out">
-         <Donate />
+         <DonatePage />
        </motion.div>
        }
      />
