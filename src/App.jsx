@@ -7,7 +7,7 @@ import { useState } from "react";
 // MAIN PAGES
 import LandingPage from "./pages/LandingPage";
 import Home from "./pages/Home";
-import DonatePage from "./pages/DonatePage.jsx";               // ✅ Updated import
+import DonatePage from "./pages/DonatePage";               // ✅ Updated import
 import DonateSuccess from "./pages/DonateSuccess";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
