@@ -1,7 +1,6 @@
 // src/pages/DonatePage.jsx
 import React, { useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
 
 export default function DonatePage() {
   const presets = [100, 250, 500, 1000, 3000, 6000, 12000];
@@ -19,17 +18,15 @@ export default function DonatePage() {
     return true;
   };
 
-  // 🟣 Flutterwave
+  // Flutterwave
   async function handleFlutterwave() {
     if (!validateAmount()) return;
     setLoading(true);
-
     try {
       const res = await axios.post(`${backendBase}/api/donate`, {
         amount: Number(amount),
         currency: "USD",
       });
-
       if (res.data?.link || res.data?.url) {
         window.location.href = res.data.link || res.data.url;
       } else {
@@ -38,25 +35,19 @@ export default function DonatePage() {
     } catch {
       alert("Flutterwave is temporarily unavailable.");
     }
-
     setLoading(false);
   }
 
-  // 🟢 Paystack
+  // Paystack
   async function handlePaystack() {
     if (!validateAmount()) return;
     setLoading(true);
-
     try {
-      const res = await axios.post(
-        `${backendBase}/api/paystack/initialize`,
-        {
-          amount: Number(amount),
-          email: "supporter@example.com",
-          currency: "NGN",
-        }
-      );
-
+      const res = await axios.post(`${backendBase}/api/paystack/initialize`, {
+        amount: Number(amount),
+        email: "supporter@example.com",
+        currency: "NGN",
+      });
       if (res.data?.authorization_url) {
         window.location.href = res.data.authorization_url;
       } else {
@@ -65,21 +56,17 @@ export default function DonatePage() {
     } catch {
       alert("Paystack is temporarily unavailable.");
     }
-
     setLoading(false);
   }
 
-  // 🔵 PayPal
+  // PayPal
   async function handlePayPal() {
     if (!validateAmount()) return;
     setLoading(true);
-
     try {
-      const res = await axios.post(
-        `${backendBase}/api/paypal/create-payment`,
-        { amount }
-      );
-
+      const res = await axios.post(`${backendBase}/api/paypal/create-payment`, {
+        amount,
+      });
       if (res.data?.approvalUrl) {
         window.location.href = res.data.approvalUrl;
       } else {
@@ -88,120 +75,116 @@ export default function DonatePage() {
     } catch {
       alert("PayPal is temporarily unavailable.");
     }
-
     setLoading(false);
   }
 
-  // 🟠 DodoPay (UI-ready, backend pending)
+  // DodoPay placeholder
   function handleDodoPay() {
     alert("DodoPay checkout will be available shortly.");
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col">
-      <div className="flex-grow flex justify-center px-4 py-12">
-        <div className="w-full max-w-xl bg-white rounded-2xl shadow-xl p-6">
+    <div className="min-h-screen bg-slate-950 flex flex-col items-center py-12 px-4">
+      <div className="w-full max-w-lg bg-gradient-to-b from-gray-800 to-gray-900 rounded-3xl shadow-2xl p-8 text-white">
 
-          <h2 className="text-3xl font-extrabold mb-2 text-center text-indigo-600">
-            Support a Digital Impact
-          </h2>
+        {/* Header */}
+        <h2 className="text-3xl font-extrabold mb-2 text-center text-indigo-400">
+          Support a Digital Impact
+        </h2>
+        <p className="text-gray-300 mb-6 text-center">
+          Choose an amount and a preferred payment method.
+        </p>
 
-          <p className="text-gray-600 mb-6 text-center">
-            Choose an amount and a preferred payment method.
-          </p>
+        {/* Preset buttons */}
+        <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-4">
+          {presets.map((p) => (
+            <button
+              key={p}
+              onClick={() => setAmount(p)}
+              className={`py-2 rounded-lg font-semibold transition-colors duration-200 ${
+                amount === p
+                  ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg"
+                  : "bg-gray-700 hover:bg-gray-600 text-gray-200"
+              }`}
+            >
+              ${p.toLocaleString()}
+            </button>
+          ))}
+        </div>
 
-          {/* Presets */}
-          <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-4">
-            {presets.map((p) => (
-              <button
-                key={p}
-                onClick={() => setAmount(p)}
-                className={`py-2 rounded-lg font-semibold ${
-                  amount === p
-                    ? "bg-indigo-600 text-white"
-                    : "bg-gray-100 hover:bg-gray-200"
-                }`}
-              >
-                ${p.toLocaleString()}
-              </button>
-            ))}
+        {/* Custom input */}
+        <input
+          type="number"
+          value={amount}
+          min="1"
+          onChange={(e) => setAmount(Number(e.target.value))}
+          className="w-full border border-gray-600 rounded-lg p-3 mb-6 bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          placeholder="Enter custom amount"
+        />
+
+        {/* Payment Methods */}
+        <div className="space-y-3">
+          <div className="text-center mb-2">
+            <h3 className="text-lg font-bold text-gray-200">
+              Choose a Payment Method
+            </h3>
+            <p className="text-sm text-gray-400">
+              Securely support via your preferred gateway
+            </p>
           </div>
 
-          {/* Custom */}
-          <input
-            type="number"
-            value={amount}
-            min="1"
-            onChange={(e) => setAmount(Number(e.target.value))}
-            className="w-full border rounded-lg p-3 mb-6 focus:ring-2 focus:ring-indigo-500"
-            placeholder="Enter custom amount"
-          />
+          {/* Flutterwave */}
+          <button
+            onClick={handleFlutterwave}
+            disabled={loading}
+            className="w-full flex items-center justify-center gap-3 bg-orange-500 hover:bg-orange-600 py-3 rounded-xl font-semibold transition disabled:opacity-50"
+          >
+            🟠 Pay via Flutterwave
+          </button>
 
-          {/* PAYMENT METHODS */}
-       <div className="mt-6 space-y-4">
+          {/* Paystack */}
+          <button
+            onClick={handlePaystack}
+            disabled={loading}
+            className="w-full flex items-center justify-center gap-3 bg-green-500 hover:bg-green-600 py-3 rounded-xl font-semibold transition disabled:opacity-50"
+          >
+            🟢 Pay via Paystack
+          </button>
 
-       {/* Controller / Header */}
-       <div className="text-center">
-        <h3 className="text-lg font-bold text-gray-800">
-        Choose a Payment Method
-       </h3>
-         <p className="text-sm text-gray-500">
-         Securely support via your preferred gateway
-         </p>
-         </div>
+          {/* PayPal */}
+          <button
+            onClick={handlePayPal}
+            disabled={loading}
+            className="w-full flex items-center justify-center gap-3 bg-blue-500 hover:bg-blue-600 py-3 rounded-xl font-semibold transition disabled:opacity-50"
+          >
+            🔵 Pay via PayPal
+          </button>
 
-         {/* FLUTTERWAVE */}
-         <button
-         onClick={handleFlutterwave} // use this, it's defined
-         disabled={loading}
-         className="w-full flex items-center justify-center gap-3 bg-orange-600 text-white py-3 rounded-xl font-semibold hover:bg-orange-700 transition disabled:opacity-50"
-       >
-       🟠 Pay via Flutterwave
-        </button>
+          {/* DodoPay */}
+          <button
+            onClick={handleDodoPay}
+            disabled={loading}
+            className="w-full flex items-center justify-center gap-3 bg-purple-500 hover:bg-purple-600 py-3 rounded-xl font-semibold transition disabled:opacity-50"
+          >
+            🟣 Pay via DodoPay
+          </button>
 
-        {/* PAYSTACK */}
-        <button
-         onClick={handlePaystack}
-         disabled={loading}
-         className="w-full flex items-center justify-center gap-3 bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 transition disabled:opacity-50"
-       >
-       🟢 Pay via Paystack
-       </button>
-
-        {/* PAYPAL */}
-        <button
-         onClick={handlePayPal}
-         disabled={loading}
-         className="w-full flex items-center justify-center gap-3 bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition disabled:opacity-50"
-      >
-       🔵 Pay via PayPal
-       </button>
-
-     {/* DodoPay */}
-     <button
-      onClick={() => alert("DodoPay checkout initializing…")}
-      disabled={loading}
-      className="w-full flex items-center justify-center gap-3 bg-purple-600 text-white py-3 rounded-xl font-semibold hover:bg-purple-700 transition disabled:opacity-50"
-     >
-       🟣 Pay via DodoPay
-     </button>
-
-      {/* Bank Transfer */}
-     <button
-      onClick={() => alert("Bank transfer details will be displayed")}
-      className="w-full flex items-center justify-center gap-3 bg-gray-800 text-white py-3 rounded-xl font-semibold hover:bg-gray-900 transition"
-     >
-       🏦 Pay via Bank Transfer
-     </button>
-
-     </div>
-          <p className="text-xs text-gray-500 text-center mt-4">
-            Payments are processed securely via third-party gateways.
-          </p>
+          {/* Bank Transfer */}
+          <button
+            onClick={() => alert("Bank transfer details will be displayed")}
+            className="w-full flex items-center justify-center gap-3 bg-gray-700 hover:bg-gray-600 py-3 rounded-xl font-semibold transition"
+          >
+            🏦 Pay via Bank Transfer
+          </button>
         </div>
+
+        <p className="text-xs text-gray-400 text-center mt-4">
+          Payments are processed securely via third-party gateways.
+        </p>
       </div>
 
-      <footer className="bg-slate-900 text-center py-6 text-sm text-gray-400">
+      {/* Footer */}
+      <footer className="bg-slate-900 text-center py-6 text-sm text-gray-400 mt-6">
         © {new Date().getFullYear()} GFSSGA Impact Network
       </footer>
     </div>
