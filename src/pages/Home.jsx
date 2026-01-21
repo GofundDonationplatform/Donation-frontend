@@ -4,7 +4,7 @@ export default function Home() {
   const campaigns = [
     {
       id: 1,
-      title: "Support African Children",
+      title: "support community services",
       description:
         "Help provide food, shelter, and education for children in underprivileged African communities.",
       image: "/images/african-children.jpg",
@@ -18,16 +18,16 @@ export default function Home() {
     },
     {
       id: 3,
-      title: "Build a School for Every Child",
+      title: "build digital infrastructure for Every Child",
       description:
         "Contribute to building safe, accessible schools in rural regions where education is scarce.",
       image: "/images/school.jpg",
     },
     {
       id: 4,
-      title: "Clean Water for All",
+      title: "digital access initiative",
       description:
-        "Your digital impact support funds wells and water filtration systems in communities lacking clean water.",
+        "Your digital impact support credits wells and water filtration systems in communities lacking clean water.",
       image: "/images/clean-water.jpg",
     },
   ];
@@ -54,7 +54,7 @@ export default function Home() {
             marginBottom: 12,
           }}
         >
-          Welcome to GoFund Digital Impact Support Platform
+          Welcome to Gocredit Digital Impact Support Platform
         </h1>
         <p
           style={{
@@ -158,7 +158,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer style={{ marginTop: 50, color: "#94a3b8" }}>
-        © 2025 GoFund Digital Impact Support Platform. All rights reserved.
+        © 2025 Gocredit Digital Impact Support Platform. All rights reserved.
       </footer>
     </div>
   );

@@ -7,10 +7,10 @@ export default function Terms() {
       <div className="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow">
         <h1 className="text-3xl font-bold mb-4 text-indigo-700">Terms & Conditions</h1>
 
-        <p>GFSSGA Impact Network operates a tech-enabled crowdfunding platform that allows individuals to create, support, and manage fundraising campaigns for education, medical needs, community development, and social support initiatives. By using this website, you agree to these Terms & Conditions.</p>
+        <p>GFSSGA Impact Network operates a tech-enabled digital support platform platform that allows individuals to create, support, and manage digital services campaigns for education, medical needs, community development, and social support initiatives. By using this website, you agree to these Terms & Conditions.</p>
 
         <h2 className="mt-4 font-semibold text-xl">Use of Platform</h2>
-        <p>Users may create fundraising campaigns following our platform guidelines. Digital Impact Supports are voluntary and are not in exchange for goods or services. GFSSGA Impact Network reserves the right to decline or remove any campaign that violates ethical, legal, or compliance standards.</p>
+        <p>Users may create digital services campaigns following our platform guidelines. Digital Impact Supports are voluntary and are not in exchange for goods or services. GFSSGA Impact Network reserves the right to decline or remove any campaign that violates ethical, legal, or compliance standards.</p>
 
         <h2 className="mt-4 font-semibold text-xl">Digital Impact Supports</h2>
         <p>Digital Impact Supports are processed through secure third-party payment providers. GFSSGA Impact Network does not guarantee the success of any campaign. All digital impact supports go directly to the beneficiary or campaign organizer after necessary verification.</p>
@@ -19,7 +19,7 @@ export default function Terms() {
         <p>To protect supporters and beneficiaries, GFSSGA may request additional documentation before disbursement.</p>
 
         <h2 className="mt-4 font-semibold text-xl">Compliance</h2>
-        <p>Users agree not to engage in fundraising related to: money laundering, fraud, illegal activities, terror financing, hate speech, adult content, political violence.</p>
+        <p>Users agree not to engage in digital services related to: money laundering, fraud, illegal activities, terror financing, hate speech, adult content, political violence.</p>
 
         <h2 className="mt-4 font-semibold text-xl">Limitation of Liability</h2>
         <p>GFSSGA Impact Network will not be responsible for: third-party payment issues, campaign organizer misrepresentation, supporter errors.</p>

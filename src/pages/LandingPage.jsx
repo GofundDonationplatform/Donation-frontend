@@ -16,12 +16,14 @@ export default function LandingPage() {
         />
 
         <h1 style={styles.title}>GFSSGA IMPACT NETWORK</h1>
-        <h2 style={styles.subtitle}>GofundSS Digital Impact Support Platform</h2>
+        <h2 style={styles.subtitle}>GFSSGA Digital Impact Platform</h2>
 
         <p style={styles.text}>
-          A platform designed to support <strong>education</strong>,
-          <strong> women empowerment</strong>, and building a future for the
-          less privileged through transparent and impactful crowdfunding.
+          A digital platform delivering premium tools, resources, and service
+          access across <strong>education</strong>, <strong>business growth</strong>,
+          and <strong>community development</strong>.  
+          Securely access features, subscriptions, and digital services through
+          our integrated payment gateways.
         </p>
 
         <Link to="/home">
