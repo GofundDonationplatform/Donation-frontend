@@ -18,97 +18,67 @@ export default function DonatePage() {
     return true;
   };
 
-  async function handleFlutterwave() {
-    if (!validateAmount()) return;
-    setLoading(true);
-    try {
-      const res = await axios.post(`${backendBase}/api/donate`, {
-        amount: Number(amount),
-        currency: "USD",
-      });
-      if (res.data?.link || res.data?.url) {
-        window.location.href = res.data.link || res.data.url;
-      } else {
-        alert("Flutterwave checkout unavailable.");
-      }
-    } catch {
-      alert("Flutterwave is temporarily unavailable.");
-    }
-    setLoading(false);
-  }
-
-  async function handlePaystack() {
-    if (!validateAmount()) return;
-    setLoading(true);
-    try {
-      const res = await axios.post(`${backendBase}/api/paystack/initialize`, {
-        amount: Number(amount),
-        email: "supporter@example.com",
-        currency: "NGN",
-      });
-      if (res.data?.authorization_url) {
-        window.location.href = res.data.authorization_url;
-      } else {
-        alert("Paystack checkout unavailable.");
-      }
-    } catch {
-      alert("Paystack is temporarily unavailable.");
-    }
-    setLoading(false);
-  }
-
-  async function handlePayPal() {
-    if (!validateAmount()) return;
-    setLoading(true);
-    try {
-      const res = await axios.post(`${backendBase}/api/paypal/create-payment`, {
-        amount,
-      });
-      if (res.data?.approvalUrl) {
-        window.location.href = res.data.approvalUrl;
-      } else {
-        alert("PayPal checkout unavailable.");
-      }
-    } catch {
-      alert("PayPal is temporarily unavailable.");
-    }
-    setLoading(false);
-  }
-
-  function handleDodoPay() {
-    alert("DodoPay checkout will be available shortly.");
-  }
-
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md bg-slate-900 rounded-2xl shadow-xl border border-white/10 p-6">
+    <div style={{
+      minHeight: "100vh",
+      background: "#020617",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      padding: "20px"
+    }}>
+      <div style={{
+        width: "100%",
+        maxWidth: "420px",
+        background: "#0f172a",
+        borderRadius: "16px",
+        padding: "24px",
+        boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
+        color: "#fff"
+      }}>
 
-        {/* Header */}
-        <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-cyan-400">
-            Support a Digital Impact
-          </h2>
-          <p className="text-sm text-gray-400 mt-1">
-            Select an amount and continue securely
-          </p>
-        </div>
+        <h2 style={{
+          textAlign: "center",
+          fontSize: "22px",
+          marginBottom: "6px",
+          color: "#22d3ee"
+        }}>
+          Support a Digital Impact
+        </h2>
 
-        {/* Amount Section */}
-        <div className="mb-5">
-          <label className="block text-sm font-medium text-gray-300 mb-2">
+        <p style={{
+          textAlign: "center",
+          fontSize: "13px",
+          color: "#94a3b8",
+          marginBottom: "18px"
+        }}>
+          Select an amount and continue securely
+        </p>
+
+        <div style={{ marginBottom: "16px" }}>
+          <div style={{ marginBottom: "8px", fontSize: "13px", color: "#cbd5f5" }}>
             Select Amount
-          </label>
+          </div>
 
-          <div className="grid grid-cols-3 gap-2 mb-3">
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "8px",
+            marginBottom: "10px"
+          }}>
             {presets.map((p) => (
               <button
                 key={p}
                 onClick={() => setAmount(p)}
-                className={`py-2 rounded-lg text-sm font-semibold transition ${
-                  amount === p
-                    ? "bg-cyan-500 text-black"
-                    : "bg-slate-800 hover:bg-slate-700 text-gray-200"
-                }`}
+                style={{
+                  padding: "8px",
+                  borderRadius: "8px",
+                  border: "none",
+                  background: amount === p ? "#22d3ee" : "#1e293b",
+                  color: amount === p ? "#000" : "#e5e7eb",
+                  fontWeight: "600",
+                  cursor: "pointer"
+                }}
               >
                 ${p.toLocaleString()}
               </button>
@@ -120,60 +90,48 @@ export default function DonatePage() {
             value={amount}
             min="1"
             onChange={(e) => setAmount(Number(e.target.value))}
-            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
-            placeholder="Enter custom amount"
+            style={{
+              width: "100%",
+              padding: "10px",
+              borderRadius: "8px",
+              border: "1px solid #334155",
+              background: "#020617",
+              color: "#fff"
+            }}
           />
         </div>
 
-        {/* Payment Section */}
-        <div className="space-y-3">
-          <h3 className="text-sm font-semibold text-gray-300 mb-2">
-            Payment Method
-          </h3>
-
-          <button
-            onClick={handleFlutterwave}
-            disabled={loading}
-            className="w-full bg-orange-500 hover:bg-orange-600 text-black py-2.5 rounded-lg font-semibold transition disabled:opacity-50"
-          >
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          <button style={{ background: "#f97316", color: "#000", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}>
             Pay with Flutterwave
           </button>
 
-          <button
-            onClick={handlePaystack}
-            disabled={loading}
-            className="w-full bg-green-500 hover:bg-green-600 text-black py-2.5 rounded-lg font-semibold transition disabled:opacity-50"
-          >
+          <button style={{ background: "#22c55e", color: "#000", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}>
             Pay with Paystack
           </button>
 
-          <button
-            onClick={handlePayPal}
-            disabled={loading}
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2.5 rounded-lg font-semibold transition disabled:opacity-50"
-          >
+          <button style={{ background: "#3b82f6", color: "#fff", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}>
             Pay with PayPal
           </button>
 
-          <button
-            onClick={handleDodoPay}
-            disabled={loading}
-            className="w-full bg-purple-500 hover:bg-purple-600 text-white py-2.5 rounded-lg font-semibold transition disabled:opacity-50"
-          >
+          <button style={{ background: "#a855f7", color: "#fff", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}>
             Pay with DodoPay
           </button>
 
-          <button
-            onClick={() => alert("Bank transfer details will be displayed")}
-            className="w-full bg-slate-700 hover:bg-slate-600 text-white py-2.5 rounded-lg font-semibold transition"
-          >
+          <button style={{ background: "#475569", color: "#fff", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}>
             Bank Transfer
           </button>
         </div>
 
-        <p className="text-xs text-gray-400 text-center mt-5">
+        <p style={{
+          textAlign: "center",
+          fontSize: "11px",
+          color: "#94a3b8",
+          marginTop: "16px"
+        }}>
           Payments are processed securely via third-party gateways.
         </p>
+
       </div>
     </div>
   );
