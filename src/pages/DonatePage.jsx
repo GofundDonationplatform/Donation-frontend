@@ -1,11 +1,13 @@
 // src/pages/DonatePage.jsx
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function DonatePage() {
   const presets = [100, 250, 500, 1000, 3000, 6000, 12000];
   const [amount, setAmount] = useState(100);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const backendBase =
     import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
@@ -16,6 +18,70 @@ export default function DonatePage() {
       return false;
     }
     return true;
+  };
+
+  const startFlutterwave = async () => {
+    if (!validateAmount()) return;
+    try {
+      setLoading(true);
+      const res = await axios.post(`${backendBase}/api/flutterwave/init`, {
+        amount,
+      });
+      window.location.href = res.data.link;
+    } catch (err) {
+      alert("Flutterwave initialization failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const startPaystack = async () => {
+    if (!validateAmount()) return;
+    try {
+      setLoading(true);
+      const res = await axios.post(`${backendBase}/api/paystack/init`, {
+        amount,
+      });
+      window.location.href = res.data.authorization_url;
+    } catch (err) {
+      alert("Paystack initialization failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const startPayPal = async () => {
+    if (!validateAmount()) return;
+    try {
+      setLoading(true);
+      const res = await axios.post(`${backendBase}/api/paypal/init`, {
+        amount,
+      });
+      window.location.href = res.data.approvalUrl;
+    } catch (err) {
+      alert("PayPal initialization failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const startDodoPay = async () => {
+    if (!validateAmount()) return;
+    try {
+      setLoading(true);
+      const res = await axios.post(`${backendBase}/api/dodopay/init`, {
+        amount,
+      });
+      window.location.href = res.data.checkout_url;
+    } catch (err) {
+      alert("DodoPay initialization failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const goToBankTransfer = () => {
+    navigate("/bank-transfer");
   };
 
   return (
@@ -102,23 +168,42 @@ export default function DonatePage() {
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-          <button style={{ background: "#f97316", color: "#000", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}>
+          <button
+            onClick={startFlutterwave}
+            disabled={loading}
+            style={{ background: "#f97316", color: "#000", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}
+          >
             Pay with Flutterwave
           </button>
 
-          <button style={{ background: "#22c55e", color: "#000", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}>
+          <button
+            onClick={startPaystack}
+            disabled={loading}
+            style={{ background: "#22c55e", color: "#000", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}
+          >
             Pay with Paystack
           </button>
 
-          <button style={{ background: "#3b82f6", color: "#fff", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}>
+          <button
+            onClick={startPayPal}
+            disabled={loading}
+            style={{ background: "#3b82f6", color: "#fff", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}
+          >
             Pay with PayPal
           </button>
 
-          <button style={{ background: "#a855f7", color: "#fff", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}>
+          <button
+            onClick={startDodoPay}
+            disabled={loading}
+            style={{ background: "#a855f7", color: "#fff", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}
+          >
             Pay with DodoPay
           </button>
 
-          <button style={{ background: "#475569", color: "#fff", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}>
+          <button
+            onClick={goToBankTransfer}
+            style={{ background: "#475569", color: "#fff", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}
+          >
             Bank Transfer
           </button>
         </div>
