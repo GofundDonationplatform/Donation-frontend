@@ -12,6 +12,7 @@ import DonateSuccess from "./pages/DonateSuccess";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import Refund from "./pages/Refund";
+import BankTransfer from "./pages/BankTransfer";
 
 // USER AUTH
 import Register from "./pages/Register";
@@ -142,6 +143,8 @@ function AnimatedRoutes() {
            </motion.div>
          }
         />
+        
+        <Route path="/bank-transfer" element={<BankTransfer />} />
 
         {/* USER AUTH */}
         <Route path="/register" element={<Register />} />

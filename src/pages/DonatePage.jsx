@@ -26,21 +26,19 @@ export default function DonatePage() {
       let payload = { amount };
 
       switch (gateway) {
-        case "flutterwave":
-          endpoint = "/api/flutterwave/init";
-          break;
-        case "paystack":
-          endpoint = "/api/paystack/init";
-          break;
-        case "paypal":
-          endpoint = "/api/paypal/init";
-          break;
-        case "dodopay":
-          endpoint = "/api/dodopay/init";
-          break;
-        default:
-          return;
-      }
+     case "flutterwave":
+     endpoint = "/api/flutterwave";
+     break;
+     case "paystack":
+     endpoint = "/api/paystack";
+     break;
+     case "paypal":
+     endpoint = "/api/paypal";
+     break;
+     case "dodopay":
+     endpoint = "/api/dodopay";
+     break;
+   }
 
       const res = await axios.post(`${backendBase}${endpoint}`, payload);
 
