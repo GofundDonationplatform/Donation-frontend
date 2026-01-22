@@ -1,4 +1,3 @@
-// src/pages/DonatePage.jsx
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -9,8 +8,7 @@ export default function DonatePage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const backendBase =
-    import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+  const backendBase = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
   const validateAmount = () => {
     if (!amount || isNaN(amount) || Number(amount) <= 0) {
@@ -20,61 +18,53 @@ export default function DonatePage() {
     return true;
   };
 
-  const startFlutterwave = async () => {
+  const handlePayment = async (gateway) => {
     if (!validateAmount()) return;
+    setLoading(true);
     try {
-      setLoading(true);
-      const res = await axios.post(`${backendBase}/api/flutterwave/init`, {
-        amount,
-      });
-      window.location.href = res.data.link;
-    } catch (err) {
-      alert("Flutterwave initialization failed");
-    } finally {
-      setLoading(false);
-    }
-  };
+      let endpoint = "";
+      let payload = { amount };
 
-  const startPaystack = async () => {
-    if (!validateAmount()) return;
-    try {
-      setLoading(true);
-      const res = await axios.post(`${backendBase}/api/paystack/init`, {
-        amount,
-      });
-      window.location.href = res.data.authorization_url;
-    } catch (err) {
-      alert("Paystack initialization failed");
-    } finally {
-      setLoading(false);
-    }
-  };
+      switch (gateway) {
+        case "flutterwave":
+          endpoint = "/api/flutterwave/init";
+          break;
+        case "paystack":
+          endpoint = "/api/paystack/init";
+          break;
+        case "paypal":
+          endpoint = "/api/paypal/init";
+          break;
+        case "dodopay":
+          endpoint = "/api/dodopay/init";
+          break;
+        default:
+          return;
+      }
 
-  const startPayPal = async () => {
-    if (!validateAmount()) return;
-    try {
-      setLoading(true);
-      const res = await axios.post(`${backendBase}/api/paypal/init`, {
-        amount,
-      });
-      window.location.href = res.data.approvalUrl;
-    } catch (err) {
-      alert("PayPal initialization failed");
-    } finally {
-      setLoading(false);
-    }
-  };
+      const res = await axios.post(`${backendBase}${endpoint}`, payload);
 
-  const startDodoPay = async () => {
-    if (!validateAmount()) return;
-    try {
-      setLoading(true);
-      const res = await axios.post(`${backendBase}/api/dodopay/init`, {
-        amount,
-      });
-      window.location.href = res.data.checkout_url;
+      // Redirect based on gateway
+      switch (gateway) {
+        case "flutterwave":
+          if (res.data.link) window.location.href = res.data.link;
+          else alert("Flutterwave link unavailable");
+          break;
+        case "paystack":
+          if (res.data.authorization_url) window.location.href = res.data.authorization_url;
+          else alert("Paystack link unavailable");
+          break;
+        case "paypal":
+          if (res.data.approvalUrl) window.location.href = res.data.approvalUrl;
+          else alert("PayPal link unavailable");
+          break;
+        case "dodopay":
+          if (res.data.checkout_url) window.location.href = res.data.checkout_url;
+          else alert("DodoPay link unavailable");
+          break;
+      }
     } catch (err) {
-      alert("DodoPay initialization failed");
+      alert(`${gateway.charAt(0).toUpperCase() + gateway.slice(1)} initialization failed`);
     } finally {
       setLoading(false);
     }
@@ -169,7 +159,7 @@ export default function DonatePage() {
 
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           <button
-            onClick={startFlutterwave}
+            onClick={() => handlePayment("flutterwave")}
             disabled={loading}
             style={{ background: "#f97316", color: "#000", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}
           >
@@ -177,7 +167,7 @@ export default function DonatePage() {
           </button>
 
           <button
-            onClick={startPaystack}
+            onClick={() => handlePayment("paystack")}
             disabled={loading}
             style={{ background: "#22c55e", color: "#000", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}
           >
@@ -185,7 +175,7 @@ export default function DonatePage() {
           </button>
 
           <button
-            onClick={startPayPal}
+            onClick={() => handlePayment("paypal")}
             disabled={loading}
             style={{ background: "#3b82f6", color: "#fff", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}
           >
@@ -193,7 +183,7 @@ export default function DonatePage() {
           </button>
 
           <button
-            onClick={startDodoPay}
+            onClick={() => handlePayment("dodopay")}
             disabled={loading}
             style={{ background: "#a855f7", color: "#fff", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}
           >
