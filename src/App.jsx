@@ -7,12 +7,12 @@ import { useState } from "react";
 // MAIN PAGES
 import LandingPage from "./pages/LandingPage";
 import Home from "./pages/Home";
-import DonatePage from "./pages/DonatePage";               // ✅ Updated import
+import DonatePage from "./pages/DonatePage";
 import DonateSuccess from "./pages/DonateSuccess";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import Refund from "./pages/Refund";
-import BankTransfer from "./pages/BankTransfer";
+import BankTransfer from "./pages/BankTransfer.jsx"; // 🔧 FIXED
 
 // USER AUTH
 import Register from "./pages/Register";
@@ -43,7 +43,7 @@ function ChatBot() {
     setInput("");
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/ai`, {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/ai`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: input }),
@@ -126,24 +126,10 @@ function AnimatedRoutes() {
         {/* PUBLIC ROUTES */}
         <Route path="/" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><LandingPage /></motion.div>} />
         <Route path="/home" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><Home /></motion.div>} />
-        <Route
-         path="/donate"
-        element={
-          <motion.div variants={anim} initial="initial" animate="in" exit="out">
-         <DonatePage />
-       </motion.div>
-       }
-     />
+        <Route path="/donate" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><DonatePage /></motion.div>} />
+        <Route path="/donate-success" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><DonateSuccess /></motion.div>} />
 
-       <Route
-       path="/donate-success"
-       element={
-        <motion.div variants={anim} initial="initial" animate="in" exit="out">
-          <DonateSuccess />
-           </motion.div>
-         }
-        />
-        
+        {/* 🔧 BANK TRANSFER ROUTE */}
         <Route path="/bank-transfer" element={<BankTransfer />} />
 
         {/* USER AUTH */}
@@ -159,8 +145,6 @@ function AnimatedRoutes() {
 
         {/* ADMIN AUTH */}
         <Route path="/admin/login" element={<AdminLogin />} />
-
-        {/* PROTECTED ADMIN DASHBOARD */}
         <Route path="/admin/dashboard" element={
           <AdminRoute>
             <AdminDashboard />

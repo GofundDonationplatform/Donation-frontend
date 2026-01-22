@@ -21,48 +21,53 @@ export default function DonatePage() {
   const handlePayment = async (gateway) => {
     if (!validateAmount()) return;
     setLoading(true);
+
     try {
       let endpoint = "";
       let payload = { amount };
 
       switch (gateway) {
-     case "flutterwave":
-     endpoint = "/api/flutterwave";
-     break;
-     case "paystack":
-     endpoint = "/api/paystack";
-     break;
-     case "paypal":
-     endpoint = "/api/paypal";
-     break;
-     case "dodopay":
-     endpoint = "/api/dodopay";
-     break;
-   }
+        case "flutterwave":
+          endpoint = "/api/flutterwave";
+          break;
+        case "paystack":
+          endpoint = "/api/paystack";
+          break;
+        case "paypal":
+          endpoint = "/api/paypal";
+          break;
+        case "dodopay":
+          endpoint = "/api/dodopay";
+          break;
+        default:
+          throw new Error("Invalid payment gateway");
+      }
 
       const res = await axios.post(`${backendBase}${endpoint}`, payload);
 
-      // Redirect based on gateway
       switch (gateway) {
         case "flutterwave":
           if (res.data.link) window.location.href = res.data.link;
           else alert("Flutterwave link unavailable");
           break;
+
         case "paystack":
           if (res.data.authorization_url) window.location.href = res.data.authorization_url;
           else alert("Paystack link unavailable");
           break;
+
         case "paypal":
           if (res.data.approvalUrl) window.location.href = res.data.approvalUrl;
           else alert("PayPal link unavailable");
           break;
+
         case "dodopay":
           if (res.data.checkout_url) window.location.href = res.data.checkout_url;
           else alert("DodoPay link unavailable");
           break;
       }
     } catch (err) {
-      alert(`${gateway.charAt(0).toUpperCase() + gateway.slice(1)} initialization failed`);
+      alert(`${gateway.toUpperCase()} initialization failed`);
     } finally {
       setLoading(false);
     }
@@ -91,21 +96,11 @@ export default function DonatePage() {
         color: "#fff"
       }}>
 
-        <h2 style={{
-          textAlign: "center",
-          fontSize: "22px",
-          marginBottom: "6px",
-          color: "#22d3ee"
-        }}>
+        <h2 style={{ textAlign: "center", fontSize: "22px", marginBottom: "6px", color: "#22d3ee" }}>
           Support a Digital Impact
         </h2>
 
-        <p style={{
-          textAlign: "center",
-          fontSize: "13px",
-          color: "#94a3b8",
-          marginBottom: "18px"
-        }}>
+        <p style={{ textAlign: "center", fontSize: "13px", color: "#94a3b8", marginBottom: "18px" }}>
           Select an amount and continue securely
         </p>
 
@@ -156,52 +151,33 @@ export default function DonatePage() {
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-          <button
-            onClick={() => handlePayment("flutterwave")}
-            disabled={loading}
-            style={{ background: "#f97316", color: "#000", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}
-          >
+          <button onClick={() => handlePayment("flutterwave")} disabled={loading}
+            style={{ background: "#f97316", color: "#000", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}>
             Pay with Flutterwave
           </button>
 
-          <button
-            onClick={() => handlePayment("paystack")}
-            disabled={loading}
-            style={{ background: "#22c55e", color: "#000", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}
-          >
+          <button onClick={() => handlePayment("paystack")} disabled={loading}
+            style={{ background: "#22c55e", color: "#000", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}>
             Pay with Paystack
           </button>
 
-          <button
-            onClick={() => handlePayment("paypal")}
-            disabled={loading}
-            style={{ background: "#3b82f6", color: "#fff", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}
-          >
+          <button onClick={() => handlePayment("paypal")} disabled={loading}
+            style={{ background: "#3b82f6", color: "#fff", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}>
             Pay with PayPal
           </button>
 
-          <button
-            onClick={() => handlePayment("dodopay")}
-            disabled={loading}
-            style={{ background: "#a855f7", color: "#fff", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}
-          >
+          <button onClick={() => handlePayment("dodopay")} disabled={loading}
+            style={{ background: "#a855f7", color: "#fff", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}>
             Pay with DodoPay
           </button>
 
-          <button
-            onClick={goToBankTransfer}
-            style={{ background: "#475569", color: "#fff", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}
-          >
+          <button onClick={goToBankTransfer}
+            style={{ background: "#475569", color: "#fff", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}>
             Bank Transfer
           </button>
         </div>
 
-        <p style={{
-          textAlign: "center",
-          fontSize: "11px",
-          color: "#94a3b8",
-          marginTop: "16px"
-        }}>
+        <p style={{ textAlign: "center", fontSize: "11px", color: "#94a3b8", marginTop: "16px" }}>
           Payments are processed securely via third-party gateways.
         </p>
 
