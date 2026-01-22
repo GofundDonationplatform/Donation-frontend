@@ -1,49 +1,30 @@
-import React from "react";
+// src/pages/BankTransfer.jsx
+import React from 'react';
 
 export default function BankTransfer() {
   return (
-    <div style={{
-      minHeight: "100vh",
-      background: "#020617",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      padding: "20px",
-      color: "#fff"
-    }}>
+    <div style={{ padding: '2rem', textAlign: 'center' }}>
+      <h1>Bank Transfer Payment</h1>
+      <p>Please follow the instructions below to complete your bank transfer:</p>
+
       <div style={{
-        width: "100%",
-        maxWidth: "520px",
-        background: "#0f172a",
-        borderRadius: "16px",
-        padding: "24px",
-        boxShadow: "0 10px 30px rgba(0,0,0,0.5)"
+        marginTop: '2rem',
+        border: '1px solid #ccc',
+        padding: '1rem',
+        borderRadius: '8px',
+        display: 'inline-block',
+        textAlign: 'left',
+        minWidth: '300px'
       }}>
-        <h2 style={{ color: "#22d3ee", textAlign: "center" }}>
-          Bank Transfer Details
-        </h2>
-
-        <p style={{ color: "#94a3b8", textAlign: "center", marginBottom: "16px" }}>
-          Use the details below to complete your transfer.
-        </p>
-
-        <div style={{ lineHeight: "1.9", fontSize: "14px" }}>
-          <div><strong>Account Holder:</strong> GFSSGA IMPACT NETWORK</div>
-          <div><strong>Account Number:</strong> 214673810876</div>
-          <div><strong>Bank Name:</strong> Lead Bank</div>
-          <div><strong>Country Code:</strong> US</div>
-          <div><strong>ACH Routing:</strong> 101019644</div>
-          <div><strong>Wire Routing:</strong> 101019644</div>
-          <div><strong>Bank Address:</strong> 1801 Main St., Kansas City, MO 64108</div>
-          <div><strong>Account Type:</strong> Checking</div>
-        </div>
-
-        <p style={{ marginTop: "16px", fontSize: "12px", color: "#94a3b8" }}>
-          After payment, please email your receipt to:
-          <br />
-          <strong>gofunddonationplatformhelpneed@gmail.com</strong>
-        </p>
+        <p><strong>Account Name:</strong> GFSSGA Impact Network</p>
+        <p><strong>Account Number:</strong> 1234567890</p>
+        <p><strong>Bank Name:</strong> Example Bank</p>
+        <p><strong>Amount:</strong> Enter your donation amount</p>
       </div>
+
+      <p style={{ marginTop: '1.5rem' }}>
+        After completing the transfer, click the confirmation button in the app to notify us.
+      </p>
     </div>
   );
 }
