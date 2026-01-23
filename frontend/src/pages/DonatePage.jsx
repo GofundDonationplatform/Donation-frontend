@@ -8,65 +8,71 @@ export default function DonatePage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const backendBase = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+  const backendBase =
+  import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
-  const validateAmount = () => {
-    if (!amount || isNaN(amount) || Number(amount) <= 0) {
-      alert("Please enter a valid amount");
-      return false;
+const handlePayment = async (gateway) => {
+  if (!validateAmount()) return;
+  setLoading(true);
+
+  try {
+    let endpoint = "";
+    let payload = { amount };
+
+    switch (gateway) {
+      case "flutterwave":
+        endpoint = "/api/flutterwave";
+        break;
+      case "paystack":
+        endpoint = "/api/paystack";
+        break;
+      case "paypal":
+        endpoint = "/api/paypal";
+        break;
+      case "dodopay":
+        endpoint = "/api/dodopay";
+        break;
+      default:
+        throw new Error("Invalid payment gateway");
     }
-    return true;
-  };
 
-  const handlePayment = async (gateway) => {
-    if (!validateAmount()) return;
-    setLoading(true);
-    try {
-      let endpoint = "";
-      let payload = { amount };
+    const res = await axios.post(`${backendBase}${endpoint}`, payload);
 
-      switch (gateway) {
-     case "flutterwave":
-     endpoint = "/api/flutterwave";
-     break;
-     case "paystack":
-     endpoint = "/api/paystack";
-     break;
-     case "paypal":
-     endpoint = "/api/paypal";
-     break;
-     case "dodopay":
-     endpoint = "/api/dodopay";
-     break;
-   }
+    switch (gateway) {
+      case "flutterwave":
+        if (res.data?.link) window.location.href = res.data.link;
+        else throw new Error("Flutterwave link unavailable");
+        break;
 
-      const res = await axios.post(`${backendBase}${endpoint}`, payload);
+      case "paystack":
+        if (res.data?.authorization_url)
+          window.location.href = res.data.authorization_url;
+        else throw new Error("Paystack link unavailable");
+        break;
 
-      // Redirect based on gateway
-      switch (gateway) {
-        case "flutterwave":
-          if (res.data.link) window.location.href = res.data.link;
-          else alert("Flutterwave link unavailable");
-          break;
-        case "paystack":
-          if (res.data.authorization_url) window.location.href = res.data.authorization_url;
-          else alert("Paystack link unavailable");
-          break;
-        case "paypal":
-          if (res.data.approvalUrl) window.location.href = res.data.approvalUrl;
-          else alert("PayPal link unavailable");
-          break;
-        case "dodopay":
-          if (res.data.checkout_url) window.location.href = res.data.checkout_url;
-          else alert("DodoPay link unavailable");
-          break;
-      }
-    } catch (err) {
-      alert(`${gateway.charAt(0).toUpperCase() + gateway.slice(1)} initialization failed`);
-    } finally {
-      setLoading(false);
+      case "paypal":
+        if (res.data?.approvalUrl)
+          window.location.href = res.data.approvalUrl;
+        else throw new Error("PayPal link unavailable");
+        break;
+
+      case "dodopay":
+        if (res.data?.checkout_url)
+          window.location.href = res.data.checkout_url;
+        else throw new Error("DodoPay link unavailable");
+        break;
     }
-  };
+  } catch (err) {
+    console.error(err);
+    alert(
+      err?.response?.data?.message ||
+        err.message ||
+        "Payment initialization failed"
+    );
+  } finally {
+    setLoading(false);
+  }
+};
 
   const goToBankTransfer = () => {
     navigate("/bank-transfer");
