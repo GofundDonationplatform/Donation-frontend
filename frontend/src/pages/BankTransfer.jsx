@@ -1,125 +1,82 @@
-// src/pages/BankTransfer.jsx
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function BankTransfer() {
+  const navigate = useNavigate();
+
+  const BANK_DETAILS = {
+    accountHolder: "GFSSGA IMPACT NETWORK",
+    accountNumber: "214673810876",
+    bankName: "Lead Bank",
+    countryCode: "US",
+    achRouting: "101019644",
+    wireRouting: "101019644",
+    bankAddress: "1801 Main St., Kansas City, MO 64108",
+    accountType: "Checking",
+    currency: "USD",
+    reference: "Donor Name or Email",
+    email: "support@gofund.com",
+  };
+
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#020617",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "20px",
-        color: "#fff",
-      }}
-    >
+    <div style={{ maxWidth: "720px", margin: "0 auto", padding: "24px" }}>
+      <h2>Bank Transfer Details</h2>
+
+      <p>Please make a transfer using the details below and email your proof of payment.</p>
+
       <div
         style={{
-          width: "100%",
-          maxWidth: "480px",
-          background: "#0f172a",
-          borderRadius: "16px",
-          padding: "24px",
-          boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
+          background: "#f9f9f9",
+          border: "1px solid #ddd",
+          borderRadius: "8px",
+          padding: "16px",
+          marginTop: "16px",
         }}
       >
-        <h2
-          style={{
-            textAlign: "center",
-            fontSize: "22px",
-            marginBottom: "10px",
-            color: "#22d3ee",
-          }}
-        >
-          Bank Transfer Details
-        </h2>
+        <p><strong>Account Holder:</strong> {BANK_DETAILS.accountHolder}</p>
+        <p><strong>Account Number:</strong> {BANK_DETAILS.accountNumber}</p>
+        <p><strong>Bank Name:</strong> {BANK_DETAILS.bankName}</p>
+        <p><strong>Country Code:</strong> {BANK_DETAILS.countryCode}</p>
+        <p><strong>ACH Routing:</strong> {BANK_DETAILS.achRouting}</p>
+        <p><strong>Wire Routing:</strong> {BANK_DETAILS.wireRouting}</p>
+        <p><strong>Bank Address:</strong> {BANK_DETAILS.bankAddress}</p>
+        <p><strong>Account Type:</strong> {BANK_DETAILS.accountType}</p>
+        <p><strong>Currency:</strong> {BANK_DETAILS.currency}</p>
+        <p><strong>Reference:</strong> {BANK_DETAILS.reference}</p>
 
-        <p
-          style={{
-            textAlign: "center",
-            fontSize: "13px",
-            color: "#94a3b8",
-            marginBottom: "18px",
-          }}
-        >
-          Please make a transfer using the details below and email your proof of
-          payment.
+        <p style={{ marginTop: "12px" }}>
+          After payment, email your receipt to:  
+          <strong> {BANK_DETAILS.email}</strong>
         </p>
+      </div>
 
-        <div
+      <div style={{ marginTop: "24px", display: "flex", gap: "12px" }}>
+        <button
+          onClick={() => navigate(-1)}
           style={{
-            background: "#020617",
-            borderRadius: "12px",
-            padding: "16px",
-            border: "1px solid #334155",
-            marginBottom: "16px",
+            padding: "10px 16px",
+            borderRadius: "6px",
+            border: "1px solid #ccc",
+            background: "#fff",
+            cursor: "pointer",
           }}
         >
-          <div style={{ marginBottom: "10px" }}>
-            <strong>Bank Name:</strong> Example Bank
-          </div>
-          <div style={{ marginBottom: "10px" }}>
-            <strong>Account Name:</strong> GoFund Digital Impact Support
-          </div>
-          <div style={{ marginBottom: "10px" }}>
-            <strong>Account Number:</strong> 1234567890
-          </div>
-          <div style={{ marginBottom: "10px" }}>
-            <strong>Currency:</strong> USD / NGN
-          </div>
-          <div style={{ marginBottom: "10px" }}>
-            <strong>Reference:</strong> Your Name or Email
-          </div>
-        </div>
+          Back
+        </button>
 
-        <p
+        <button
+          onClick={() => alert("Thank you. We will verify your payment shortly.")}
           style={{
-            fontSize: "12px",
-            color: "#94a3b8",
-            marginBottom: "18px",
-            textAlign: "center",
+            padding: "10px 16px",
+            borderRadius: "6px",
+            border: "none",
+            background: "#2563eb",
+            color: "#fff",
+            cursor: "pointer",
           }}
         >
-          After payment, email your receipt to:
-          <br />
-          <strong>support@gofund.com</strong>
-        </p>
-
-        <div style={{ display: "flex", gap: "10px" }}>
-          <Link
-            to="/donate"
-            style={{
-              flex: 1,
-              background: "#475569",
-              color: "#fff",
-              padding: "10px",
-              borderRadius: "10px",
-              textAlign: "center",
-              textDecoration: "none",
-              fontWeight: "700",
-            }}
-          >
-            Back
-          </Link>
-
-          <Link
-            to="/donate-success"
-            style={{
-              flex: 1,
-              background: "#22d3ee",
-              color: "#000",
-              padding: "10px",
-              borderRadius: "10px",
-              textAlign: "center",
-              textDecoration: "none",
-              fontWeight: "700",
-            }}
-          >
-            I’ve Paid
-          </Link>
-        </div>
+          I’ve Paid
+        </button>
       </div>
     </div>
   );
