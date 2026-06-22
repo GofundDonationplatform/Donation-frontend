@@ -24,3 +24,14 @@ dist-ssr
 *.sw?
 # Allow Netlify redirects
 !public/_redirects
+.env
+env
+
+backend/.env
+backend/backup/.env
+
+*.env
+.env
+backend/.env
+backend/backup/.env
+env
