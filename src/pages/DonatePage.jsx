@@ -28,7 +28,7 @@ export default function DonatePage() {
 
     try {
       const res = await axios.post(
-        `${backendBase}/api/paystack`,
+       `${backendBase}/api/paystack/initialize`,
         { amount }
       );
 
