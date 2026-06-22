@@ -6,6 +6,8 @@ export default function DonatePage() {
   const presets = [100, 250, 500, 1000, 3000, 6000, 12000];
 
   const [amount, setAmount] = useState(100);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -13,28 +15,39 @@ export default function DonatePage() {
   const backendBase =
     import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
-  const validateAmount = () => {
+  const validateForm = () => {
     if (!amount || isNaN(amount) || Number(amount) <= 0) {
       alert("Please enter a valid amount");
       return false;
     }
+
+    if (!name.trim()) {
+      alert("Please enter your name");
+      return false;
+    }
+
+    if (!email.trim()) {
+      alert("Please enter your email address");
+      return false;
+    }
+
     return true;
   };
 
   const handlePaystackPayment = async () => {
-    if (!validateAmount()) return;
+    if (!validateForm()) return;
 
     setLoading(true);
 
-   try {
+    try {
       const res = await axios.post(
-    `${backendBase}/api/paystack/initialize`,
-   {
-      amount,
-      email: "donor@gofundss.com",
-      name: "Anonymous Donor"
-    }
-   );
+        `${backendBase}/api/paystack/initialize`,
+        {
+          amount,
+          email,
+          name,
+        }
+      );
 
       if (res.data?.authorization_url) {
         window.location.href = res.data.authorization_url;
@@ -43,8 +56,10 @@ export default function DonatePage() {
       }
     } catch (err) {
       console.error(err);
+
       alert(
-        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+          err?.response?.data?.message ||
           "Paystack initialization failed"
       );
     } finally {
@@ -99,6 +114,39 @@ export default function DonatePage() {
         >
           Select an amount and continue securely
         </p>
+
+        <div style={{ marginBottom: "12px" }}>
+          <input
+            type="text"
+            placeholder="Full Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "10px",
+              borderRadius: "8px",
+              border: "1px solid #334155",
+              background: "#020617",
+              color: "#fff",
+              marginBottom: "10px",
+            }}
+          />
+
+          <input
+            type="email"
+            placeholder="Email Address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "10px",
+              borderRadius: "8px",
+              border: "1px solid #334155",
+              background: "#020617",
+              color: "#fff",
+            }}
+          />
+        </div>
 
         <div style={{ marginBottom: "16px" }}>
           <div
