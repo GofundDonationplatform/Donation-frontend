@@ -26,11 +26,15 @@ export default function DonatePage() {
 
     setLoading(true);
 
-    try {
+   try {
       const res = await axios.post(
-       `${backendBase}/api/paystack/initialize`,
-        { amount }
-      );
+    `${backendBase}/api/paystack/initialize`,
+   {
+      amount,
+      email: "donor@gofundss.com",
+      name: "Anonymous Donor"
+    }
+   );
 
       if (res.data?.authorization_url) {
         window.location.href = res.data.authorization_url;
