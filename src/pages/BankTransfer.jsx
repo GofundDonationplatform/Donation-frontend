@@ -104,7 +104,7 @@ export default function BankTransfer() {
         >
           After making payment, please send proof of payment to:
           <br />
-          <strong>support@gofundss.com</strong>
+          <strong>gfssgaimpactnetwork@gmail.com</strong>
         </p>
 
         <div style={{ display: "flex", gap: "10px" }}>
