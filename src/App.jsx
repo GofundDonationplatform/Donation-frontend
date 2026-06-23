@@ -13,6 +13,7 @@ import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import Refund from "./pages/Refund";
 import BankTransfer from "./pages/BankTransfer.jsx"; // 🔧 FIXED
+import CryptoDonation from "./pages/CryptoDonation";
 
 // USER AUTH
 import Register from "./pages/Register";
@@ -129,6 +130,11 @@ function AnimatedRoutes() {
         <Route path="/donate" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><DonatePage /></motion.div>} />
         <Route path="/donate-success" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><DonateSuccess /></motion.div>} />
 
+        <Route
+        path="/crypto-donation"
+        element={<CryptoDonation />}
+        />
+       
         {/* 🔧 BANK TRANSFER ROUTE */}
         <Route path="/bank-transfer" element={<BankTransfer />} />
 

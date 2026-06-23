@@ -225,7 +225,22 @@ export default function DonatePage() {
             {loading ? "Initializing..." : "Donate with Paystack"}
           </button>
 
-          <button
+            <button
+            onClick={() => navigate("/crypto-donation")}
+            style={{
+             background: "#8b5cf6",
+             color: "#fff",
+             padding: "12px",
+             borderRadius: "10px",
+             border: "none",
+             fontWeight: "700",
+             cursor: "pointer",
+           }}
+         >
+            Crypto Donation
+           </button>
+            
+            <button
             onClick={goToBankTransfer}
             style={{
               background: "#475569",
