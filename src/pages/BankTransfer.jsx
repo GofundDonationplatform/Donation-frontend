@@ -18,7 +18,7 @@ export default function BankTransfer() {
       <div
         style={{
           width: "100%",
-          maxWidth: "480px",
+          maxWidth: "550px",
           background: "#0f172a",
           borderRadius: "16px",
           padding: "24px",
@@ -33,7 +33,7 @@ export default function BankTransfer() {
             color: "#22d3ee",
           }}
         >
-          Bank Transfer Details
+          Bank Transfer Donation
         </h2>
 
         <p
@@ -44,8 +44,7 @@ export default function BankTransfer() {
             marginBottom: "18px",
           }}
         >
-          Please make a transfer using the details below and email your proof of
-          payment.
+          Please use the banking details below to support our mission.
         </p>
 
         <div
@@ -58,20 +57,72 @@ export default function BankTransfer() {
           }}
         >
           <div style={{ marginBottom: "10px" }}>
-            <strong>Bank Name:</strong> Example Bank
+            <strong>Account Holder:</strong> GFSSGA IMPACT NETWORK
           </div>
+
           <div style={{ marginBottom: "10px" }}>
-            <strong>Account Name:</strong> GoFund Digital Impact Support
+            <strong>Account Number:</strong> 214673810876
           </div>
+
           <div style={{ marginBottom: "10px" }}>
-            <strong>Account Number:</strong> 1234567890
+            <strong>Bank Name:</strong> Lead Bank
           </div>
+
           <div style={{ marginBottom: "10px" }}>
-            <strong>Currency:</strong> USD / NGN
+            <strong>Country:</strong> United States (US)
           </div>
+
           <div style={{ marginBottom: "10px" }}>
-            <strong>Reference:</strong> Your Name or Email
+            <strong>ACH Routing:</strong> 101019644
           </div>
+
+          <div style={{ marginBottom: "10px" }}>
+            <strong>Wire Routing:</strong> 101019644
+          </div>
+
+          <div style={{ marginBottom: "10px" }}>
+            <strong>Account Type:</strong> Checking
+          </div>
+
+          <div style={{ marginBottom: "10px" }}>
+            <strong>Bank Address:</strong>
+            <br />
+            1801 Main St.
+            <br />
+            Kansas City, MO 64108
+            <br />
+            United States
+          </div>
+        </div>
+
+        <div
+          style={{
+            background: "#111827",
+            border: "1px solid #374151",
+            borderRadius: "12px",
+            padding: "16px",
+            marginBottom: "18px",
+          }}
+        >
+          <h3
+            style={{
+              color: "#22d3ee",
+              marginBottom: "10px",
+              textAlign: "center",
+            }}
+          >
+            Crypto Donations (Coming Soon)
+          </h3>
+
+          <p
+            style={{
+              textAlign: "center",
+              color: "#94a3b8",
+              fontSize: "13px",
+            }}
+          >
+            USDT and USDC donation wallets will be added soon.
+          </p>
         </div>
 
         <p
@@ -82,9 +133,9 @@ export default function BankTransfer() {
             textAlign: "center",
           }}
         >
-          After payment, email your receipt to:
+          After making payment, please send proof of payment to:
           <br />
-          <strong>support@gofund.com</strong>
+          <strong>support@gofundss.com</strong>
         </p>
 
         <div style={{ display: "flex", gap: "10px" }}>
@@ -117,7 +168,7 @@ export default function BankTransfer() {
               fontWeight: "700",
             }}
           >
-            I’ve Paid
+            I've Paid
           </Link>
         </div>
       </div>
