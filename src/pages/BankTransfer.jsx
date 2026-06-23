@@ -94,37 +94,6 @@ export default function BankTransfer() {
             United States
           </div>
         </div>
-
-        <div
-          style={{
-            background: "#111827",
-            border: "1px solid #374151",
-            borderRadius: "12px",
-            padding: "16px",
-            marginBottom: "18px",
-          }}
-        >
-          <h3
-            style={{
-              color: "#22d3ee",
-              marginBottom: "10px",
-              textAlign: "center",
-            }}
-          >
-            Crypto Donations (Coming Soon)
-          </h3>
-
-          <p
-            style={{
-              textAlign: "center",
-              color: "#94a3b8",
-              fontSize: "13px",
-            }}
-          >
-            USDT and USDC donation wallets will be added soon.
-          </p>
-        </div>
-
         <p
           style={{
             fontSize: "12px",
