@@ -2,6 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 export default function CryptoDonation() {
+  const copyAddress = (address) => {
+    navigator.clipboard.writeText(address);
+    alert("Wallet address copied successfully!");
+  };
+
   return (
     <div
       style={{
@@ -69,6 +74,24 @@ export default function CryptoDonation() {
           >
             TGZBf16hZhFH5MARpssBvq4donG67iRVGb
           </p>
+
+          <button
+            onClick={() =>
+              copyAddress("TGZBf16hZhFH5MARpssBvq4donG67iRVGb")
+            }
+            style={{
+              marginTop: "10px",
+              background: "#22c55e",
+              color: "#000",
+              border: "none",
+              padding: "8px 12px",
+              borderRadius: "8px",
+              fontWeight: "700",
+              cursor: "pointer",
+            }}
+          >
+            Copy USDT Address
+          </button>
         </div>
 
         <div
@@ -96,6 +119,26 @@ export default function CryptoDonation() {
           >
             2TiPFJrJg1GMbMXjSuhDmGvcqtiwC6KR6QxDZgutQ92R
           </p>
+
+          <button
+            onClick={() =>
+              copyAddress(
+                "2TiPFJrJg1GMbMXjSuhDmGvcqtiwC6KR6QxDZgutQ92R"
+              )
+            }
+            style={{
+              marginTop: "10px",
+              background: "#60a5fa",
+              color: "#000",
+              border: "none",
+              padding: "8px 12px",
+              borderRadius: "8px",
+              fontWeight: "700",
+              cursor: "pointer",
+            }}
+          >
+            Copy USDC Address
+          </button>
         </div>
 
         <div
