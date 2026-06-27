@@ -24,7 +24,7 @@ export const initializePaystack = async (req, res) => {
       amount: amountInKobo,
       currency: currency || "NGN",
       metadata: { name },
-      callback_url: process.env.PAYSTACK_CALLBACK_URL, // Example: https://yourdomain.com/success
+      callback_url: `${process.env.FRONTEND_URL.replace(/\/$/, "")}/donate-success`, 
     };
 
     const response = await axios.post(
