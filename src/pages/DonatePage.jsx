@@ -161,16 +161,6 @@ export default function DonatePage() {
             Pay with Paystack
           </button>
 
-          <button onClick={() => handlePayment("paypal")} disabled={loading}
-            style={{ background: "#3b82f6", color: "#fff", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}>
-            Pay with PayPal
-          </button>
-
-          <button onClick={() => handlePayment("dodopay")} disabled={loading}
-            style={{ background: "#a855f7", color: "#fff", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}>
-            Pay with DodoPay
-          </button>
-
           <button onClick={goToBankTransfer}
             style={{ background: "#475569", color: "#fff", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "700" }}>
             Bank Transfer
