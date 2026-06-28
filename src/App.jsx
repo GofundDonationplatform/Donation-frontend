@@ -13,6 +13,7 @@ import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import Refund from "./pages/Refund";
 import BankTransfer from "./pages/BankTransfer.jsx"; // 🔧 FIXED
+import CryptoDonation from "./pages/CryptoDonation";
 
 // USER AUTH
 import Register from "./pages/Register";
@@ -131,6 +132,7 @@ function AnimatedRoutes() {
 
         {/* 🔧 BANK TRANSFER ROUTE */}
         <Route path="/bank-transfer" element={<BankTransfer />} />
+        <Route path="/crypto" element={<CryptoDonation />} />
 
         {/* USER AUTH */}
         <Route path="/register" element={<Register />} />
