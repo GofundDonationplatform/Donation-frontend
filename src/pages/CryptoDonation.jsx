@@ -40,7 +40,7 @@ export default function CryptoDonation() {
           }}
         >
           Crypto Donation
-        </h2>
+         </h2>
 
         <p
           style={{
