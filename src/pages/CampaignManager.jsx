@@ -316,6 +316,68 @@ return (
       </form>
     )}
 
+<div
+  style={{
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "15px",
+    margin: "25px 0",
+    alignItems: "center",
+  }}
+>
+  <input
+    type="text"
+    placeholder="🔍 Search campaigns..."
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+    style={{
+      flex: "1",
+      minWidth: "220px",
+      padding: "12px",
+      borderRadius: "8px",
+      border: "1px solid #334155",
+      background: "#0f172a",
+      color: "#fff",
+    }}
+  />
+
+  <select
+    value={statusFilter}
+    onChange={(e) => setStatusFilter(e.target.value)}
+    style={{
+      padding: "12px",
+      borderRadius: "8px",
+      background: "#0f172a",
+      color: "#fff",
+    }}
+  >
+    <option value="All">All Status</option>
+    <option value="Pending">Pending</option>
+    <option value="Approved">Approved</option>
+    <option value="Paused">Paused</option>
+    <option value="Rejected">Rejected</option>
+    <option value="Completed">Completed</option>
+  </select>
+
+  <select
+    value={categoryFilter}
+    onChange={(e) => setCategoryFilter(e.target.value)}
+    style={{
+      padding: "12px",
+      borderRadius: "8px",
+      background: "#0f172a",
+      color: "#fff",
+    }}
+  >
+    <option value="All">All Categories</option>
+    <option value="General">General</option>
+    <option value="Education">Education</option>
+    <option value="Health">Health</option>
+    <option value="Emergency">Emergency</option>
+    <option value="Community">Community</option>
+  </select>
+</div>
+
     <div
   style={{
     marginTop: "30px",
