@@ -359,52 +359,100 @@ return (
               {Number(campaign.goalAmount).toLocaleString()}
             </p>
 
-            <p>Status: {campaign.status}</p>
+      <div
+       style={{
+        marginTop: "10px",
+        display: "flex",
+        alignItems: "center",
+        gap: "10px",
+        flexWrap: "wrap",
+     }}
+   >
+     <strong>Status:</strong>
 
-            {campaign.featured && (
-              <span
-                style={{
-                  color: "#facc15",
-                  fontWeight: "bold",
-                }}
-              >
-                ⭐ Featured
-              </span>
-            )}
-          </div>
+     <select
+      value={campaign.status}
+      onChange={(e) =>
+      updateStatus(campaign._id, e.target.value)
+    }
+    style={{
+      padding: "8px",
+      borderRadius: "6px",
+      background: "#0f172a",
+      color: "#fff",
+      border: "1px solid #334155",
+    }}
+  >
+      <option value="Pending">Pending</option>
+      <option value="Approved">Approved</option>
+      <option value="Paused">Paused</option>
+      <option value="Closed">Closed</option>
+      </select>
 
-          <div
+      <span
+       style={{
+       padding: "4px 10px",
+       borderRadius: "20px",
+       fontWeight: "bold",
+       background:
+        campaign.status === "Approved"
+          ? "#16a34a"
+          : campaign.status === "Pending"
+          ? "#f59e0b"
+          : campaign.status === "Paused"
+          ? "#2563eb"
+          : "#dc2626",
+      color: "#fff",
+    }}
+  >
+    {campaign.status}
+  </span>
+ </div>
+
+    {campaign.featured && (
+       <span
+        style={{
+          color: "#facc15",
+          fontWeight: "bold",
+     }}
+    >
+     ⭐ Featured
+        </span>
+     )}
+     </div>
+
+        <div
+          style={{
+          display: "flex",
+          gap: "10px",
+          marginTop: "10px",
+     }}
+    >
+       <button
+         onClick={() => editCampaign(campaign)}
+           style={{
+              background: "#0284c7",
+              color: "#fff",
+              border: "none",
+              padding: "10px 18px",
+              borderRadius: "8px",
+              cursor: "pointer",
+     }}
+    >
+         Edit
+       </button>
+
+        <button
+          onClick={() => deleteCampaign(campaign._id)}
             style={{
-              display: "flex",
-              gap: "10px",
-              marginTop: "10px",
-            }}
-          >
-            <button
-              onClick={() => editCampaign(campaign)}
-              style={{
-                background: "#0284c7",
-                color: "#fff",
-                border: "none",
-                padding: "10px 18px",
-                borderRadius: "8px",
-                cursor: "pointer",
-              }}
-            >
-              Edit
-            </button>
-
-            <button
-              onClick={() => deleteCampaign(campaign._id)}
-              style={{
-                background: "#dc2626",
-                color: "#fff",
-                border: "none",
-                padding: "10px 18px",
-                borderRadius: "8px",
-                cursor: "pointer",
-              }}
-            >
+               background: "#dc2626",
+               color: "#fff",
+               border: "none",
+               padding: "10px 18px",
+               borderRadius: "8px",
+               cursor: "pointer",
+      }}
+    >
               Delete
             </button>
           </div>
