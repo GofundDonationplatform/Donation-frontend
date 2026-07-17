@@ -294,14 +294,125 @@ return (
     )}
 
     <div
+  style={{
+    marginTop: "30px",
+    background: "#0f172a",
+    borderRadius: "12px",
+    padding: "20px",
+  }}
+>
+  <h2
+    style={{
+      color: "#22d3ee",
+      marginBottom: "20px",
+    }}
+  >
+    Campaign List
+  </h2>
+
+  {loading ? (
+    <p>Loading campaigns...</p>
+  ) : campaigns.length === 0 ? (
+    <p>No campaigns found.</p>
+  ) : (
+    <div
       style={{
-        background: "#0f172a",
-        padding: "20px",
-        borderRadius: "12px",
+        display: "grid",
+        gap: "18px",
       }}
     >
-      <p>Campaign list will be restored next…</p>
+      {campaigns.map((campaign) => (
+        <div
+          key={campaign._id}
+          style={{
+            background: "#1e293b",
+            borderRadius: "10px",
+            padding: "18px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+          }}
+        >
+          <div style={{ flex: 1 }}>
+            <h3
+              style={{
+                color: "#fff",
+                marginBottom: "8px",
+              }}
+            >
+              {campaign.title}
+            </h3>
+
+            <p style={{ color: "#94a3b8" }}>
+              {campaign.category}
+            </p>
+
+            <p
+              style={{
+                color: "#22d3ee",
+                fontWeight: "bold",
+              }}
+            >
+              Goal:
+              ₦
+              {Number(campaign.goalAmount).toLocaleString()}
+            </p>
+
+            <p>Status: {campaign.status}</p>
+
+            {campaign.featured && (
+              <span
+                style={{
+                  color: "#facc15",
+                  fontWeight: "bold",
+                }}
+              >
+                ⭐ Featured
+              </span>
+            )}
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              gap: "10px",
+              marginTop: "10px",
+            }}
+          >
+            <button
+              onClick={() => editCampaign(campaign)}
+              style={{
+                background: "#0284c7",
+                color: "#fff",
+                border: "none",
+                padding: "10px 18px",
+                borderRadius: "8px",
+                cursor: "pointer",
+              }}
+            >
+              Edit
+            </button>
+
+            <button
+              onClick={() => deleteCampaign(campaign._id)}
+              style={{
+                background: "#dc2626",
+                color: "#fff",
+                border: "none",
+                padding: "10px 18px",
+                borderRadius: "8px",
+                cursor: "pointer",
+              }}
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      ))}
     </div>
-  </div>
+  )}
+ </div>
+</div>
 );
 }
