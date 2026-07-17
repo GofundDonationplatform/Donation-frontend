@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function CampaignManager() {
+const API_BASE =
+import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+ export default function CampaignManager() {
   const [campaigns, setCampaigns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -28,7 +30,7 @@ export default function CampaignManager() {
 
   const fetchCampaigns = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/campaigns");
+      const res = await axios.get(`${API_BASE}/api/campaigns`);
       setCampaigns(res.data.campaigns);
     } catch (err) {
       console.error("Failed to load campaigns:", err);
@@ -64,14 +66,14 @@ export default function CampaignManager() {
 
     if (editingId) {
       await axios.put(
-        `http://localhost:5000/api/campaigns/${editingId}`,
+        `${API_BASE}/api/campaigns/${editingId}`,
         payload
       );
 
       alert("Campaign updated successfully!");
     } else {
       await axios.post(
-       "http://localhost:5000/api/campaigns",
+       `${API_BASE}/api/campaigns`,
        payload,
      {
        headers: {
@@ -112,7 +114,7 @@ const deleteCampaign = async (id) => {
   if (!confirmDelete) return;
 
   try {
-    await axios.delete(`http://localhost:5000/api/campaigns/${id}`);
+    await axios.delete(`${API_BASE}/api/campaigns/${id}`);
 
     alert("Campaign deleted successfully!");
 
@@ -127,7 +129,7 @@ const deleteCampaign = async (id) => {
 const updateCampaignStatus = async (id, status) => {
   try {
     await axios.put(
-      `http://localhost:5000/api/campaigns/${id}`,
+      `${API_BASE}/api/campaigns/${id}`,
       { status }
     );
 
@@ -142,7 +144,7 @@ const updateCampaignStatus = async (id, status) => {
 const updateStatus = async (id, status) => {
   try {
     await axios.put(
-      `http://localhost:5000/api/campaigns/${id}`,
+      `${API_BASE}/api/campaigns/${id}`,
       {
         status,
       }
