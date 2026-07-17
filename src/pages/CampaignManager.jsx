@@ -17,6 +17,10 @@ export default function CampaignManager() {
   status: "Active",
  });
 
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [categoryFilter, setCategoryFilter] = useState("All");
+
   useEffect(() => {
     fetchCampaigns();
   }, []);
@@ -170,6 +174,25 @@ const editCampaign = (campaign) => {
   });
 };
 
+const filteredCampaigns = campaigns.filter((campaign) => {
+  const matchesSearch =
+    campaign.title.toLowerCase().includes(search.toLowerCase());
+
+  const matchesStatus =
+    statusFilter === "All" ||
+    campaign.status === statusFilter;
+
+  const matchesCategory =
+    categoryFilter === "All" ||
+    campaign.category === categoryFilter;
+
+  return (
+    matchesSearch &&
+    matchesStatus &&
+    matchesCategory
+  );
+});
+
 return (
   <div
     style={{
@@ -321,7 +344,7 @@ return (
         gap: "18px",
       }}
     >
-      {campaigns.map((campaign) => (
+      {filteredCampaigns.map((campaign) => (
         <div
           key={campaign._id}
           style={{
