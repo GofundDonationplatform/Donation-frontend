@@ -20,6 +20,7 @@ export default function CampaignManager() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [categoryFilter, setCategoryFilter] = useState("All");
+  const [featuredFilter, setFeaturedFilter] = useState("All");
 
   useEffect(() => {
     fetchCampaigns();
@@ -186,11 +187,19 @@ const filteredCampaigns = campaigns.filter((campaign) => {
     categoryFilter === "All" ||
     campaign.category === categoryFilter;
 
+  const matchesFeatured =
+    featuredFilter === "All"
+    ? true
+    : featuredFilter === "Featured"
+    ? campaign.featured
+    : !campaign.featured;
+
   return (
-    matchesSearch &&
-    matchesStatus &&
-    matchesCategory
-  );
+   matchesSearch &&
+   matchesStatus &&
+   matchesCategory &&
+   matchesFeatured
+);
 });
 
 return (
@@ -376,6 +385,21 @@ return (
     <option value="Emergency">Emergency</option>
     <option value="Community">Community</option>
   </select>
+
+  <select
+  value={featuredFilter}
+  onChange={(e) => setFeaturedFilter(e.target.value)}
+  style={{
+    padding: "12px",
+    borderRadius: "8px",
+    background: "#0f172a",
+    color: "#fff",
+  }}
+>
+  <option value="All">All Campaigns</option>
+  <option value="Featured">Featured Only</option>
+  <option value="Normal">Non Featured</option>
+</select>
 </div>
 
     <div
