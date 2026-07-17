@@ -1,36 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function Home() {
-  const campaigns = [
-    {
-      id: 1,
-      title: "support community services",
-      description:
-        "Help provide food, shelter, and education for children in underprivileged African communities.",
-      image: "/images/african-children.jpg",
-    },
-    {
-      id: 2,
-      title: "Empower Women Entrepreneurs",
-      description:
-        "Support small business grants and training programs for women across developing nations.",
-      image: "/images/women.jpg",
-    },
-    {
-      id: 3,
-      title: "build digital infrastructure for Every Child",
-      description:
-        "Contribute to building safe, accessible schools in rural regions where education is scarce.",
-      image: "/images/school.jpg",
-    },
-    {
-      id: 4,
-      title: "digital access initiative",
-      description:
-        "Your digital impact support credits wells and water filtration systems in communities lacking clean water.",
-      image: "/images/clean-water.jpg",
-    },
-  ];
+  const [campaigns, setCampaigns] = useState([]);
+
+useEffect(() => {
+  loadCampaigns();
+}, []);
+
+const loadCampaigns = async () => {
+  try {
+    const res = await axios.get(
+      "http://localhost:5000/api/campaigns"
+    );
+
+    setCampaigns(res.data.campaigns);
+
+  } catch (err) {
+    console.error("Campaign loading failed:", err);
+  }
+};
 
   return (
     <div
@@ -67,7 +56,10 @@ export default function Home() {
           someone’s story. Together, we bring hope and opportunity.
         </p>
         <button
-          onClick={() => (window.location.href = "/donate")}
+           onClick={(e) => {
+           e.stopPropagation();
+           window.location.href = `/campaign/${c._id}`;
+          }}
           style={{
             background:
               "linear-gradient(90deg, #7c3aed, #06b6d4)",
@@ -97,32 +89,34 @@ export default function Home() {
           marginTop: "60px",
         }}
       >
-        {campaigns.map((c) => (
-          <div
-            key={c.id}
-            style={{
-              background: "rgba(255,255,255,0.05)",
-              borderRadius: "14px",
-              overflow: "hidden",
-              boxShadow: "0 8px 25px rgba(0,0,0,0.4)",
-              transition: "transform 0.3s",
-            }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.transform = "scale(1.02)")
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.transform = "scale(1.0)")
-            }
-          >
-            <img
-              src={c.image}
-              alt={c.title}
-              style={{
-                width: "100%",
-                height: "180px",
-                objectFit: "cover",
-              }}
-            />
+            {campaigns.map((c) => (
+         <div
+           key={c._id}
+           onClick={() => (window.location.href = `/campaign/${c._id}`)}
+           style={{
+           background: "rgba(255,255,255,0.05)",
+           borderRadius: "14px",
+           overflow: "hidden",
+           boxShadow: "0 8px 25px rgba(0,0,0,0.4)",
+           transition: "transform 0.3s",
+           cursor: "pointer",
+         }}
+           onMouseEnter={(e) =>
+          (e.currentTarget.style.transform = "scale(1.02)")
+        }
+           onMouseLeave={(e) =>
+          (e.currentTarget.style.transform = "scale(1.0)")
+        }
+       >
+              <img
+             src={`http://localhost:5000${c.image}`}
+             alt={c.title}
+             style={{
+             width: "100%",
+             height: "180px",
+             objectFit: "cover",
+           }}
+         />
             <div style={{ padding: "16px" }}>
               <h3 style={{ fontWeight: "700", marginBottom: "8px" }}>
                 {c.title}

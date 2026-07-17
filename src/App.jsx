@@ -19,12 +19,16 @@ import CryptoDonation from "./pages/CryptoDonation";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import UserDashboard from "./pages/UserDashboard";
+import CampaignManager from "./pages/CampaignManager";
+import AdminUsers from "./pages/AdminUsers";
 import PrivateRoute from "./components/PrivateRoute";
+import CampaignDetails from "./pages/CampaignDetails";
 
 // ADMIN AUTH
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminRoute from "./components/AdminRoute";
+import AdminDonations from "./pages/AdminDonations";
 
 // ==============================
 // CHATBOT COMPONENT
@@ -130,6 +134,20 @@ function AnimatedRoutes() {
         <Route path="/donate" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><DonatePage /></motion.div>} />
         <Route path="/donate-success" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><DonateSuccess /></motion.div>} />
 
+        <Route
+          path="/campaign/:id"
+         element={
+         <motion.div
+         variants={anim}
+         initial="initial"
+         animate="in"
+         exit="out"
+        >
+         <CampaignDetails />
+         </motion.div>
+        }
+      />
+
         {/* 🔧 BANK TRANSFER ROUTE */}
         <Route path="/bank-transfer" element={<BankTransfer />} />
         <Route path="/crypto" element={<CryptoDonation />} />
@@ -146,12 +164,43 @@ function AnimatedRoutes() {
         } />
 
         {/* ADMIN AUTH */}
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin/dashboard" element={
-          <AdminRoute>
-            <AdminDashboard />
-          </AdminRoute>
-        } />
+    <Route path="/admin/login" element={<AdminLogin />} />
+
+    <Route
+     path="/admin/dashboard"
+     element={
+     <AdminRoute>
+     <AdminDashboard />
+     </AdminRoute>
+    }
+   />
+
+     <Route
+     path="/campaign-manager"
+     element={
+     <AdminRoute>
+     <CampaignManager />
+     </AdminRoute>
+     }
+     />
+
+     <Route
+     path="/admin/users"
+     element={
+     <AdminRoute>
+     <AdminUsers />
+    </AdminRoute>
+    }
+    />
+
+     <Route
+     path="/admin/donations"
+     element={
+     <AdminRoute>
+     <AdminDonations />
+    </AdminRoute>
+    }
+   />
 
         {/* LEGAL PAGES */}
         <Route path="/terms" element={<Terms />} />

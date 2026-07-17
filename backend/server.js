@@ -5,13 +5,15 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 
 // Routes
-import paystackRoutes from "./routes/paystack.js";
+import paystackRoutes from "./routes/paystackRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import flutterwavePay from "./routes/flutterwavePay.js";
 import flutterwaveWebhook from "./routes/flutterwaveWebhook.js";
 import grayRoutes from "./routes/gray.js";
-
+import campaignRoutes from "./routes/campaignRoutes.js";
+import dashboardRoutes from "./routes/dashboardRoutes.js";
+import donationRoutes from "./routes/donationRoutes.js";
 
 dotenv.config();
 
@@ -36,7 +38,9 @@ app.use("/api/donate", flutterwavePay);
 app.use("/api/webhook/flutterwave", flutterwaveWebhook);
 app.use("/api/gray", grayRoutes);
 app.use("/uploads", express.static("uploads"));
-
+app.use("/api/campaigns", campaignRoutes);
+app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/donations", donationRoutes);
 
 // Health check
 app.get("/", (req, res) => {

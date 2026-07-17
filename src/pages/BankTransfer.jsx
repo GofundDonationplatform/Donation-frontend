@@ -49,31 +49,51 @@ export default function BankTransfer() {
         </p>
 
         <div
-          style={{
-            background: "#020617",
-            borderRadius: "12px",
-            padding: "16px",
-            border: "1px solid #334155",
-            marginBottom: "16px",
-          }}
-        >
-          <div style={{ marginBottom: "10px" }}>
-            <strong>Bank Name:</strong> Example Bank
-          </div>
-          <div style={{ marginBottom: "10px" }}>
-            <strong>Account Name:</strong> GoFund Digital Impact Support
-          </div>
-          <div style={{ marginBottom: "10px" }}>
-            <strong>Account Number:</strong> 1234567890
-          </div>
-          <div style={{ marginBottom: "10px" }}>
-            <strong>Currency:</strong> USD / NGN
-          </div>
-          <div style={{ marginBottom: "10px" }}>
-            <strong>Reference:</strong> Your Name or Email
-          </div>
-        </div>
+           style={{
+           background: "#020617",
+           borderRadius: "12px",
+           padding: "16px",
+           border: "1px solid #334155",
+           marginBottom: "16px",
+        }}
+      >
+       <div style={{ marginBottom: "10px" }}>
+       <strong>Bank Name:</strong> Lead Bank (Grey USD Account)
+       </div>
 
+       <div style={{ marginBottom: "10px" }}>
+       <strong>Account Name:</strong> GFSSGA IMPACT NETWORK
+       </div>
+
+       <div style={{ marginBottom: "10px" }}>
+       <strong>Account Number:</strong> 214673810876
+       </div>
+
+       <div style={{ marginBottom: "10px" }}>
+       <strong>Account Type:</strong> Checking
+       </div>
+
+       <div style={{ marginBottom: "10px" }}>
+       <strong>Currency:</strong> USD
+       </div>
+
+       <div style={{ marginBottom: "10px" }}>
+       <strong>ACH Routing:</strong> 101019644
+       </div>
+
+       <div style={{ marginBottom: "10px" }}>
+       <strong>Wire Routing:</strong> 101019644
+       </div>
+
+       <div style={{ marginBottom: "10px" }}>
+       <strong>Bank Address:</strong><br />
+        1801 Main St., Kansas City, MO 64108
+       </div>
+
+       <div style={{ marginBottom: "10px" }}>
+      <strong>Reference:</strong> Donor Name / Campaign Title
+     </div>
+    </div>
         <p
           style={{
             fontSize: "12px",

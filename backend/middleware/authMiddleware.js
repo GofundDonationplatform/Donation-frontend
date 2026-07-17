@@ -23,7 +23,7 @@ export function protect(req, res, next) {
 }
 
 export function adminOnly(req, res, next) {
-  if (req.user && req.user.role === "admin") {
+  if (req.user && req.user.isAdmin === true) {
     next();
   } else {
     return res.status(403).json({ message: "Admin access denied" });

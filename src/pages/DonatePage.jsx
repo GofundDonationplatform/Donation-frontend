@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 export default function DonatePage() {
   const presets = [100, 250, 500, 1000, 3000, 6000, 12000];
@@ -11,6 +11,9 @@ export default function DonatePage() {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  const campaignId = searchParams.get("campaign");
 
   const backendBase =
     import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
@@ -35,38 +38,43 @@ export default function DonatePage() {
   };
 
   const handlePaystackPayment = async () => {
-    if (!validateForm()) return;
+  if (!validateForm()) return;
 
-    setLoading(true);
+  setLoading(true);
 
-    try {
-      const res = await axios.post(
-        `${backendBase}/api/paystack/initialize`,
-        {
-          amount,
-          email,
-          name,
-        }
-      );
-
-      if (res.data?.authorization_url) {
-        window.location.href = res.data.authorization_url;
-      } else {
-        alert("Paystack payment link unavailable");
+  try {
+    const { data } = await axios.post(
+      `${backendBase}/api/paystack/initialize`,
+      {
+        amount,
+        email,
+        name,
+        campaignId,
       }
-    } catch (err) {
-      console.error(err);
+    );
 
-      alert(
-        err?.response?.data?.error ||
-          err?.response?.data?.message ||
-          "Paystack initialization failed"
-      );
-    } finally {
-      setLoading(false);
+    const paymentUrl =
+      data?.data?.authorization_url || data?.authorization_url;
+
+    if (!paymentUrl) {
+      throw new Error("No Paystack authorization URL returned.");
     }
-  };
 
+    window.location.assign(paymentUrl);
+  } catch (err) {
+    console.error(err);
+
+    alert(
+      err?.response?.data?.error ||
+      err?.response?.data?.message ||
+      err.message ||
+      "Paystack initialization failed"
+    );
+  } finally {
+    setLoading(false);
+  }
+};
+   
   const goToBankTransfer = () => {
     navigate("/bank-transfer");
   };
@@ -226,7 +234,7 @@ export default function DonatePage() {
           </button>
 
             <button
-            onClick={() => navigate("/crypto-donation")}
+            onClick={() => navigate("/crypto")}
             style={{
              background: "#8b5cf6",
              color: "#fff",

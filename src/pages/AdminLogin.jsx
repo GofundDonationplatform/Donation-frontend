@@ -15,18 +15,36 @@ const AdminLogin = () => {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const res = await axios.post("http://localhost:5000/api/admin/login", form);
+    e.preventDefault();
 
-            localStorage.setItem("token", res.data.token);
-            localStorage.setItem("user", JSON.stringify(res.data.user));
+    try {
+        console.log("Attempting admin login...");
 
-            navigate("/admin");
-        } catch (error) {
-            alert("Admin login failed");
+        const res = await axios.post(
+            "http://localhost:5000/api/admin/login",
+            form
+        );
+
+        console.log("LOGIN SUCCESS:", res.data);
+
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("user", JSON.stringify(res.data.admin));
+        localStorage.setItem("role", "admin");
+
+        navigate("/admin/dashboard");
+
+    } catch (error) {
+        console.log("LOGIN ERROR:", error);
+
+        if (error.response) {
+            console.log("Response:", error.response.data);
+            alert(error.response.data.error || error.response.data.message);
+        } else {
+            console.log(error.message);
+            alert(error.message);
         }
-    };
+    }
+};
 
     return (
         <div className="auth-container">

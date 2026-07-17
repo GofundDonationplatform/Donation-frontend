@@ -7,6 +7,11 @@ const TransactionSchema = new mongoose.Schema(
     amount: { type: Number, required: true },
     currency: { type: String, default: "USD" },
 
+    campaignId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Campaign",
+  },
+
     tx_ref: { type: String, required: true, unique: true },
 
     status: {

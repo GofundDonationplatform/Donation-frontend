@@ -2,7 +2,9 @@
 import express from "express";
 import axios from "axios";
 import Transaction from "../models/Transaction.js"; // adjust path if your models folder is elsewhere
+import Campaign from "../models/Campaign.js";
 import dotenv from "dotenv";
+console.log("✅ PAYSTACK ROUTE LOADED");
 dotenv.config();
 
 const router = express.Router();
@@ -11,7 +13,13 @@ const router = express.Router();
 // Expects: { amount: Number (major units), email: string, name?: string, currency?: 'NGN' }
 router.post("/initialize", async (req, res) => {
   try {
-    const { amount, email = "donor@example.com", name = "Donor", currency = "NGN" } = req.body;
+    const {
+     amount,
+     email = "donor@example.com",
+     name = "Donor",
+     currency = "NGN",
+     campaignId,
+   } = req.body;
     if (!amount || isNaN(amount) || Number(amount) <= 0) {
       return res.status(400).json({ error: "Invalid amount" });
     }
@@ -27,22 +35,31 @@ router.post("/initialize", async (req, res) => {
 
     // Optional: create a pending Transaction record
     await Transaction.create({
-      name,
-      email,
-      amount: Number(amount),
-      currency,
-      tx_ref,
-      status: "pending",
-    });
+        name,
+        email,
+        amount: Number(amount),
+        currency,
+        tx_ref,
+        status: "pending",
+        meta: {
+       campaignId,
+     },
+   });
 
     const callback_url = `${(process.env.FRONTEND_URL || "http://localhost:5173").replace(/\/$/, "")}/donate-success`;
+      console.log("Frontend URL:", process.env.FRONTEND_URL);
+      console.log("Callback URL:", callback_url);
 
     const body = {
-      email,
-      amount: payAmount,
-      reference: tx_ref,
-      callback_url,
-    };
+     email,
+     amount: payAmount,
+     reference: tx_ref,
+     callback_url,
+     metadata: {
+     campaignId,
+     donorName: name,
+   },
+ };
 
     const response = await axios.post("https://api.paystack.co/transaction/initialize", body, {
       headers: {
@@ -51,6 +68,9 @@ router.post("/initialize", async (req, res) => {
       },
     });
 
+      console.log("========== PAYSTACK RESPONSE ==========");
+      console.log(response.data);
+      console.log("======================================");
     // Return Paystack's data
     res.json(response.data.data || response.data);
   } catch (err) {
@@ -73,11 +93,50 @@ router.get("/verify", async (req, res) => {
 
     // If successful, update Transaction status
     const data = response.data?.data;
-    if (data && data.status === "success") {
-      await Transaction.findOneAndUpdate({ tx_ref: reference }, { status: "successful", meta: data });
-    }
 
-    res.json(response.data);
+    if (data && data.status === "success") {
+
+    // Find the transaction first
+    const transaction = await Transaction.findOne({ tx_ref: reference });
+
+    if (!transaction) {
+    return res.status(404).json({
+      error: "Transaction not found",
+    });
+  }
+
+    // If already completed, don't count it again
+    if (transaction.status === "completed") {
+     return res.json(response.data);
+   }
+
+   // Mark as completed
+   transaction.status = "completed";
+   transaction.method = "paystack";
+   transaction.meta = {
+    ...data,
+    campaignId: transaction.campaignId,
+  };
+
+    await transaction.save();
+
+   // Update campaign only once
+    if (transaction.campaignId) {
+    await Campaign.findByIdAndUpdate(
+      transaction.campaignId,
+      {
+        $inc: {
+          amountRaised: transaction.amount,
+          donorCount: 1,
+        },
+      }
+    );
+  }
+}
+
+res.json(response.data);
+
+
   } catch (err) {
     console.error("Paystack verify error:", err.response?.data || err.message);
     res.status(500).json({ error: "Paystack verify failed", details: err.response?.data || err.message });

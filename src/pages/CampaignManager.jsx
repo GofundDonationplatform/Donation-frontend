@@ -171,17 +171,137 @@ const editCampaign = (campaign) => {
 };
 
 return (
+  <div
+    style={{
+      minHeight: "100vh",
+      background: "#020617",
+      color: "#fff",
+      padding: "30px",
+    }}
+  >
+    <h1 style={{ color: "#22d3ee" }}>Campaign Management</h1>
+
+    <p style={{ color: "#94a3b8", marginBottom: "30px" }}>
+      Create and manage fundraising campaigns.
+    </p>
+
+    <button
+      onClick={() => setShowForm(!showForm)}
+      style={{
+        background: "#22d3ee",
+        color: "#000",
+        padding: "12px 18px",
+        border: "none",
+        borderRadius: "8px",
+        fontWeight: "700",
+        cursor: "pointer",
+        marginBottom: "25px",
+      }}
+    >
+      {showForm ? "Close Form" : "+ Create New Campaign"}
+    </button>
+
+    {showForm && (
+      <form
+        onSubmit={createCampaign}
+        style={{
+          background: "#0f172a",
+          padding: "20px",
+          borderRadius: "12px",
+          marginBottom: "25px",
+          display: "grid",
+          gap: "15px",
+        }}
+      >
+        <input
+          name="title"
+          placeholder="Campaign Title"
+          value={form.title}
+          onChange={handleChange}
+        />
+
+        <textarea
+          name="description"
+          placeholder="Campaign Description"
+          value={form.description}
+          onChange={handleChange}
+          rows="4"
+        />
+
+        <input
+          name="category"
+          placeholder="Category"
+          value={form.category}
+          onChange={handleChange}
+        />
+
+        <input
+          type="number"
+          name="goalAmount"
+          placeholder="Goal Amount"
+          value={form.goalAmount}
+          onChange={handleChange}
+        />
+
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) =>
+            setForm({
+              ...form,
+              image: e.target.files[0],
+            })
+          }
+        />
+
+        <label>
+          <input
+            type="checkbox"
+            name="featured"
+            checked={form.featured}
+            onChange={handleChange}
+          />
+          Featured Campaign
+        </label>
+
+        <select
+          name="status"
+          value={form.status}
+          onChange={handleChange}
+        >
+          <option>Pending</option>
+          <option>Approved</option>
+          <option>Rejected</option>
+          <option>Paused</option>
+          <option>Completed</option>
+        </select>
+
+        <button
+          type="submit"
+          style={{
+            background: "#22d3ee",
+            color: "#000",
+            padding: "12px",
+            border: "none",
+            borderRadius: "8px",
+            fontWeight: "700",
+            cursor: "pointer",
+          }}
+        >
+          {editingId ? "Update Campaign" : "Save Campaign"}
+        </button>
+      </form>
+    )}
+
     <div
       style={{
-        minHeight: "100vh",
-        background: "#020617",
-        color: "#fff",
-        padding: "30px",
-   }}
->
-  <h1 style={{ color: "#22d3ee" }}>Campaign Manager</h1>
-
-  <p>Campaign Manager is being restored.</p>
-</div>
+        background: "#0f172a",
+        padding: "20px",
+        borderRadius: "12px",
+      }}
+    >
+      <p>Campaign list will be restored next…</p>
+    </div>
+  </div>
 );
 }
