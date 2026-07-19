@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+
 
 const API_BASE =
 import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
@@ -127,20 +127,6 @@ const deleteCampaign = async (id) => {
   }
 };
 
-const updateCampaignStatus = async (id, status) => {
-  try {
-    await axios.put(
-      `${API_BASE}/api/campaigns/${id}`,
-      { status }
-    );
-
-    fetchCampaigns();
-
-  } catch (err) {
-    console.error(err);
-    alert("Failed to update campaign status.");
-  }
-};
 
 const updateStatus = async (id, status) => {
   try {
