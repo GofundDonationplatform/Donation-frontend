@@ -23,8 +23,11 @@ useEffect(() => {
 
 const fetchDashboardStats = async () => {
   try {
+    const backendUrl =
+      import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+
     const res = await axios.get(
-      "http://localhost:5000/api/dashboard"
+      `${backendUrl}/api/dashboard`
     );
 
     setStats(res.data.stats);
