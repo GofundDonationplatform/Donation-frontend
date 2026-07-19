@@ -1,8 +1,9 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function AdminLayout({ title, children }) {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -10,6 +11,13 @@ export default function AdminLayout({ title, children }) {
     localStorage.removeItem("role");
     navigate("/");
   };
+
+  const navItems = [
+    ["📊 Dashboard", "/admin/dashboard"],
+    ["📢 Campaigns", "/campaign-manager"],
+    ["👥 Users", "/admin/users"],
+    ["💰 Donations", "/admin/donations"],
+  ];
 
   return (
     <div
@@ -19,75 +27,79 @@ export default function AdminLayout({ title, children }) {
         color: "#fff",
       }}
     >
-      {/* Header */}
-      <div
+      <header
         style={{
           background: "#0f172a",
-          padding: "18px",
+          padding: "18px 25px",
           borderBottom: "1px solid #1e293b",
         }}
       >
-        <h2
-          style={{
-            color: "#22d3ee",
-            margin: 0,
-          }}
-        >
+        <h2 style={{ color: "#22d3ee", margin: 0 }}>
           GoFund Digital Impact Support
         </h2>
 
-        <p
-          style={{
-            color: "#94a3b8",
-            marginTop: "6px",
-          }}
-        >
+        <p style={{ color: "#94a3b8", margin: "6px 0 0" }}>
           Admin Control Panel
         </p>
-      </div>
+      </header>
 
-      {/* Navigation */}
-      <div
+      <nav
         style={{
           display: "flex",
-          overflowX: "auto",
+          flexWrap: "wrap",
           gap: "10px",
-          padding: "15px",
+          padding: "15px 25px",
           background: "#071021",
+          borderBottom: "1px solid #1e293b",
         }}
       >
-        <button onClick={() => navigate("/admin/dashboard")}>
-          Dashboard
-        </button>
+        {navItems.map(([label, path]) => {
+          const active = location.pathname === path;
 
-        <button onClick={() => navigate("/campaign-manager")}>
-          Campaigns
-        </button>
-
-        <button onClick={() => navigate("/admin/users")}>
-          Users
-        </button>
-
-        <button>
-          Donations
-        </button>
+          return (
+            <button
+              key={path}
+              onClick={() => navigate(path)}
+              style={{
+                padding: "10px 16px",
+                borderRadius: "8px",
+                border: "1px solid #334155",
+                background: active ? "#22d3ee" : "#0f172a",
+                color: active ? "#020617" : "#cbd5e1",
+                fontWeight: "700",
+                cursor: "pointer",
+              }}
+            >
+              {label}
+            </button>
+          );
+        })}
 
         <button
           onClick={logout}
           style={{
+            padding: "10px 16px",
+            borderRadius: "8px",
+            border: "none",
             background: "#dc2626",
             color: "#fff",
+            fontWeight: "700",
+            cursor: "pointer",
           }}
         >
-          Logout
+          🚪 Logout
         </button>
-      </div>
+      </nav>
 
-      <div style={{ padding: "25px" }}>
-        <h1 style={{ color: "#22d3ee" }}>{title}</h1>
+      <main style={{ padding: "25px" }}>
+        {title && (
+          <h1 style={{ color: "#22d3ee", marginTop: 0 }}>
+            {title}
+          </h1>
+        )}
 
         {children}
-      </div>
+      </main>
     </div>
   );
 }

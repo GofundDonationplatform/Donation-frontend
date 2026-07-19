@@ -45,23 +45,7 @@ const fetchDashboardStats = async () => {
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#020617",
-        color: "#fff",
-        padding: "30px",
-      }}
-    >
-      <h1
-        style={{
-          color: "#22d3ee",
-          fontSize: "42px",
-          marginBottom: "5px",
-        }}
-      >
-        Admin Dashboard
-      </h1>
+    <AdminLayout title="📊 Admin Dashboard">
 
       <p
         style={{
@@ -184,7 +168,7 @@ const fetchDashboardStats = async () => {
           </button>
         </div>
       </div>
-    </div>
+    </AdminLayout>
  );
 }
 
