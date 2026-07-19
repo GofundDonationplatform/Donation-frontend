@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import AdminLayout from "../components/AdminLayout";
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
@@ -94,17 +95,8 @@ const filteredUsers = users.filter((user) => {
   });
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#020617",
-        color: "#fff",
-        padding: "30px",
-      }}
-    >
-      <h1 style={{ color: "#22d3ee" }}>
-        👥 User Management
-      </h1>
+    <AdminLayout title="👥 User Management">
+      
 
       <p style={{ color: "#94a3b8" }}>
         Total Users: <strong>{users.length}</strong>
@@ -252,6 +244,6 @@ const filteredUsers = users.filter((user) => {
           </tbody>
         </table>
       </div>
-    </div>
+    </AdminLayout>
   );
 }
