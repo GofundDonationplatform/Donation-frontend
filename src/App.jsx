@@ -217,12 +217,17 @@ function AnimatedRoutes() {
 // ==============================
 // MAIN APP
 // ==============================
-export default function App() {
+function AppContent() {
+  const location = useLocation();
+
+  const isAdminArea =
+    location.pathname.startsWith("/admin") ||
+    location.pathname === "/campaign-manager";
   return (
-    <Router>
+    
       <div className="app min-h-screen bg-slate-950 text-white flex flex-col">
 
-        {/* HEADER */}
+        {!isAdminArea && (
         <header className="flex justify-between items-center px-6 py-4 bg-slate-900/70 backdrop-blur-xl border-b border-white/10">
           <Link to="/" className="flex items-center gap-2 font-bold text-cyan-400 text-lg">
             <span className="bg-gradient-to-r from-purple-600 to-cyan-400 text-white px-3 py-1 rounded-lg">GoFund</span>
@@ -237,13 +242,14 @@ export default function App() {
             <Link to="/refund" className="hover:text-cyan-400">Refund</Link>
           </nav>
         </header>
+        )}
 
         {/* ROUTES */}
         <main className="flex-1">
           <AnimatedRoutes />
         </main>
 
-        {/* FOOTER */}
+        {!isAdminArea && (
         <footer className="text-center text-gray-500 py-6 text-sm border-t border-white/10 space-y-2">
           <div>© {new Date().getFullYear()} GoFund Digital Impact Support Platform</div>
           <div className="flex justify-center gap-4">
@@ -252,11 +258,19 @@ export default function App() {
             <Link to="/refund" className="hover:text-cyan-400">Refund</Link>
           </div>
         </footer>
+        )}
 
         {/* CHAT AI */}
-        <ChatBot />
+        {!isAdminArea && <ChatBot />}
 
       </div>
+  );
+}
+
+export default function App() {
+  return (
+    <Router>
+      <AppContent />
     </Router>
   );
 }
