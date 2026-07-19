@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
+import AdminLayout from "../components/AdminLayout";
+
 
 export default function AdminDonations() {
   const [donations, setDonations] = useState([]);
@@ -84,17 +86,7 @@ export default function AdminDonations() {
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#020617",
-        color: "#fff",
-        padding: "30px",
-      }}
-    >
-      <h1 style={{ color: "#22d3ee" }}>
-        💰 Donation Management
-      </h1>
+    <AdminLayout title="💰 Donation Management">
 
       <p style={{ color: "#94a3b8" }}>
         Showing{" "}
@@ -253,7 +245,7 @@ export default function AdminDonations() {
             </table>
           )}
       </div>
-    </div>
+    </AdminLayout>
   );
 }
 
