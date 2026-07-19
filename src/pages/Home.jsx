@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
+const API_BASE =
+  import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+
 export default function Home() {
   const [campaigns, setCampaigns] = useState([]);
 
@@ -11,7 +14,7 @@ useEffect(() => {
 const loadCampaigns = async () => {
   try {
     const res = await axios.get(
-      "http://localhost:5000/api/campaigns"
+      `${API_BASE}/api/campaigns`
     );
 
     setCampaigns(res.data.campaigns);
@@ -109,7 +112,7 @@ const loadCampaigns = async () => {
         }
        >
               <img
-             src={`http://localhost:5000${c.image}`}
+             src={`${API_BASE}${c.image}`}
              alt={c.title}
              style={{
              width: "100%",

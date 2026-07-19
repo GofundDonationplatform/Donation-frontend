@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
+const API_BASE =
+  import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+
 export default function CampaignDetails() {
   const { id } = useParams();
 
@@ -14,7 +17,7 @@ export default function CampaignDetails() {
   const loadCampaign = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/campaigns/${id}`
+        `${API_BASE}/api/campaigns/${id}`
       );
 
       setCampaign(res.data.campaign);
@@ -57,7 +60,7 @@ export default function CampaignDetails() {
         }}
       >
         <img
-          src={`http://localhost:5000${campaign.image}`}
+          src={`${API_BASE}${campaign.image}`}
           alt={campaign.title}
           style={{
             width: "100%",
