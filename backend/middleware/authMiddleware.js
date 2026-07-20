@@ -1,31 +1,44 @@
-// middleware/authMiddleware.js
 import jwt from "jsonwebtoken";
 
 export function protect(req, res, next) {
-  let token = null;
-
-  // Get bearer token from headers
-  if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
-    token = req.headers.authorization.split(" ")[1];
-  }
-
-  if (!token) {
-    return res.status(401).json({ message: "Not authorized, no token" });
-  }
-
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // attach user info
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({
+        message: "Not authorized, no token",
+      });
+    }
+
+    const token = authHeader.split(" ")[1];
+
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET
+    );
+
+    req.user = decoded;
+
     next();
   } catch (err) {
-    return res.status(401).json({ message: "Token failed or expired" });
+    return res.status(401).json({
+      message: "Token failed or expired",
+    });
   }
 }
 
 export function adminOnly(req, res, next) {
-  if (req.user && req.user.isAdmin === true) {
-    next();
-  } else {
-    return res.status(403).json({ message: "Admin access denied" });
+  if (
+    req.user &&
+    (
+      req.user.isAdmin === true ||
+      req.user.role === "admin"
+    )
+  ) {
+    return next();
   }
+
+  return res.status(403).json({
+    message: "Admin access denied",
+  });
 }

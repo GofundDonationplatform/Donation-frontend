@@ -11,91 +11,143 @@ router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    console.log("Email:", email);
-
-    const admin = await User.findOne({ email, isAdmin: true });
-
-    console.log("Admin found:", admin);
-
-    if (!admin) {
-      return res.status(400).json({ error: "Admin not found" });
+    if (!email || !password) {
+      return res.status(400).json({
+        error: "Email and password are required",
+      });
     }
 
-    const isMatch = await bcrypt.compare(password, admin.password);
+    const admin = await User.findOne({
+      email: email.trim().toLowerCase(),
+      isAdmin: true,
+    });
 
-    console.log("Password match:", isMatch);
+    if (!admin) {
+      return res.status(401).json({
+        error: "Admin account not found",
+      });
+    }
 
-    if (!isMatch) {
-      return res.status(400).json({ error: "Invalid password" });
+    const passwordMatch = await bcrypt.compare(
+      password,
+      admin.password
+    );
+
+    if (!passwordMatch) {
+      return res.status(401).json({
+        error: "Invalid credentials",
+      });
     }
 
     const token = jwt.sign(
-      { id: admin._id, isAdmin: true },
+      {
+        id: admin._id,
+        role: "admin",
+        isAdmin: true,
+      },
       process.env.JWT_SECRET,
-      { expiresIn: "7d" }
+      {
+        expiresIn: "7d",
+      }
     );
 
     return res.json({
+      message: "Admin login successful",
       token,
-      admin: {
+      user: {
         id: admin._id,
         name: admin.name,
         email: admin.email,
+        role: "admin",
+        isAdmin: true,
       },
     });
-
   } catch (err) {
-    console.error("ADMIN LOGIN ERROR:", err);
-    res.status(500).json({ error: err.message });
+    console.error("Admin login error:", err);
+
+    res.status(500).json({
+      error: "Server error during admin login",
+    });
   }
 });
 
 // GET ALL USERS
-  router.get("/users", protect, adminOnly, async (req, res) => {
-  try {
-    const users = await User.find().select("-password").sort({ createdAt: -1 });
-    res.json(users);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+router.get(
+  "/users",
+  protect,
+  adminOnly,
+  async (req, res) => {
+    try {
+      const users = await User.find()
+        .select("-password")
+        .sort({ createdAt: -1 });
+
+      res.json(users);
+    } catch (err) {
+      res.status(500).json({
+        error: err.message,
+      });
+    }
   }
-});
+);
 
 // DELETE USER
-  router.delete("/users/:id", protect, adminOnly, async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
+router.delete(
+  "/users/:id",
+  protect,
+  adminOnly,
+  async (req, res) => {
+    try {
+      const user = await User.findById(req.params.id);
 
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      if (!user) {
+        return res.status(404).json({
+          error: "User not found",
+        });
+      }
+
+      await User.findByIdAndDelete(req.params.id);
+
+      res.json({
+        message: "User deleted successfully",
+      });
+    } catch (err) {
+      res.status(500).json({
+        error: err.message,
+      });
     }
-
-    await User.findByIdAndDelete(req.params.id);
-
-    res.json({ message: "User deleted successfully" });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
   }
-});
+);
 
 // TOGGLE ADMIN ROLE
-  router.put("/users/:id/toggle-admin", protect, adminOnly, async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
+router.put(
+  "/users/:id/toggle-admin",
+  protect,
+  adminOnly,
+  async (req, res) => {
+    try {
+      const user = await User.findById(req.params.id);
 
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      if (!user) {
+        return res.status(404).json({
+          error: "User not found",
+        });
+      }
+
+      user.isAdmin = !user.isAdmin;
+
+      await user.save();
+
+      res.json({
+        message: "Role updated successfully",
+        isAdmin: user.isAdmin,
+      });
+    } catch (err) {
+      res.status(500).json({
+        error: err.message,
+      });
     }
-
-    user.isAdmin = !user.isAdmin;
-
-    await user.save();
-
-    res.json({
-      message: "Role updated successfully",
-      isAdmin: user.isAdmin,
-    });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
   }
-});
+);
+
 export default router;
