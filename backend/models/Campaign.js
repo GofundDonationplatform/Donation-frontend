@@ -24,6 +24,14 @@ const campaignSchema = new mongoose.Schema(
       min: 0,
     },
 
+    currency: {
+      type: String,
+      enum: ["USD", "NGN", "EUR", "GBP"],
+      default: "USD",
+      uppercase: true,
+      trim: true,
+    },
+
     amountRaised: {
       type: Number,
       default: 0,

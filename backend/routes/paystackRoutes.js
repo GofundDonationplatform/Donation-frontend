@@ -1,145 +1,267 @@
-// routes/paystackRoutes.js
 import express from "express";
 import axios from "axios";
-import Transaction from "../models/Transaction.js"; // adjust path if your models folder is elsewhere
+import Transaction from "../models/Transaction.js";
 import Campaign from "../models/Campaign.js";
 import dotenv from "dotenv";
-console.log("✅ PAYSTACK ROUTE LOADED");
+
 dotenv.config();
+
+console.log("✅ PAYSTACK ROUTE LOADED");
 
 const router = express.Router();
 
+const SUPPORTED_CURRENCIES = {
+  NGN: {
+    minimum: 50,
+  },
+  USD: {
+    minimum: 2,
+  },
+};
+
+const generateReference = () =>
+  `ps_${Date.now()}_${Math.random()
+    .toString(36)
+    .slice(2, 8)}`;
+
+// Convert major currency units to Paystack subunits.
+const toSubunit = (amount, currency) =>
+  Math.round(Number(amount) * 100);
+
 // Initialize a Paystack transaction
-// Expects: { amount: Number (major units), email: string, name?: string, currency?: 'NGN' }
 router.post("/initialize", async (req, res) => {
   try {
     const {
-     amount,
-     email = "donor@example.com",
-     name = "Donor",
-     currency = "NGN",
-     campaignId,
-   } = req.body;
-    if (!amount || isNaN(amount) || Number(amount) <= 0) {
-      return res.status(400).json({ error: "Invalid amount" });
+      amount,
+      email = "donor@example.com",
+      name = "Donor",
+      currency = "NGN",
+      campaignId,
+    } = req.body;
+
+    const normalizedCurrency =
+      String(currency).toUpperCase();
+
+    if (!SUPPORTED_CURRENCIES[normalizedCurrency]) {
+      return res.status(400).json({
+        error: "Unsupported currency",
+        supportedCurrencies: Object.keys(
+          SUPPORTED_CURRENCIES
+        ),
+      });
     }
 
-    const paystackSecret = process.env.PAYSTACK_SECRET_KEY;
-    if (!paystackSecret) return res.status(500).json({ error: "Paystack secret not configured" });
+    if (
+      !amount ||
+      isNaN(amount) ||
+      Number(amount) <= 0
+    ) {
+      return res.status(400).json({
+        error: "Invalid amount",
+      });
+    }
 
-    // Paystack expects amount in kobo for NGN (multiply by 100). For other currencies, check Paystack docs.
-    const payAmount = Math.round(Number(amount) * 100);
+    const numericAmount = Number(amount);
 
-    // Generate a unique reference
-    const tx_ref = `ps_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+    if (
+      numericAmount <
+      SUPPORTED_CURRENCIES[normalizedCurrency].minimum
+    ) {
+      return res.status(400).json({
+        error: `Minimum donation for ${normalizedCurrency} is ${SUPPORTED_CURRENCIES[normalizedCurrency].minimum}`,
+      });
+    }
 
-    // Optional: create a pending Transaction record
+    const paystackSecret =
+      process.env.PAYSTACK_SECRET_KEY;
+
+    if (!paystackSecret) {
+      return res.status(500).json({
+        error: "Paystack secret not configured",
+      });
+    }
+
+    const tx_ref = generateReference();
+
     await Transaction.create({
-        name,
-        email,
-        amount: Number(amount),
-        currency,
-        tx_ref,
-        status: "pending",
-        meta: {
-       campaignId,
-     },
-   });
-
-    const callback_url = `${(process.env.FRONTEND_URL || "http://localhost:5173").replace(/\/$/, "")}/donate-success`;
-      console.log("Frontend URL:", process.env.FRONTEND_URL);
-      console.log("Callback URL:", callback_url);
-
-    const body = {
-     email,
-     amount: payAmount,
-     reference: tx_ref,
-     callback_url,
-     metadata: {
-     campaignId,
-     donorName: name,
-   },
- };
-
-    const response = await axios.post("https://api.paystack.co/transaction/initialize", body, {
-      headers: {
-        Authorization: `Bearer ${paystackSecret}`,
-        "Content-Type": "application/json",
+      name,
+      email,
+      amount: numericAmount,
+      currency: normalizedCurrency,
+      campaignId: campaignId || undefined,
+      tx_ref,
+      status: "pending",
+      method: "paystack",
+      meta: {
+        campaignId,
+        donorName: name,
+        requestedCurrency: normalizedCurrency,
       },
     });
 
-      console.log("========== PAYSTACK RESPONSE ==========");
-      console.log(response.data);
-      console.log("======================================");
-    // Return Paystack's data
-    res.json(response.data.data || response.data);
-  } catch (err) {
-    console.error("Paystack initialize error:", err.response?.data || err.message);
-    res.status(500).json({ error: "Failed to initialize Paystack transaction", details: err.response?.data || err.message });
-  }
-});
+    const callback_url =
+      `${(
+        process.env.FRONTEND_URL ||
+        "http://localhost:5173"
+      ).replace(/\/$/, "")}/donate-success`;
 
-// Verify a transaction by reference (GET /api/paystack/verify?reference=...)
-router.get("/verify", async (req, res) => {
-  try {
-    const { reference } = req.query;
-    const paystackSecret = process.env.PAYSTACK_SECRET_KEY;
-    if (!reference) return res.status(400).json({ error: "Missing reference" });
-    if (!paystackSecret) return res.status(500).json({ error: "Paystack secret not configured" });
+    const body = {
+      email,
+      amount: toSubunit(
+        numericAmount,
+        normalizedCurrency
+      ),
+      currency: normalizedCurrency,
+      reference: tx_ref,
+      callback_url,
+      metadata: {
+        campaignId,
+        donorName: name,
+        currency: normalizedCurrency,
+      },
+    };
 
-    const response = await axios.get(`https://api.paystack.co/transaction/verify/${encodeURIComponent(reference)}`, {
-      headers: { Authorization: `Bearer ${paystackSecret}` },
-    });
-
-    // If successful, update Transaction status
-    const data = response.data?.data;
-
-    if (data && data.status === "success") {
-
-    // Find the transaction first
-    const transaction = await Transaction.findOne({ tx_ref: reference });
-
-    if (!transaction) {
-    return res.status(404).json({
-      error: "Transaction not found",
-    });
-  }
-
-    // If already completed, don't count it again
-    if (transaction.status === "completed") {
-     return res.json(response.data);
-   }
-
-   // Mark as completed
-   transaction.status = "completed";
-   transaction.method = "paystack";
-   transaction.meta = {
-    ...data,
-    campaignId: transaction.campaignId,
-  };
-
-    await transaction.save();
-
-   // Update campaign only once
-    if (transaction.campaignId) {
-    await Campaign.findByIdAndUpdate(
-      transaction.campaignId,
+    const response = await axios.post(
+      "https://api.paystack.co/transaction/initialize",
+      body,
       {
-        $inc: {
-          amountRaised: transaction.amount,
-          donorCount: 1,
+        headers: {
+          Authorization: `Bearer ${paystackSecret}`,
+          "Content-Type": "application/json",
         },
       }
     );
-  }
-}
 
-res.json(response.data);
-
-
+    res.json(
+      response.data.data || response.data
+    );
   } catch (err) {
-    console.error("Paystack verify error:", err.response?.data || err.message);
-    res.status(500).json({ error: "Paystack verify failed", details: err.response?.data || err.message });
+    console.error(
+      "Paystack initialize error:",
+      err.response?.data || err.message
+    );
+
+    res.status(500).json({
+      error: "Failed to initialize Paystack transaction",
+      details:
+        err.response?.data || err.message,
+    });
+  }
+});
+
+// Verify a transaction by reference
+router.get("/verify", async (req, res) => {
+  try {
+    const { reference } = req.query;
+
+    const paystackSecret =
+      process.env.PAYSTACK_SECRET_KEY;
+
+    if (!reference) {
+      return res.status(400).json({
+        error: "Missing reference",
+      });
+    }
+
+    if (!paystackSecret) {
+      return res.status(500).json({
+        error: "Paystack secret not configured",
+      });
+    }
+
+    const response = await axios.get(
+      `https://api.paystack.co/transaction/verify/${encodeURIComponent(
+        reference
+      )}`,
+      {
+        headers: {
+          Authorization: `Bearer ${paystackSecret}`,
+        },
+      }
+    );
+
+    const data = response.data?.data;
+
+    if (
+      data &&
+      data.status === "success"
+    ) {
+      const transaction =
+        await Transaction.findOne({
+          tx_ref: reference,
+        });
+
+      if (!transaction) {
+        return res.status(404).json({
+          error: "Transaction not found",
+        });
+      }
+
+      if (
+        transaction.status === "completed"
+      ) {
+        return res.json(response.data);
+      }
+
+      transaction.status = "completed";
+      transaction.method = "paystack";
+      transaction.currency =
+        data.currency || transaction.currency;
+
+      transaction.meta = {
+        ...(transaction.meta || {}),
+        ...data,
+      };
+
+      await transaction.save();
+
+      /*
+       * IMPORTANT:
+       * Campaign.amountRaised currently stores one numeric total.
+       * We only update it when the campaign currency matches the
+       * transaction currency, preventing NGN and USD from being
+       * silently mixed together.
+       */
+      if (
+        transaction.campaignId
+      ) {
+        const campaign =
+          await Campaign.findById(
+            transaction.campaignId
+          );
+
+        if (
+          campaign &&
+          (!campaign.currency ||
+            campaign.currency ===
+              transaction.currency)
+        ) {
+          await Campaign.findByIdAndUpdate(
+            transaction.campaignId,
+            {
+              $inc: {
+                amountRaised:
+                  transaction.amount,
+                donorCount: 1,
+              },
+            }
+          );
+        }
+      }
+    }
+
+    res.json(response.data);
+  } catch (err) {
+    console.error(
+      "Paystack verify error:",
+      err.response?.data || err.message
+    );
+
+    res.status(500).json({
+      error: "Paystack verify failed",
+      details:
+        err.response?.data || err.message,
+    });
   }
 });
 

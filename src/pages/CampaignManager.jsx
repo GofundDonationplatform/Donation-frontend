@@ -15,6 +15,7 @@ import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
   description: "",
   category: "General",
   goalAmount: "",
+  currency: "USD",
   image: "",
   featured: false,
   status: "Active",
@@ -58,6 +59,7 @@ import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
     payload.append("description", form.description);
     payload.append("category", form.category);
     payload.append("goalAmount", Number(form.goalAmount));
+    payload.append("currency", form.currency);
     payload.append("featured", form.featured);
     payload.append("status", form.status);
 
@@ -91,6 +93,7 @@ import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
       description: "",
       category: "General",
       goalAmount: "",
+      currency: "USD",
       image: "",
       featured: false,
       status: "Active",
@@ -153,6 +156,7 @@ const editCampaign = (campaign) => {
     description: campaign.description,
     category: campaign.category,
     goalAmount: campaign.goalAmount,
+    currency: campaign.currency || "USD",
     image: campaign.image,
     featured: campaign.featured,
     status: campaign.status || "Pending",
@@ -263,6 +267,17 @@ return (
           value={form.goalAmount}
           onChange={handleChange}
         />
+
+        <select
+          name="currency"
+          value={form.currency}
+          onChange={handleChange}
+        >
+          <option value="USD">🇺🇸 USD — US Dollar</option>
+          <option value="NGN">🇳🇬 NGN — Nigerian Naira</option>
+          <option value="EUR">🇪🇺 EUR — Euro</option>
+          <option value="GBP">🇬🇧 GBP — British Pound</option>
+        </select>
 
         <input
           type="file"
@@ -453,7 +468,7 @@ return (
               }}
             >
               Goal:
-              ₦
+              {campaign.currency || "USD"}{" "}
               {Number(campaign.goalAmount).toLocaleString()}
             </p>
 
