@@ -48,7 +48,7 @@ function ChatBot() {
     setInput("");
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/ai`, {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL || "https://donation-backend-1-fh7d.onrender.com"}/api/ai`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: input }),
