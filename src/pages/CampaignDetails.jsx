@@ -10,7 +10,9 @@ export default function CampaignDetails() {
   const navigate = useNavigate();
 
   const [campaign, setCampaign] = useState(null);
+  const [updates, setUpdates] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [updatesLoading, setUpdatesLoading] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -27,11 +29,29 @@ export default function CampaignDetails() {
       );
 
       setCampaign(res.data.campaign);
+      loadCampaignUpdates();
     } catch (err) {
       console.error("Campaign loading failed:", err);
       setError("Campaign could not be loaded.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadCampaignUpdates = async () => {
+    try {
+      setUpdatesLoading(true);
+
+      const res = await axios.get(
+        `${API_BASE}/api/campaign-updates/campaign/${id}`
+      );
+
+      setUpdates(res.data.updates || []);
+    } catch (err) {
+      console.error("Campaign updates loading failed:", err);
+      setUpdates([]);
+    } finally {
+      setUpdatesLoading(false);
     }
   };
 
@@ -249,6 +269,132 @@ export default function CampaignDetails() {
                 {campaign.description}
               </p>
             </div>
+          </section>
+
+          {/* CAMPAIGN UPDATES */}
+          <section
+            style={{
+              marginTop: "35px",
+              background: "#fff",
+              borderRadius: "18px",
+              padding: "28px",
+              border: "1px solid #e2e8f0",
+              boxShadow: "0 10px 30px rgba(15, 23, 42, .05)",
+            }}
+          >
+            <h2
+              style={{
+                fontSize: "1.6rem",
+                fontWeight: "900",
+                color: "#0f172a",
+              }}
+            >
+              Campaign Updates 📣
+            </h2>
+
+            <p
+              style={{
+                color: "#64748b",
+                marginTop: "8px",
+                lineHeight: "1.6",
+              }}
+            >
+              Follow the latest news and progress from this campaign.
+            </p>
+
+            {updatesLoading ? (
+              <p
+                style={{
+                  marginTop: "22px",
+                  color: "#64748b",
+                }}
+              >
+                Loading updates...
+              </p>
+            ) : updates.length === 0 ? (
+              <div
+                style={{
+                  marginTop: "22px",
+                  padding: "20px",
+                  borderRadius: "12px",
+                  background: "#f8fafc",
+                  color: "#64748b",
+                }}
+              >
+                No updates have been posted yet.
+              </div>
+            ) : (
+              <div
+                style={{
+                  marginTop: "24px",
+                  display: "grid",
+                  gap: "22px",
+                }}
+              >
+                {updates.map((update) => (
+                  <article
+                    key={update._id}
+                    style={{
+                      paddingBottom: "22px",
+                      borderBottom: "1px solid #e2e8f0",
+                    }}
+                  >
+                    {update.image && (
+                      <img
+                        src={`${API_BASE}${update.image}`}
+                        alt={update.title}
+                        style={{
+                          width: "100%",
+                          maxHeight: "320px",
+                          objectFit: "cover",
+                          borderRadius: "12px",
+                          display: "block",
+                          marginBottom: "16px",
+                        }}
+                      />
+                    )}
+
+                    <h3
+                      style={{
+                        fontSize: "1.2rem",
+                        fontWeight: "900",
+                        color: "#0f172a",
+                      }}
+                    >
+                      {update.title}
+                    </h3>
+
+                    <p
+                      style={{
+                        marginTop: "10px",
+                        color: "#475569",
+                        lineHeight: "1.8",
+                        whiteSpace: "pre-line",
+                      }}
+                    >
+                      {update.content}
+                    </p>
+
+                    <small
+                      style={{
+                        display: "block",
+                        marginTop: "12px",
+                        color: "#94a3b8",
+                      }}
+                    >
+                      {new Date(update.createdAt).toLocaleDateString(
+                        "en-US",
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        }
+                      )}
+                    </small>
+                  </article>
+                ))}
+              </div>
+            )}
           </section>
 
           {/* FUNDING CARD */}

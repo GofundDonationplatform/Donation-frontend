@@ -12,6 +12,7 @@ import flutterwavePay from "./routes/flutterwavePay.js";
 import flutterwaveWebhook from "./routes/flutterwaveWebhook.js";
 import grayRoutes from "./routes/gray.js";
 import campaignRoutes from "./routes/campaignRoutes.js";
+import campaignUpdateRoutes from "./routes/campaignUpdateRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import donationRoutes from "./routes/donationRoutes.js";
 
@@ -39,6 +40,7 @@ app.use("/api/webhook/flutterwave", flutterwaveWebhook);
 app.use("/api/gray", grayRoutes);
 app.use("/uploads", express.static("uploads"));
 app.use("/api/campaigns", campaignRoutes);
+app.use("/api/campaign-updates", campaignUpdateRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/donations", donationRoutes);
 
