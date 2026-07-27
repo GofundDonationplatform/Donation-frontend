@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+const API_BASE =
+    import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+
 const AdminLogin = () => {
     const navigate = useNavigate();
 
@@ -21,7 +24,7 @@ const AdminLogin = () => {
         console.log("Attempting admin login...");
 
         const res = await axios.post(
-            "http://localhost:5000/api/admin/login",
+            `${API_BASE}/api/admin/login`,
             form
         );
 
