@@ -7,24 +7,33 @@ import {
   deleteCampaignUpdate,
 } from "../controllers/campaignUpdateController.js";
 
+import {
+  protect,
+  adminOnly,
+} from "../middleware/authMiddleware.js";
+
 const router = express.Router();
 
-// Create campaign update
+// Admin campaign update management
 router.post(
   "/",
+  protect,
+  adminOnly,
   upload.single("image"),
   createCampaignUpdate
 );
 
-// Get updates for one campaign
+// Public campaign update browsing
 router.get(
   "/campaign/:campaignId",
   getCampaignUpdates
 );
 
-// Delete campaign update
+// Admin campaign update deletion
 router.delete(
   "/:id",
+  protect,
+  adminOnly,
   deleteCampaignUpdate
 );
 
