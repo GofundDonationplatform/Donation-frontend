@@ -7,22 +7,38 @@ import {
   updateCampaign,
   deleteCampaign,
 } from "../controllers/campaignController.js";
+import {
+  protect,
+  adminOnly,
+} from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// Create campaign
-router.post("/", upload.single("image"), createCampaign);
-
-// Get all campaigns
+// Public campaign browsing
 router.get("/", getCampaigns);
-
-// Get one campaign
 router.get("/:id", getCampaign);
 
-// Update campaign
-router.put("/:id", updateCampaign);
+// Admin campaign management
+router.post(
+  "/",
+  protect,
+  adminOnly,
+  upload.single("image"),
+  createCampaign
+);
 
-// Delete campaign
-router.delete("/:id", deleteCampaign);
+router.put(
+  "/:id",
+  protect,
+  adminOnly,
+  updateCampaign
+);
+
+router.delete(
+  "/:id",
+  protect,
+  adminOnly,
+  deleteCampaign
+);
 
 export default router;
