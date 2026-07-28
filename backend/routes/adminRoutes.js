@@ -2,40 +2,41 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
-import { protect, adminOnly } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// ADMIN LOGIN
 router.post("/login", async (req, res) => {
   try {
-    const { email, password } = req.body;
+    console.log("========== ADMIN LOGIN ==========");
 
-    if (!email || !password) {
-      return res.status(400).json({
-        error: "Email and password are required",
-      });
-    }
+    const email = (req.body.email || "").trim().toLowerCase();
+    const password = req.body.password || "";
+
+    console.log("EMAIL RECEIVED:", email);
+    console.log("PASSWORD LENGTH:", password.length);
 
     const admin = await User.findOne({
-      email: email.trim().toLowerCase(),
+      email,
       isAdmin: true,
     });
 
     if (!admin) {
+      console.log("ADMIN NOT FOUND");
       return res.status(401).json({
         error: "Admin account not found",
       });
     }
 
-    const passwordMatch = await bcrypt.compare(
-      password,
-      admin.password
-    );
+    console.log("ADMIN FOUND:", admin.email);
+    console.log("HASH:", admin.password);
 
-    if (!passwordMatch) {
+    const match = await bcrypt.compare(password, admin.password);
+
+    console.log("BCRYPT RESULT:", match);
+
+    if (!match) {
       return res.status(401).json({
-        error: "Invalid credentials",
+        error: "Invalid password",
       });
     }
 
@@ -51,103 +52,26 @@ router.post("/login", async (req, res) => {
       }
     );
 
+    console.log("LOGIN SUCCESS");
+
     return res.json({
-      message: "Admin login successful",
       token,
-      user: {
+      admin: {
         id: admin._id,
         name: admin.name,
         email: admin.email,
-        role: "admin",
         isAdmin: true,
       },
     });
-  } catch (err) {
-    console.error("Admin login error:", err);
 
-    res.status(500).json({
-      error: "Server error during admin login",
+  } catch (err) {
+
+    console.log("LOGIN ERROR:", err);
+
+    return res.status(500).json({
+      error: err.message,
     });
   }
 });
-
-// GET ALL USERS
-router.get(
-  "/users",
-  protect,
-  adminOnly,
-  async (req, res) => {
-    try {
-      const users = await User.find()
-        .select("-password")
-        .sort({ createdAt: -1 });
-
-      res.json(users);
-    } catch (err) {
-      res.status(500).json({
-        error: err.message,
-      });
-    }
-  }
-);
-
-// DELETE USER
-router.delete(
-  "/users/:id",
-  protect,
-  adminOnly,
-  async (req, res) => {
-    try {
-      const user = await User.findById(req.params.id);
-
-      if (!user) {
-        return res.status(404).json({
-          error: "User not found",
-        });
-      }
-
-      await User.findByIdAndDelete(req.params.id);
-
-      res.json({
-        message: "User deleted successfully",
-      });
-    } catch (err) {
-      res.status(500).json({
-        error: err.message,
-      });
-    }
-  }
-);
-
-// TOGGLE ADMIN ROLE
-router.put(
-  "/users/:id/toggle-admin",
-  protect,
-  adminOnly,
-  async (req, res) => {
-    try {
-      const user = await User.findById(req.params.id);
-
-      if (!user) {
-        return res.status(404).json({
-          error: "User not found",
-        });
-      }
-
-      user.isAdmin = !user.isAdmin;
-
-      await user.save();
-
-      res.json({
-        message: "Role updated successfully",
-        isAdmin: user.isAdmin,
-      });
-    } catch (err) {
-      res.status(500).json({
-        error: err.message,
-      });
-    }
-  }
-);
 
 export default router;
