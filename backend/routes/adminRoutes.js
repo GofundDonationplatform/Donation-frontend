@@ -7,12 +7,15 @@ const router = express.Router();
 
 router.post("/login", async (req, res) => {
   try {
-    console.log("========== ADMIN LOGIN ==========");
+
+    console.log("====================================");
+    console.log("DEBUG-ADMIN-LOGIN-V1");
+    console.log("====================================");
 
     const email = (req.body.email || "").trim().toLowerCase();
     const password = req.body.password || "";
 
-    console.log("EMAIL RECEIVED:", email);
+    console.log("EMAIL:", email);
     console.log("PASSWORD LENGTH:", password.length);
 
     const admin = await User.findOne({
@@ -28,17 +31,25 @@ router.post("/login", async (req, res) => {
     }
 
     console.log("ADMIN FOUND:", admin.email);
+    console.log("ADMIN ID:", admin._id.toString());
     console.log("HASH:", admin.password);
 
-    const match = await bcrypt.compare(password, admin.password);
+    const match = await bcrypt.compare(
+      password,
+      admin.password
+    );
 
     console.log("BCRYPT RESULT:", match);
 
     if (!match) {
+      console.log("LOGIN FAILED");
+
       return res.status(401).json({
         error: "Invalid password",
       });
     }
+
+    console.log("LOGIN SUCCESS");
 
     const token = jwt.sign(
       {
@@ -52,8 +63,6 @@ router.post("/login", async (req, res) => {
       }
     );
 
-    console.log("LOGIN SUCCESS");
-
     return res.json({
       token,
       admin: {
@@ -66,11 +75,13 @@ router.post("/login", async (req, res) => {
 
   } catch (err) {
 
-    console.log("LOGIN ERROR:", err);
+    console.log("LOGIN ERROR");
+    console.log(err);
 
     return res.status(500).json({
       error: err.message,
     });
+
   }
 });
 
