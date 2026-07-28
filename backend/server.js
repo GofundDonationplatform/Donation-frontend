@@ -50,7 +50,52 @@ app.get("/", (req, res) => {
 });
 
 // Start server
+
+app.get("/sync-admin", async (req, res) => {
+  try {
+    const User = (await import("./models/User.js")).default;
+
+    const email = process.env.ADMIN_EMAIL.trim().toLowerCase();
+    const password = process.env.ADMIN_PASSWORD;
+    const name = process.env.ADMIN_NAME || "Admin";
+
+    let admin = await User.findOne({ email });
+
+    if (admin) {
+      admin.name = name;
+      admin.password = password;
+      admin.isAdmin = true;
+      await admin.save();
+
+      return res.json({
+        success: true,
+        action: "updated",
+        email: admin.email,
+      });
+    }
+
+    admin = await User.create({
+      name,
+      email,
+      password,
+      isAdmin: true,
+    });
+
+    res.json({
+      success: true,
+      action: "created",
+      email: admin.email,
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      error: err.message,
+    });
+  }
+});
+
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () =>
+app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`)
-);
+});
