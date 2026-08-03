@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import User from "./models/User.js";
 
-dotenv.config();
+dotenv.config({ path: new URL("./.env", import.meta.url) });
 
 const run = async () => {
   try {

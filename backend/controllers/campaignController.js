@@ -64,17 +64,35 @@ export const getCampaign = async (req, res) => {
 // Update Campaign
 export const updateCampaign = async (req, res) => {
   try {
-    const campaign = await Campaign.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
+    const campaign = await Campaign.findById(req.params.id);
+
+    if (!campaign) {
+      return res.status(404).json({
+        success: false,
+        message: "Campaign not found",
+      });
+    }
+
+    Object.assign(campaign, req.body);
+
+    if (req.file) {
+      campaign.image = `/uploads/${req.file.filename}`;
+    }
+
+    const updatedCampaign = await campaign.save();
 
     res.json({
       success: true,
-      campaign,
+      campaign: updatedCampaign,
     });
   } catch (err) {
+    if (err.name === "CastError") {
+      return res.status(404).json({
+        success: false,
+        message: "Campaign not found",
+      });
+    }
+
     res.status(500).json({
       success: false,
       message: err.message,

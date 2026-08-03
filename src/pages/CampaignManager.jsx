@@ -4,6 +4,12 @@ import axios from "axios";
 const API_BASE =
   import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
+const token = localStorage.getItem("token");
+
+const AUTH_HEADERS = {
+  Authorization: `Bearer ${token}`,
+};
+
 const EMPTY_FORM = {
   title: "",
   description: "",
@@ -153,8 +159,7 @@ export default function CampaignManager() {
           payload,
           {
             headers: {
-              "Content-Type":
-                "multipart/form-data",
+              ...AUTH_HEADERS,
             },
           }
         );
@@ -168,8 +173,7 @@ export default function CampaignManager() {
           payload,
           {
             headers: {
-              "Content-Type":
-                "multipart/form-data",
+              ...AUTH_HEADERS,
             },
           }
         );
@@ -208,7 +212,10 @@ export default function CampaignManager() {
 
     try {
       await axios.delete(
-        `${API_BASE}/api/campaigns/${id}`
+        `${API_BASE}/api/campaigns/${id}`,
+        {
+          headers: AUTH_HEADERS,
+        }
       );
 
       alert(
@@ -238,6 +245,9 @@ export default function CampaignManager() {
         `${API_BASE}/api/campaigns/${id}`,
         {
           status,
+        },
+        {
+          headers: AUTH_HEADERS,
         }
       );
 
@@ -401,8 +411,7 @@ export default function CampaignManager() {
         payload,
         {
           headers: {
-            "Content-Type":
-              "multipart/form-data",
+            ...AUTH_HEADERS,
           },
         }
       );
@@ -450,7 +459,10 @@ export default function CampaignManager() {
 
     try {
       await axios.delete(
-        `${API_BASE}/api/campaign-updates/${updateId}`
+        `${API_BASE}/api/campaign-updates/${updateId}`,
+        {
+          headers: AUTH_HEADERS,
+        }
       );
 
       alert(
