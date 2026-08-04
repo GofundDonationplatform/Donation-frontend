@@ -3,6 +3,7 @@
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { API_BASE } from "./config";
 
 // MAIN PAGES
 import LandingPage from "./pages/LandingPage";
@@ -48,7 +49,7 @@ function ChatBot() {
     setInput("");
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL || "https://donation-backend-1-fh7d.onrender.com"}/api/ai`, {
+      const res = await fetch(`${API_BASE}/api/ai`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: input }),

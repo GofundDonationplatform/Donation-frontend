@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import AdminLayout from "../components/AdminLayout";
+import { API_BASE } from "../config";
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
@@ -11,7 +12,7 @@ export default function AdminUsers() {
   const token = localStorage.getItem("token");
 
   const backendBase =
-    import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+    API_BASE;
 
   useEffect(() => {
     loadUsers();

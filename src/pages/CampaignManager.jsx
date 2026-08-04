@@ -1,8 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-
-const API_BASE =
-  import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+import { API_BASE } from "../config";
 
 const token = localStorage.getItem("token");
 

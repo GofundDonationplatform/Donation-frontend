@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { API_BASE } from "../config";
 
 export default function DonateSuccess() {
   const [searchParams] = useSearchParams();
@@ -8,7 +9,7 @@ export default function DonateSuccess() {
   const [message, setMessage] = useState("Verifying your donation...");
 
   const backendBase =
-    import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+    API_BASE;
 
   useEffect(() => {
     const verifyPayment = async () => {

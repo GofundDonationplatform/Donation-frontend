@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import AdminLayout from "../components/AdminLayout";
+import { API_BASE } from "../config";
 
 
 export default function AdminDonations() {
@@ -10,7 +11,7 @@ export default function AdminDonations() {
   const [error, setError] = useState("");
 
   const backendBase =
-    import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+    API_BASE;
 
   const token = localStorage.getItem("token");
 

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import AdminLayout from "../components/AdminLayout";
+import { API_BASE } from "../config";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ useEffect(() => {
 const fetchDashboardStats = async () => {
   try {
     const backendUrl =
-      import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+      API_BASE;
 
     const res = await axios.get(
       `${backendUrl}/api/dashboard`
