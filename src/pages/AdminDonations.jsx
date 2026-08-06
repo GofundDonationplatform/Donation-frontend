@@ -25,7 +25,7 @@ export default function AdminDonations() {
       setError("");
 
       const res = await axios.get(
-        `${backendBase}/api/donations`,
+        `${backendBase}/api/admin/donations`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

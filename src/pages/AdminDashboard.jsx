@@ -28,10 +28,15 @@ const fetchDashboardStats = async () => {
       API_BASE;
 
     const res = await axios.get(
-      `${backendUrl}/api/dashboard`
+      `${backendUrl}/api/admin/dashboard`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
     );
 
-    setStats(res.data.stats);
+    setStats(res.data);
 
   } catch (err) {
     console.error("Dashboard Error:", err);

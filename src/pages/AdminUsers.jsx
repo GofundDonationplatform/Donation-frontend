@@ -32,7 +32,7 @@ export default function AdminUsers() {
       }
     );
 
-    setUsers(res.data);
+    setUsers(res.data.users || []);
   } catch (err) {
     console.error(err);
     setError(
