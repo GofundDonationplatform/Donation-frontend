@@ -221,50 +221,270 @@ function AnimatedRoutes() {
 function AppContent() {
   const location = useLocation();
 
+  const isLandingPage = location.pathname === "/";
+
   const isAdminArea =
     location.pathname.startsWith("/admin") ||
     location.pathname === "/campaign-manager";
+
   return (
-    
-      <div className="app min-h-screen bg-slate-950 text-white flex flex-col">
+    <div className="app min-h-screen bg-slate-950 text-white flex flex-col">
 
-        {!isAdminArea && (
-        <header className="flex justify-between items-center px-6 py-4 bg-slate-900/70 backdrop-blur-xl border-b border-white/10">
-          <Link to="/" className="flex items-center gap-2 font-bold text-cyan-400 text-lg">
-            <span className="bg-gradient-to-r from-purple-600 to-cyan-400 text-white px-3 py-1 rounded-lg">GoFund</span>
-            Digital Impact Support
-          </Link>
+      {/* PUBLIC HEADER */}
+      {!isLandingPage && !isAdminArea && (
+        <header
+          style={{
+            background: "#ffffff",
+            color: "#111827",
+            borderBottom: "1px solid #e5e7eb",
+            position: "sticky",
+            top: 0,
+            zIndex: 40,
+          }}
+        >
+          <div
+            style={{
+              maxWidth: "1180px",
+              minHeight: "72px",
+              margin: "0 auto",
+              padding: "0 24px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: "20px",
+            }}
+          >
 
-          <nav className="flex gap-4 text-sm">
-            <Link to="/" className="hover:text-cyan-400">Home</Link>
-            <Link to="/donate" className="hover:text-cyan-400">Support</Link>
-            <Link to="/terms" className="hover:text-cyan-400">Terms</Link>
-            <Link to="/privacy" className="hover:text-cyan-400">Privacy</Link>
-            <Link to="/refund" className="hover:text-cyan-400">Refund</Link>
-          </nav>
+            <Link
+              to="/"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                textDecoration: "none",
+                color: "#111827",
+              }}
+            >
+              <img
+                src="/images/gfssga-logo1.png"
+                alt="GFSSGA Impact Network"
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  objectFit: "contain",
+                  borderRadius: "9px",
+                }}
+              />
+
+              <div>
+                <div
+                  style={{
+                    fontWeight: 800,
+                    fontSize: "14px",
+                    lineHeight: 1.2,
+                  }}
+                >
+                  GFSSGA Impact Network
+                </div>
+
+                <div
+                  style={{
+                    fontSize: "10px",
+                    color: "#64748b",
+                    marginTop: "2px",
+                  }}
+                >
+                  Digital Impact Platform
+                </div>
+              </div>
+            </Link>
+
+            <nav
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "20px",
+              }}
+            >
+              <Link
+                to="/home"
+                style={{
+                  color: "#334155",
+                  textDecoration: "none",
+                  fontWeight: 600,
+                  fontSize: "14px",
+                }}
+              >
+                Explore
+              </Link>
+
+              <Link
+                to="/donate"
+                style={{
+                  color: "#334155",
+                  textDecoration: "none",
+                  fontWeight: 600,
+                  fontSize: "14px",
+                }}
+              >
+                Support
+              </Link>
+
+              <Link
+                to="/login"
+                style={{
+                  color: "#334155",
+                  textDecoration: "none",
+                  fontWeight: 600,
+                  fontSize: "14px",
+                }}
+              >
+                Sign in
+              </Link>
+
+              <Link
+                to="/register"
+                style={{
+                  background: "#4f46e5",
+                  color: "#ffffff",
+                  textDecoration: "none",
+                  fontWeight: 800,
+                  fontSize: "13px",
+                  padding: "10px 15px",
+                  borderRadius: "8px",
+                }}
+              >
+                Create account
+              </Link>
+            </nav>
+
+          </div>
         </header>
-        )}
+      )}
 
-        {/* ROUTES */}
-        <main className="flex-1">
-          <AnimatedRoutes />
-        </main>
+      {/* ROUTES */}
+      <main className="flex-1">
+        <AnimatedRoutes />
+      </main>
 
-        {!isAdminArea && (
-        <footer className="text-center text-gray-500 py-6 text-sm border-t border-white/10 space-y-2">
-          <div>© {new Date().getFullYear()} GoFund Digital Impact Support Platform</div>
-          <div className="flex justify-center gap-4">
-            <Link to="/terms" className="hover:text-cyan-400">Terms</Link>
-            <Link to="/privacy" className="hover:text-cyan-400">Privacy</Link>
-            <Link to="/refund" className="hover:text-cyan-400">Refund</Link>
+      {/* PUBLIC FOOTER */}
+      {!isLandingPage && !isAdminArea && (
+        <footer
+          style={{
+            background: "#111827",
+            color: "#ffffff",
+            padding: "45px 24px 20px",
+          }}
+        >
+          <div
+            style={{
+              maxWidth: "1180px",
+              margin: "0 auto",
+              display: "grid",
+              gridTemplateColumns: "2fr 1fr 1fr 1fr",
+              gap: "35px",
+            }}
+          >
+
+            <div>
+              <div
+                style={{
+                  fontWeight: 800,
+                  fontSize: "16px",
+                }}
+              >
+                GFSSGA Impact Network
+              </div>
+
+              <p
+                style={{
+                  color: "#94a3b8",
+                  lineHeight: 1.7,
+                  fontSize: "13px",
+                  maxWidth: "400px",
+                  marginTop: "12px",
+                }}
+              >
+                Connecting people, causes and communities through
+                accessible digital impact and fundraising tools.
+              </p>
+            </div>
+
+            <div>
+              <strong>Platform</strong>
+              <div style={{ marginTop: "13px", display: "grid", gap: "9px" }}>
+                <Link to="/home" style={{ color: "#94a3b8", textDecoration: "none" }}>
+                  Explore causes
+                </Link>
+                <Link to="/donate" style={{ color: "#94a3b8", textDecoration: "none" }}>
+                  Support
+                </Link>
+                <Link to="/register" style={{ color: "#94a3b8", textDecoration: "none" }}>
+                  Start campaign
+                </Link>
+              </div>
+            </div>
+
+            <div>
+              <strong>Account</strong>
+              <div style={{ marginTop: "13px", display: "grid", gap: "9px" }}>
+                <Link to="/login" style={{ color: "#94a3b8", textDecoration: "none" }}>
+                  User login
+                </Link>
+                <Link to="/register" style={{ color: "#94a3b8", textDecoration: "none" }}>
+                  Register
+                </Link>
+                <Link to="/admin/login" style={{ color: "#94a3b8", textDecoration: "none" }}>
+                  Admin login
+                </Link>
+              </div>
+            </div>
+
+            <div>
+              <strong>Legal</strong>
+              <div style={{ marginTop: "13px", display: "grid", gap: "9px" }}>
+                <Link to="/terms" style={{ color: "#94a3b8", textDecoration: "none" }}>
+                  Terms
+                </Link>
+                <Link to="/privacy" style={{ color: "#94a3b8", textDecoration: "none" }}>
+                  Privacy
+                </Link>
+                <Link to="/refund" style={{ color: "#94a3b8", textDecoration: "none" }}>
+                  Refund
+                </Link>
+              </div>
+            </div>
+
+          </div>
+
+          <div
+            style={{
+              maxWidth: "1180px",
+              margin: "35px auto 0",
+              paddingTop: "18px",
+              borderTop: "1px solid rgba(255,255,255,0.1)",
+              color: "#64748b",
+              fontSize: "11px",
+              display: "flex",
+              justifyContent: "space-between",
+              gap: "15px",
+            }}
+          >
+            <span>
+              © {new Date().getFullYear()} GFSSGA Impact Network
+            </span>
+
+            <span>
+              Digital impact • Community • Opportunity
+            </span>
           </div>
         </footer>
-        )}
+      )}
 
-        {/* CHAT AI */}
-        {!isAdminArea && <ChatBot />}
+      {/* CHAT AI */}
+      {!isLandingPage && !isAdminArea && <ChatBot />}
 
-      </div>
+    </div>
   );
 }
 
