@@ -77,8 +77,17 @@ export default function AdminUsers() {
 
     loadUsers();
   } catch (err) {
-    console.error(err);
-    alert("Failed to update role");
+    console.error("Toggle admin failed:", err);
+
+    const status = err.response?.status;
+    const message =
+      err.response?.data?.message ||
+      err.message ||
+      "Unknown error";
+
+    alert(
+      `Failed to update role\\n\\nHTTP: ${status || "N/A"}\\nMessage: ${message}`
+    );
   }
 };
 
