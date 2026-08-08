@@ -158,6 +158,7 @@ const fetchDashboardStats = async () => {
           </button>
 
           <button
+            onClick={() => navigate("/donate")}
             style={buttonStyle}
           >
             ❤️ Digital Impact Supports
