@@ -1,79 +1,138 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { API_BASE } from "../config";
 
 const AdminLogin = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-    const [form, setForm] = useState({
-        email: "",
-        password: ""
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
     });
+  };
 
-    const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    };
-
-    const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setLoading(true);
+    setErrorMessage("");
+
     try {
-        console.log("Attempting admin login...");
+      const res = await axios.post(
+        `${API_BASE}/api/admin/login`,
+        form
+      );
 
-        const res = await axios.post(
-            `${API_BASE}/api/admin/login`,
-            form
-        );
+      console.log("ADMIN LOGIN SUCCESS:", res.data);
 
-        console.log("LOGIN SUCCESS:", res.data);
+      const admin = res.data.admin;
+      const token = res.data.token;
 
-        localStorage.setItem("token", res.data.token);
-        localStorage.setItem("user", JSON.stringify(res.data.admin));
-        localStorage.setItem("role", "admin");
+      if (!token || !admin) {
+        throw new Error("Invalid admin login response");
+      }
 
-        navigate("/admin/dashboard");
+      // Clear any previous ordinary-user session.
+      localStorage.removeItem("userToken");
+      localStorage.removeItem("user");
 
+      // Establish the admin session.
+      localStorage.setItem("token", token);
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          ...admin,
+          role: "admin",
+          isAdmin: true,
+        })
+      );
+      localStorage.setItem("role", "admin");
+
+      // If the admin was redirected here by a protected
+      // admin page, return there. Otherwise use dashboard.
+      const destination =
+        location.state?.from &&
+        location.state.from.startsWith("/admin/")
+          ? location.state.from
+          : "/admin/dashboard";
+
+      navigate(destination, { replace: true });
     } catch (error) {
-        console.log("LOGIN ERROR:", error);
+      console.error("ADMIN LOGIN ERROR:", error);
 
-        if (error.response) {
-            console.log("Response:", error.response.data);
-            alert(error.response.data.error || error.response.data.message);
-        } else {
-            console.log(error.message);
-            alert(error.message);
-        }
+      const message =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        error.message ||
+        "Admin login failed.";
+
+      setErrorMessage(message);
+    } finally {
+      setLoading(false);
     }
-};
+  };
 
-    return (
-        <div className="auth-container">
-            <h2>Admin Login</h2>
+  return (
+    <div className="admin-login-page">
+      <div className="admin-login-card">
+        <h2>Admin Login</h2>
 
-            <form onSubmit={handleSubmit}>
-                <input 
-                    type="email"
-                    name="email"
-                    placeholder="Admin Email"
-                    value={form.email}
-                    onChange={handleChange}
-                    required
-                />
+        <p className="admin-login-subtitle">
+          Sign in with your administrator credentials to access
+          the administration dashboard.
+        </p>
 
-                <input 
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    value={form.password}
-                    onChange={handleChange}
-                    required
-                />
+        {errorMessage && (
+          <div
+            style={{
+              marginBottom: "15px",
+              padding: "10px 12px",
+              borderRadius: "8px",
+              background: "#fee2e2",
+              color: "#991b1b",
+            }}
+          >
+            {errorMessage}
+          </div>
+        )}
 
-                <button type="submit">Login</button>
-            </form>
-        </div>
-    );
+        <form className="admin-login-form" onSubmit={handleSubmit}>
+          <input
+            type="email"
+            name="email"
+            placeholder="Admin Email"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
+
+          <input
+            type="password"
+            name="password"
+            placeholder="Admin Password"
+            value={form.password}
+            onChange={handleChange}
+            required
+          />
+
+          <button type="submit" disabled={loading}>
+            {loading ? "Signing in..." : "Admin Login"}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
 };
 
 export default AdminLogin;

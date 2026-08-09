@@ -1,6 +1,6 @@
 // src/App.jsx
 
-import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link, Navigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { API_BASE } from "./config";
@@ -165,6 +165,12 @@ function AnimatedRoutes() {
         } />
 
         {/* ADMIN AUTH */}
+
+        {/* Convenient administrator entry point */}
+        <Route
+          path="/admin"
+          element={<Navigate to="/admin/login" replace />}
+        />
     <Route path="/admin/login" element={<AdminLogin />} />
 
     <Route
@@ -233,6 +239,7 @@ function AppContent() {
       {/* PUBLIC HEADER */}
       {!isLandingPage && !isAdminArea && (
         <header
+          className="public-header"
           style={{
             background: "#ffffff",
             color: "#111827",
@@ -243,6 +250,7 @@ function AppContent() {
           }}
         >
           <div
+            className="public-header-inner"
             style={{
               maxWidth: "1180px",
               minHeight: "72px",
@@ -300,6 +308,7 @@ function AppContent() {
             </Link>
 
             <nav
+              className="public-header-nav"
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -356,6 +365,22 @@ function AppContent() {
               >
                 Create account
               </Link>
+                <Link
+                  to="/admin/login"
+                  style={{
+                    color: "#4f46e5",
+                    background: "#eef2ff",
+                    border: "1px solid #c7d2fe",
+                    textDecoration: "none",
+                    fontWeight: 800,
+                    fontSize: "13px",
+                    padding: "9px 14px",
+                    borderRadius: "8px",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Admin Login
+                </Link>
             </nav>
 
           </div>

@@ -1,11 +1,32 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
 export default function AdminRoute({ children }) {
-  const token = localStorage.getItem("token");
-  const role = localStorage.getItem("role");
+  const location = useLocation();
 
-  if (!token) return <Navigate to="/login" />;
-  if (role !== "admin") return <Navigate to="/" />;
+  const token = localStorage.getItem("token");
+  const userRaw = localStorage.getItem("user");
+
+  let user = null;
+
+  try {
+    user = userRaw ? JSON.parse(userRaw) : null;
+  } catch {
+    user = null;
+  }
+
+  const isAdmin =
+    user &&
+    (user.role === "admin" || user.isAdmin === true);
+
+  if (!token || !isAdmin) {
+    return (
+      <Navigate
+        to="/admin/login"
+        replace
+        state={{ from: location.pathname }}
+      />
+    );
+  }
 
   return children;
 }
