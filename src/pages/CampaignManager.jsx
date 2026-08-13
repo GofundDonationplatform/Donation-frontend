@@ -1,11 +1,16 @@
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { API_BASE } from "../config";
+import { getImageUrl } from "../utils/imageUrl";
 
-const token = localStorage.getItem("token");
+const getAuthHeaders = () => {
+  const token = localStorage.getItem("token");
 
-const AUTH_HEADERS = {
-  Authorization: `Bearer ${token}`,
+  return token
+    ? {
+        Authorization: `Bearer ${token}`,
+      }
+    : {};
 };
 
 const EMPTY_FORM = {
@@ -156,9 +161,7 @@ export default function CampaignManager() {
           `${API_BASE}/api/campaigns/${editingId}`,
           payload,
           {
-            headers: {
-              ...AUTH_HEADERS,
-            },
+            headers: getAuthHeaders(),
           }
         );
 
@@ -170,9 +173,7 @@ export default function CampaignManager() {
           `${API_BASE}/api/campaigns`,
           payload,
           {
-            headers: {
-              ...AUTH_HEADERS,
-            },
+            headers: getAuthHeaders(),
           }
         );
 
@@ -212,7 +213,7 @@ export default function CampaignManager() {
       await axios.delete(
         `${API_BASE}/api/campaigns/${id}`,
         {
-          headers: AUTH_HEADERS,
+          headers: getAuthHeaders(),
         }
       );
 
@@ -245,7 +246,7 @@ export default function CampaignManager() {
           status,
         },
         {
-          headers: AUTH_HEADERS,
+          headers: getAuthHeaders(),
         }
       );
 
@@ -408,9 +409,7 @@ export default function CampaignManager() {
         `${API_BASE}/api/campaign-updates`,
         payload,
         {
-          headers: {
-            ...AUTH_HEADERS,
-          },
+          headers: getAuthHeaders(),
         }
       );
 
@@ -459,7 +458,7 @@ export default function CampaignManager() {
       await axios.delete(
         `${API_BASE}/api/campaign-updates/${updateId}`,
         {
-          headers: AUTH_HEADERS,
+          headers: getAuthHeaders(),
         }
       );
 
@@ -1549,7 +1548,7 @@ export default function CampaignManager() {
 
                                   {update.image && (
                                     <img
-                                      src={`${API_BASE}${update.image}`}
+                                      src={getImageUrl(update.image)}
                                       alt={
                                         update.title
                                       }

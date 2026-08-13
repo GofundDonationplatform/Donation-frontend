@@ -1,10 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { getImageUrl } from "../utils/imageUrl";
 
 export default function CampaignCard({ campaign }) {
   return (
     <article className="campaign-card" role="article" aria-labelledby={`c-${campaign.id}`}>
-      <img src={campaign.image} alt={campaign.title} />
+      <img src={getImageUrl(campaign.image)} alt={campaign.title} />
       <div style={{ paddingTop: 8 }}>
         <h3 id={`c-${campaign.id}`} style={{ fontWeight: 700, color: "#0f172a" }}>{campaign.title}</h3>
         <p style={{ fontSize: 14, color: "#334155" }}>{campaign.description}</p>

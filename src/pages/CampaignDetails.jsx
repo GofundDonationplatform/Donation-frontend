@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { API_BASE } from "../config";
+import { getImageUrl } from "../utils/imageUrl";
 
 export default function CampaignDetails() {
   const { id } = useParams();
@@ -204,7 +205,7 @@ export default function CampaignDetails() {
           <section>
             {campaign.image ? (
               <img
-                src={`${API_BASE}${campaign.image}`}
+                src={getImageUrl(campaign.image)}
                 alt={campaign.title}
                 style={{
                   width: "100%",
@@ -453,7 +454,7 @@ export default function CampaignDetails() {
                 >
                   {update.image && (
                     <img
-                      src={`${API_BASE}${update.image}`}
+                      src={getImageUrl(update.image)}
                       alt={update.title}
                       style={{
                         width: "100%",

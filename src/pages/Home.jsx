@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { API_BASE } from "../config";
+import { getImageUrl } from "../utils/imageUrl";
 
 export default function Home() {
   const [campaigns, setCampaigns] = useState([]);
@@ -251,7 +252,7 @@ export default function Home() {
                 >
                   {campaign.image ? (
                     <img
-                      src={`${API_BASE}${campaign.image}`}
+                      src={getImageUrl(campaign.image)}
                       alt={campaign.title}
                       style={{
                         width: "100%",
