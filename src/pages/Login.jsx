@@ -59,7 +59,7 @@ export default function Login() {
                   className="inline-flex items-center gap-3 no-underline"
                 >
                   <img
-                    src="/images/gfssga-logo1.png"
+                    src="/images/gfssga-logo1.webp"
                     alt="GFSSGA Impact Network"
                     className="h-12 w-12 rounded-xl object-contain"
                   />
@@ -130,7 +130,7 @@ export default function Login() {
                   className="inline-flex items-center gap-3 no-underline"
                 >
                   <img
-                    src="/images/gfssga-logo1.png"
+                    src="/images/gfssga-logo1.webp"
                     alt="GFSSGA Impact Network"
                     className="h-12 w-12 rounded-xl object-contain"
                   />

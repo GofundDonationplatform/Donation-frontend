@@ -18,7 +18,7 @@
 /* === HERO SECTION === */
 .landing-hero {
   height: 85vh;
-  background-image: url("/hero-bg.jpg"); /* Add a clean tech/impact photo */
+  background-image: url("/hero-bg.webp"); /* Add a clean tech/impact photo */
   background-size: cover;
   background-position: center;
   position: relative;

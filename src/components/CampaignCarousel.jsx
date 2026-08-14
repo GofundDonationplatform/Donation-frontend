@@ -6,28 +6,28 @@ const campaigns = [
     desc: "Education changes everything — help build classrooms.",
     raised: 7500,
     goal: 10000,
-    img: "/src/assets/school.jpg",
+    img: "/images/campaigns/school.webp",
   },
   {
     title: "Clean Water for All",
     desc: "Help provide sustainable water to rural communities.",
     raised: 2800,
     goal: 5000,
-    img: "/src/assets/water.jpg",
+    img: "/images/campaigns/clean-water.webp",
   },
   {
     title: "Support Orphan Care",
     desc: "Provide shelter, food, and education for orphaned children.",
     raised: 6200,
     goal: 8000,
-    img: "/src/assets/orphan.jpg",
+    img: "/images/campaigns/orphan-care.webp",
   },
   {
     title: "Women Empowerment",
     desc: "Training and micro-loans for women.",
     raised: 2100,
     goal: 4500,
-    img: "/src/assets/women.jpg",
+    img: "/images/campaigns/women-empowerment.webp",
   },
 ];
 

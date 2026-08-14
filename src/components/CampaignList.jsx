@@ -3,9 +3,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const sample = [
-  { img: "/images/orphan-care.jpg", title: "Support Orphan Care", raised: 6200, goal: 8000 },
-  { img: "/images/clean-water.jpg", title: "Clean Water for All", raised: 2800, goal: 5000 },
-  { img: "/images/children-education.jpg", title: "Help Build a School in Kenya", raised: 7500, goal: 10000 },
+  { img: "/images/campaigns/orphan-care.webp", title: "Support Orphan Care", raised: 6200, goal: 8000 },
+  { img: "/images/campaigns/clean-water.webp", title: "Clean Water for All", raised: 2800, goal: 5000 },
+  { img: "/images/campaigns/school.webp", title: "Help Build a School in Kenya", raised: 7500, goal: 10000 },
 ];
 
 export default function CampaignList() {

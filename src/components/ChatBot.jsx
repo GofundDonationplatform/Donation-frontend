@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { API_BASE } from "../config";
 
 export default function ChatBot() {
   const [messages, setMessages] = useState([
@@ -17,7 +18,7 @@ export default function ChatBot() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/ai/chat", {
+      const res = await fetch(`${API_BASE}/api/ai/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -33,7 +34,7 @@ export default function ChatBot() {
 
       const data = await res.json();
       const reply =
-        data?.choices?.[0]?.message?.content ||
+        data?.reply ||
         "Sorry, I couldn’t understand that 😅";
 
       setMessages((prev) => [...prev, { from: "bot", text: reply }]);

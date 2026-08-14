@@ -4,7 +4,8 @@
 
 /* reset */
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html,body,#root { height: 100%; }
+html, body { min-height: 100%; }
+#root { min-height: 100vh; }
 
 body {
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
@@ -320,7 +321,7 @@ body::before {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: url("/hero-bg.jpg");
+  background-image: url("/hero-bg.webp");
   background-size: cover;
   background-position: center;
   overflow: hidden;
@@ -1155,3 +1156,986 @@ body,
   }
 }
 
+
+/* =========================================================
+   GFSSGA / GOFUNDSS — ADMIN LOGIN FINAL VISUAL DESIGN
+   ========================================================= */
+
+.admin-login-page {
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  padding: 24px !important;
+
+  background:
+    radial-gradient(
+      circle at 15% 10%,
+      rgba(79, 70, 229, 0.28),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 85% 85%,
+      rgba(6, 182, 212, 0.18),
+      transparent 30%
+    ),
+    linear-gradient(
+      145deg,
+      #020617 0%,
+      #0f172a 48%,
+      #111827 100%
+    );
+
+  color: #ffffff;
+  overflow-x: hidden;
+}
+
+/* Subtle glow behind the login card */
+.admin-login-page::before {
+  content: "";
+  position: fixed;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+
+  background: rgba(79, 70, 229, 0.10);
+  filter: blur(80px);
+
+  top: -180px;
+  left: -150px;
+
+  pointer-events: none;
+}
+
+/* Main login card */
+.admin-login-card {
+  position: relative;
+  z-index: 1;
+
+  width: 100% !important;
+  max-width: 430px !important;
+
+  box-sizing: border-box;
+
+  padding: 38px !important;
+
+  background: rgba(255, 255, 255, 0.97) !important;
+  color: #111827 !important;
+
+  border: 1px solid rgba(255, 255, 255, 0.65) !important;
+  border-radius: 24px !important;
+
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.45),
+    0 10px 30px rgba(79, 70, 229, 0.12);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+/* Small brand mark above heading */
+.admin-login-card::before {
+  content: "GFSSGA";
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 58px;
+  height: 58px;
+
+  margin: 0 auto 18px;
+
+  border-radius: 16px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #4f46e5,
+      #06b6d4
+    );
+
+  color: #ffffff;
+
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+
+  box-shadow:
+    0 12px 28px rgba(79, 70, 229, 0.30);
+}
+
+/* Heading */
+.admin-login-card h2 {
+  margin: 0 0 8px !important;
+
+  color: #0f172a !important;
+
+  font-size: 30px !important;
+  line-height: 1.15;
+
+  font-weight: 850 !important;
+
+  text-align: center;
+}
+
+/* Subtitle */
+.admin-login-subtitle {
+  margin: 0 auto 28px !important;
+
+  max-width: 330px;
+
+  color: #64748b !important;
+
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+
+  text-align: center;
+}
+
+/* Error message */
+.admin-login-card > div[style] {
+  box-sizing: border-box;
+
+  width: 100%;
+
+  margin-bottom: 18px !important;
+
+  border: 1px solid #fecaca;
+
+  background: #fef2f2 !important;
+  color: #991b1b !important;
+
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+/* Form */
+.admin-login-form {
+  width: 100%;
+
+  display: flex !important;
+  flex-direction: column !important;
+
+  gap: 15px !important;
+}
+
+/* Inputs */
+.admin-login-form input {
+  width: 100% !important;
+  min-width: 0;
+
+  min-height: 54px !important;
+
+  box-sizing: border-box;
+
+  padding: 14px 16px !important;
+
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 12px !important;
+
+  background: #f8fafc !important;
+  color: #0f172a !important;
+
+  font-family: inherit;
+  font-size: 15px !important;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.admin-login-form input::placeholder {
+  color: #94a3b8;
+}
+
+.admin-login-form input:hover {
+  background: #ffffff !important;
+  border-color: #94a3b8 !important;
+}
+
+.admin-login-form input:focus {
+  background: #ffffff !important;
+
+  border-color: #4f46e5 !important;
+
+  box-shadow:
+    0 0 0 4px rgba(79, 70, 229, 0.12) !important;
+}
+
+/* Login button */
+.admin-login-form button {
+  width: 100% !important;
+  min-height: 54px !important;
+
+  box-sizing: border-box;
+
+  margin-top: 5px;
+
+  padding: 13px 18px !important;
+
+  border: none !important;
+  border-radius: 12px !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      #4f46e5 0%,
+      #6366f1 45%,
+      #06b6d4 100%
+    ) !important;
+
+  color: #ffffff !important;
+
+  font-family: inherit;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+
+  letter-spacing: 0.01em;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 12px 25px rgba(79, 70, 229, 0.28);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.admin-login-form button:hover:not(:disabled) {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 16px 30px rgba(79, 70, 229, 0.34);
+}
+
+.admin-login-form button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.admin-login-form button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .admin-login-page {
+    padding: 18px !important;
+    align-items: center !important;
+  }
+
+  .admin-login-card {
+    max-width: 100% !important;
+
+    padding: 30px 22px !important;
+
+    border-radius: 20px !important;
+  }
+
+  .admin-login-card h2 {
+    font-size: 27px !important;
+  }
+
+  .admin-login-subtitle {
+    font-size: 13px !important;
+    margin-bottom: 24px !important;
+  }
+
+  .admin-login-form input,
+  .admin-login-form button {
+    min-height: 52px !important;
+  }
+}
+
+/* Very small phones */
+@media (max-width: 380px) {
+  .admin-login-page {
+    padding: 12px !important;
+  }
+
+  .admin-login-card {
+    padding: 26px 18px !important;
+    border-radius: 18px !important;
+  }
+
+  .admin-login-card h2 {
+    font-size: 24px !important;
+  }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .admin-login-form input,
+  .admin-login-form button {
+    transition: none !important;
+  }
+}
+
+
+/* =========================================================
+   FEATURED CAMPAIGNS
+   ========================================================= */
+
+.landing-featured-campaigns {
+  background: #ffffff;
+  padding: 90px 24px;
+}
+
+.landing-featured-campaigns > .landing-section-heading {
+  max-width: 1180px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.landing-featured-grid {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.landing-featured-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(15, 23, 42, 0.07);
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.landing-featured-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.13);
+}
+
+.landing-featured-image-wrap {
+  position: relative;
+  height: 220px;
+  background: #e2e8f0;
+  overflow: hidden;
+}
+
+.landing-featured-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.landing-featured-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    linear-gradient(135deg, #312e81, #0891b2);
+  color: #ffffff;
+  font-size: 52px;
+}
+
+.landing-featured-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.86);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.landing-featured-content {
+  padding: 21px;
+}
+
+.landing-category-badge {
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #4338ca;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.landing-featured-content h3 {
+  margin-bottom: 9px;
+  color: #111827;
+  font-size: 20px;
+  line-height: 1.25;
+}
+
+.landing-featured-content > p {
+  min-height: 68px;
+  margin-bottom: 17px;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.landing-progress {
+  margin-top: 14px;
+}
+
+.landing-progress-track {
+  height: 9px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e2e8f0;
+}
+
+.landing-progress-bar {
+  height: 100%;
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, #4f46e5, #06b6d4);
+}
+
+.landing-progress-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 8px;
+  font-size: 12px;
+}
+
+.landing-progress-info strong {
+  color: #4f46e5;
+}
+
+.landing-progress-info span {
+  color: #64748b;
+  text-align: right;
+}
+
+.landing-campaign-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 7px;
+  color: #64748b;
+  font-size: 11px;
+}
+
+.landing-support-btn {
+  width: 100%;
+  margin-top: 17px;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #4f46e5;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.landing-support-btn:hover {
+  background: #4338ca;
+}
+
+.landing-featured-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 38px;
+}
+
+.landing-campaign-state {
+  max-width: 760px;
+  min-height: 190px;
+  margin: 0 auto;
+  padding: 45px 25px;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  background: #f8fafc;
+  text-align: center;
+}
+
+.landing-campaign-state h3 {
+  margin-bottom: 8px;
+  color: #111827;
+  font-size: 20px;
+}
+
+.landing-campaign-state p {
+  max-width: 550px;
+  margin: 0 auto;
+  color: #64748b;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.landing-state-icon {
+  margin-bottom: 13px;
+  font-size: 34px;
+}
+
+.landing-campaign-error {
+  border-color: #fecaca;
+  background: #fff7f7;
+}
+
+.landing-retry-btn {
+  margin-top: 20px;
+  border: none;
+  cursor: pointer;
+}
+
+.landing-loading-spinner {
+  width: 34px;
+  height: 34px;
+  margin: 0 auto 14px;
+  border: 4px solid #e2e8f0;
+  border-top-color: #4f46e5;
+  border-radius: 50%;
+  animation: landing-spin 0.8s linear infinite;
+}
+
+@keyframes landing-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- FEATURED CAMPAIGNS MOBILE ---------- */
+
+@media (max-width: 900px) {
+  .landing-featured-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .landing-featured-campaigns {
+    padding: 65px 18px;
+  }
+
+  .landing-featured-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .landing-featured-image-wrap {
+    height: 205px;
+  }
+
+  .landing-featured-content {
+    padding: 18px;
+  }
+
+  .landing-featured-content > p {
+    min-height: auto;
+  }
+
+  .landing-campaign-meta {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .landing-progress-info {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .landing-progress-info span {
+    text-align: left;
+  }
+}
+
+
+/* =========================================================
+   HOW IT WORKS
+   ========================================================= */
+
+.landing-how-it-works {
+  background: #f8fafc;
+  padding: 90px 24px;
+}
+
+.landing-how-it-works > .landing-section-heading {
+  max-width: 1180px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.landing-how-grid {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+}
+
+.landing-how-card {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 28px 22px 25px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.landing-how-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.11);
+}
+
+.landing-how-number {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  color: #cbd5e1;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.landing-how-icon {
+  width: 54px;
+  height: 54px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: #eef2ff;
+  font-size: 25px;
+}
+
+.landing-how-card h3 {
+  margin-bottom: 10px;
+  color: #111827;
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+.landing-how-card p {
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+@media (max-width: 900px) {
+  .landing-how-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .landing-how-it-works {
+    padding: 65px 18px;
+  }
+
+  .landing-how-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .landing-how-card {
+    padding: 24px 20px;
+  }
+}
+
+
+/* =========================================================
+   GFSSGA MISSION / WHAT IS GFSSGA
+   ========================================================= */
+
+.landing-mission {
+  margin-top: 60px;
+  padding: 46px;
+  border: 1px solid #e5e7eb;
+  border-radius: 22px;
+  background:
+    linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #f8fafc 55%,
+      #eef2ff 100%
+    );
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.07);
+
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 42px;
+  align-items: center;
+}
+
+.landing-mission-label {
+  display: inline-block;
+  margin-bottom: 12px;
+  color: #4f46e5;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+}
+
+.landing-mission-content h2 {
+  max-width: 650px;
+  color: #111827;
+  font-size: clamp(28px, 4vw, 42px);
+  line-height: 1.1;
+  letter-spacing: -1.2px;
+}
+
+.landing-mission-content p {
+  max-width: 680px;
+  margin-top: 16px;
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.landing-mission-pillars {
+  display: grid;
+  gap: 14px;
+}
+
+.landing-mission-pillar {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 18px;
+  border: 1px solid #e5e7eb;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.landing-mission-pillar-icon {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #eef2ff;
+  font-size: 22px;
+}
+
+.landing-mission-pillar h3 {
+  margin-bottom: 4px;
+  color: #111827;
+  font-size: 16px;
+}
+
+.landing-mission-pillar p {
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+@media (max-width: 800px) {
+  .landing-mission {
+    margin-top: 42px;
+    padding: 28px 22px;
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .landing-mission-content h2 {
+    font-size: clamp(27px, 8vw, 36px);
+  }
+}
+
+@media (max-width: 500px) {
+  .landing-mission {
+    padding: 24px 18px;
+    border-radius: 18px;
+  }
+
+  .landing-mission-pillar {
+    padding: 15px;
+  }
+
+  .landing-mission-pillar-icon {
+    flex-basis: 40px;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+}
+
+
+/* =========================================================
+   IMPACT STATS
+   ========================================================= */
+
+.landing-impact-stats {
+  width: 100%;
+  padding: 85px 24px;
+  background: #f8fafc;
+}
+
+.landing-impact-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.landing-impact-heading {
+  max-width: 680px;
+  margin-bottom: 38px;
+}
+
+.landing-impact-heading > span {
+  color: #4f46e5;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+}
+
+.landing-impact-heading h2 {
+  margin-top: 9px;
+  color: #111827;
+  font-size: clamp(30px, 4vw, 44px);
+  line-height: 1.1;
+  letter-spacing: -1.5px;
+}
+
+.landing-impact-heading p {
+  margin-top: 13px;
+  color: #64748b;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.landing-impact-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.landing-impact-stat {
+  padding: 28px 22px;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 8px 25px rgba(15, 23, 42, 0.05);
+}
+
+.landing-impact-stat strong {
+  display: block;
+  color: #111827;
+  font-size: clamp(30px, 4vw, 42px);
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+.landing-impact-stat span {
+  display: block;
+  margin-top: 10px;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.landing-impact-raised {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 24px;
+  padding: 20px;
+  border-radius: 15px;
+  background: #eef2ff;
+  text-align: center;
+}
+
+.landing-impact-raised strong {
+  color: #4f46e5;
+  font-size: clamp(22px, 3vw, 32px);
+}
+
+.landing-impact-raised span {
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .landing-impact-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .landing-impact-stats {
+    padding: 65px 18px;
+  }
+
+  .landing-impact-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .landing-impact-stat {
+    padding: 22px 16px;
+  }
+
+  .landing-impact-raised {
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
+}
+
+
+/* =========================================================
+   PHASE 3C — TRUST PAGE LINKS
+   ========================================================= */
+
+.landing-mission-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.landing-footer-about-link {
+  display: inline-block;
+  margin-top: 14px;
+  color: #a5b4fc;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.landing-footer-about-link:hover {
+  color: #c7d2fe;
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .landing-mission-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .landing-mission-actions a {
+    width: 100%;
+    text-align: center;
+  }
+}

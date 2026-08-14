@@ -24,6 +24,9 @@ import CampaignManager from "./pages/CampaignManager";
 import AdminUsers from "./pages/AdminUsers";
 import PrivateRoute from "./components/PrivateRoute";
 import CampaignDetails from "./pages/CampaignDetails";
+import About from "./pages/About";
+import Team from "./pages/Team";
+import Contact from "./pages/Contact";
 
 // ADMIN AUTH
 import AdminLogin from "./pages/AdminLogin";
@@ -132,6 +135,11 @@ function AnimatedRoutes() {
         {/* PUBLIC ROUTES */}
         <Route path="/" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><LandingPage /></motion.div>} />
         <Route path="/home" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><Home /></motion.div>} />
+
+        {/* PHASE 3 — TRUST / INFORMATION PAGES */}
+        <Route path="/about" element={<About />} />
+        <Route path="/team" element={<Team />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/donate" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><DonatePage /></motion.div>} />
         <Route path="/donate-success" element={<motion.div variants={anim} initial="initial" animate="in" exit="out"><DonateSuccess /></motion.div>} />
 
@@ -274,7 +282,7 @@ function AppContent() {
               }}
             >
               <img
-                src="/images/gfssga-logo1.png"
+                src="/images/gfssga-logo1.webp"
                 alt="GFSSGA Impact Network"
                 style={{
                   width: "40px",

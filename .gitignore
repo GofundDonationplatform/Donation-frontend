@@ -29,3 +29,7 @@ backend/.env
 backend/backup/.env
 env
 .env*
+
+# Local development backup snapshots
+image-backup-phase4/
+*.before-*
