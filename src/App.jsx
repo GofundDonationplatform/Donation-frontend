@@ -193,9 +193,9 @@ function AnimatedRoutes() {
      <Route
      path="/campaign-manager"
      element={
-     <AdminRoute>
+     <PrivateRoute>
      <CampaignManager />
-     </AdminRoute>
+     </PrivateRoute>
      }
      />
 
