@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { API_BASE } from "../config";
 import { getImageUrl } from "../utils/imageUrl";
+import SEO from "../components/SEO";
 
 export default function CampaignDetails() {
   const { id } = useParams();
@@ -130,8 +131,32 @@ export default function CampaignDetails() {
 
   const progress = getProgress();
 
+  const campaignTitle =
+    campaign.title || "Fundraising Campaign";
+
+  const campaignDescription =
+    campaign.description ||
+    `Support this fundraising campaign through GFSSGA Impact Network.`;
+
+  const campaignImage = campaign.image
+    ? getImageUrl(campaign.image)
+    : "/images/gfssga-logo1.webp";
+
+  const seoDescription =
+    campaignDescription.length > 160
+      ? campaignDescription.slice(0, 157) + "..."
+      : campaignDescription;
+
+
   return (
-    <div
+    <>
+      <SEO
+        title={`${campaignTitle} | GFSSGA Impact Network`}
+        description={seoDescription}
+        image={campaignImage}
+      />
+
+      <div
       style={{
         minHeight: "100vh",
         background: "#f8fafc",
@@ -523,5 +548,6 @@ export default function CampaignDetails() {
         © 2026 GFSSGA Impact Network. All rights reserved.
       </footer>
     </div>
+    </>
   );
 }

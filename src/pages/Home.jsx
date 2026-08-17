@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { API_BASE } from "../config";
 import { getImageUrl } from "../utils/imageUrl";
+import SEO from "../components/SEO";
 
 export default function Home() {
   const [campaigns, setCampaigns] = useState([]);
@@ -48,6 +49,12 @@ export default function Home() {
     `${currency} ${Number(amount || 0).toLocaleString()}`;
 
   return (
+    <>
+      <SEO
+        title="GFSSGA Impact Network | Discover Fundraising Campaigns"
+        description="Discover verified fundraising campaigns, support meaningful causes, and help create positive community impact through GFSSGA Impact Network."
+      />
+
     <div
       style={{
         minHeight: "100vh",
@@ -409,5 +416,6 @@ export default function Home() {
         © 2026 GFSSGA Impact Network. All rights reserved.
       </footer>
     </div>
+    </>
   );
 }

@@ -19,7 +19,7 @@ export default function Register() {
       const res = await axios.post(`${backend}/api/auth/register`, { name, email, password });
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
-      nav("/home");
+      nav("/dashboard", { replace: true });
     } catch (err) {
       console.error(err);
       alert(err.response?.data?.error || "Registration failed");
@@ -29,10 +29,10 @@ export default function Register() {
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded shadow mt-12">
       <h2 className="text-2xl font-bold mb-4">Create account</h2>
-      <form onSubmit={submit} className="space-y-3">
-        <input required value={name} onChange={e=>setName(e.target.value)} placeholder="Full name" className="w-full p-2 border rounded"/>
-        <input required value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email" type="email" className="w-full p-2 border rounded"/>
-        <input required value={password} onChange={e=>setPassword(e.target.value)} placeholder="Password" type="password" className="w-full p-2 border rounded"/>
+      <form onSubmit={submit} className="register-form space-y-3">
+        <input required value={name} onChange={e=>setName(e.target.value)} placeholder="Full name" className="w-full p-2 border rounded bg-white text-slate-900 caret-indigo-600"/>
+        <input required value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email" type="email" className="w-full p-2 border rounded bg-white text-slate-900 caret-indigo-600"/>
+        <input required value={password} onChange={e=>setPassword(e.target.value)} placeholder="Password" type="password" className="w-full p-2 border rounded bg-white text-slate-900 caret-indigo-600"/>
         <button disabled={loading} className="w-full bg-indigo-600 text-white p-2 rounded">{loading ? "Creating..." : "Create account"}</button>
       </form>
     </div>

@@ -2139,3 +2139,58 @@ body,
     text-align: center;
   }
 }
+
+/* =========================================================
+   REGISTER FORM
+   Explicit input rendering for mobile/browser consistency
+   ========================================================= */
+
+.register-form input {
+  width: 100%;
+  min-height: 52px;
+  box-sizing: border-box;
+
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+
+  -webkit-text-fill-color: #0f172a !important;
+
+  caret-color: #4f46e5 !important;
+
+  opacity: 1 !important;
+  font-size: 16px;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+
+  outline: none;
+}
+
+.register-form input::placeholder {
+  color: #94a3b8 !important;
+  -webkit-text-fill-color: #94a3b8 !important;
+  opacity: 1 !important;
+}
+
+.register-form input:focus {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+
+  border-color: #4f46e5;
+
+  box-shadow:
+    0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+/* Android/Chrome autofill */
+.register-form input:-webkit-autofill,
+.register-form input:-webkit-autofill:hover,
+.register-form input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #0f172a !important;
+
+  box-shadow:
+    0 0 0 1000px #ffffff inset !important;
+
+  caret-color: #4f46e5 !important;
+}

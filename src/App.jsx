@@ -452,7 +452,7 @@ function AppContent() {
                 <Link to="/donate" style={{ color: "#94a3b8", textDecoration: "none" }}>
                   Support
                 </Link>
-                <Link to="/register" style={{ color: "#94a3b8", textDecoration: "none" }}>
+                <Link to="/campaign-manager" style={{ color: "#94a3b8", textDecoration: "none" }}>
                   Start campaign
                 </Link>
               </div>

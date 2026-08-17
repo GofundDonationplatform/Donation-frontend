@@ -1,7 +1,7 @@
 // src/pages/Login.jsx
 import React, { useState } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { API_BASE } from "../config";
 
 export default function Login() {
@@ -12,6 +12,7 @@ export default function Login() {
   const [error, setError] = useState("");
 
   const nav = useNavigate();
+  const location = useLocation();
   const backend = API_BASE;
 
   async function submit(e) {
@@ -27,7 +28,7 @@ export default function Login() {
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
-      nav("/home");
+      nav("/dashboard", { replace: true });
     } catch (err) {
       console.error("Login error:", err);
 

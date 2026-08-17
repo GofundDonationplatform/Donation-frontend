@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API_BASE } from "../config";
 import { getImageUrl } from "../utils/imageUrl";
+import SEO from "../components/SEO";
 
 export default function LandingPage() {
   const [campaigns, setCampaigns] = useState([]);
@@ -107,7 +108,13 @@ export default function LandingPage() {
       : null;
 
   return (
-    <div className="public-landing">
+    <>
+      <SEO
+        title="GFSSGA Impact Network | Support Causes & Make an Impact"
+        description="Discover meaningful fundraising campaigns, support communities, and help create positive change through GFSSGA Impact Network."
+      />
+
+      <div className="public-landing">
 
       {/* ================= HEADER ================= */}
 
@@ -971,5 +978,6 @@ export default function LandingPage() {
       </footer>
 
     </div>
+    </>
   );
 }
